@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { BridgeButton } from '../../components/BridgeButton'
 import { useAuth } from '../auth'
 import { requestCoachTips } from '../ai-coach/api'
@@ -10,7 +10,6 @@ import {
   updateFootprintMigrated,
 } from './api'
 import {
-  EXAMPLE_TEMPLATES,
   TASK_TEMPLATES,
   consumeRequestedTemplate,
   getTemplate,
@@ -26,6 +25,8 @@ const DEFAULT = TASK_TEMPLATES[0]
 
 export function FootprintsPanel() {
   const { user, configured } = useAuth()
+  const draftRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const [items, setItems] = useState<LocalFootprint[]>([])
   const [source, setSource] = useState<'supabase' | 'local'>('local')
   const [busy, setBusy] = useState(false)
@@ -37,14 +38,27 @@ export function FootprintsPanel() {
   const [exampleDraft, setExampleDraft] = useState(DEFAULT.exampleDraft)
   const [body, setBody] = useState('')
   const [showExampleInDraft, setShowExampleInDraft] = useState(false)
-  const [exampleIdx, setExampleIdx] = useState(0)
   const [criteriaMet, setCriteriaMet] = useState(true)
   const [selfRating, setSelfRating] = useState('还行')
   const [tips, setTips] = useState<CoachTip[] | null>(null)
   const [coachNote, setCoachNote] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  const [focusDraftAfter, setFocusDraftAfter] = useState(0)
 
-  function applyTemplate(tpl: TaskTemplate, opts?: { fillExample?: boolean }) {
+  const activeTemplate = getTemplate(activeId) ?? DEFAULT
+
+  useEffect(() => {
+    if (!focusDraftAfter) return
+    const el = draftRef.current
+    if (!el) return
+    const timer = window.setTimeout(() => {
+      el.focus({ preventScroll: true })
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 40)
+    return () => window.clearTimeout(timer)
+  }, [focusDraftAfter])
+
+  function applyTemplate(tpl: TaskTemplate, opts?: { fillExample?: boolean; focus?: boolean }) {
     setActiveId(tpl.id)
     setScene(tpl.scene)
     setTitle(tpl.title)
@@ -61,19 +75,26 @@ export function FootprintsPanel() {
       setBody('')
     }
     setStatus(`已填入「${tpl.title}」——先自己写，AI 只点拨。`)
-    const ex = EXAMPLE_TEMPLATES.findIndex((t) => t.id === tpl.id)
-    if (ex >= 0) setExampleIdx(ex)
+    if (opts?.focus) setFocusDraftAfter((n) => n + 1)
+  }
+
+  function selectTemplate(tpl: TaskTemplate) {
+    applyTemplate(tpl)
+  }
+
+  function practiceWithTemplate(tpl: TaskTemplate, fillExample = false) {
+    applyTemplate(tpl, { fillExample, focus: true })
   }
 
   useEffect(() => {
     const pending = consumeRequestedTemplate()
     if (pending) {
       const tpl = getTemplate(pending)
-      if (tpl) applyTemplate(tpl)
+      if (tpl) applyTemplate(tpl, { focus: true })
     }
     return onTemplateRequest((id) => {
       const tpl = getTemplate(id)
-      if (tpl) applyTemplate(tpl)
+      if (tpl) applyTemplate(tpl, { focus: true })
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mount once for external requests
   }, [])
@@ -152,8 +173,6 @@ export function FootprintsPanel() {
     await refresh()
   }
 
-  const currentExample = EXAMPLE_TEMPLATES[exampleIdx] ?? EXAMPLE_TEMPLATES[0]
-
   function toggleExampleFill(on: boolean) {
     setShowExampleInDraft(on)
     if (on) setBody(exampleDraft)
@@ -187,70 +206,55 @@ export function FootprintsPanel() {
         </p>
       ) : null}
 
-      <div className="fp-recommend" aria-label="推荐模板">
-        <div className="fp-recommend-head">
-          <p className="fp-section-label">推荐模板</p>
-          <p className="fp-section-hint">点选即填入场景与标题；独立稿仍须你自己写。</p>
-        </div>
-        <ul className="fp-template-list">
-          {TASK_TEMPLATES.map((tpl) => (
-            <li key={tpl.id}>
-              <button
-                type="button"
-                className={activeId === tpl.id ? 'on' : undefined}
-                onClick={() => applyTemplate(tpl)}
-              >
-                <span className="fp-tpl-scene">{tpl.scene}</span>
-                <span className="fp-tpl-title">{tpl.title}</span>
-                <span className="fp-tpl-meta">
-                  {tpl.timeHint} · {tpl.action}
-                </span>
-                <span className="fp-tpl-std">{tpl.criteria}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="fp-studio">
+        <aside className="fp-studio-list" aria-label="推荐模板">
+          <div className="fp-recommend-head">
+            <p className="fp-section-label">推荐模板</p>
+            <p className="fp-section-hint">点选右侧即时预览；独立稿仍须你自己写。</p>
+          </div>
+          <ul className="fp-template-list">
+            {TASK_TEMPLATES.map((tpl) => (
+              <li key={tpl.id}>
+                <button
+                  type="button"
+                  className={activeId === tpl.id ? 'on' : undefined}
+                  aria-current={activeId === tpl.id ? 'true' : undefined}
+                  onClick={() => selectTemplate(tpl)}
+                >
+                  <span className="fp-tpl-scene">{tpl.scene}</span>
+                  <span className="fp-tpl-title">{tpl.title}</span>
+                  <span className="fp-tpl-meta">
+                    {tpl.timeHint} · {tpl.action}
+                  </span>
+                  <span className="fp-tpl-std">{tpl.criteria}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
 
-      <div className="fp-example" aria-label="独立输出示例">
-        <div className="fp-example-head">
-          <p className="fp-section-label">
-            示例 <span className="fp-badge">示例 · 可模仿</span>
-          </p>
-          <p className="fp-section-hint">短、可开口或可改写；不是范文代写。</p>
-        </div>
-        <div className="fp-example-tabs" role="tablist" aria-label="切换示例">
-          {EXAMPLE_TEMPLATES.map((tpl, i) => (
-            <button
-              key={tpl.id}
-              type="button"
-              role="tab"
-              aria-selected={i === exampleIdx}
-              className={i === exampleIdx ? 'on' : undefined}
-              onClick={() => setExampleIdx(i)}
-            >
-              {tpl.title.replace(/ · .*$/, '')}
-            </button>
-          ))}
-        </div>
-        {currentExample ? (
-          <article className="fp-example-card">
-            <header>
-              <h3>{currentExample.title}</h3>
-              <p>
-                受众：{currentExample.audience} · 动作：{currentExample.action}
-              </p>
-            </header>
+        <div className="fp-studio-detail">
+          <div className="fp-detail-head">
+            <p className="fp-section-label">
+              正在练习 <span className="fp-badge">示例 · 可模仿</span>
+            </p>
+            <h3 className="fp-practicing">{activeTemplate.title}</h3>
+            <p className="fp-section-hint">
+              受众：{activeTemplate.audience} · 动作：{activeTemplate.action}
+            </p>
+          </div>
+
+          <article className="fp-example-card" aria-live="polite">
             <p className="fp-example-std">
               <strong>完成标准：</strong>
-              {currentExample.criteria}
+              {activeTemplate.criteria}
             </p>
-            <pre className="fp-example-draft">{currentExample.exampleDraft}</pre>
+            <pre className="fp-example-draft">{activeTemplate.exampleDraft}</pre>
             <div className="fp-example-actions">
               <BridgeButton
                 type="button"
                 variant="primary"
-                onClick={() => applyTemplate(currentExample)}
+                onClick={() => practiceWithTemplate(activeTemplate)}
               >
                 用这个模板练习
               </BridgeButton>
@@ -258,79 +262,84 @@ export function FootprintsPanel() {
                 type="button"
                 variant="ghost"
                 arrow="none"
-                onClick={() => applyTemplate(currentExample, { fillExample: true })}
+                onClick={() => practiceWithTemplate(activeTemplate, true)}
               >
                 填入示例稿（可改）
               </BridgeButton>
             </div>
           </article>
-        ) : null}
-      </div>
 
-      <form className="fp-form" onSubmit={(e) => void onSave(e)}>
-        <label>
-          场景
-          <select value={scene} onChange={(e) => setScene(e.target.value as Scene)}>
-            {SCENES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          任务标题
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </label>
-        <label>
-          完成标准
-          <input
-            value={criteria}
-            onChange={(e) => setCriteria(e.target.value)}
-            placeholder="可观察的结果，例如：对方能听懂你要什么"
-          />
-        </label>
-        <label>
-          独立稿（必填）
-          <textarea
-            rows={5}
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder={placeholder}
-            required
-          />
-        </label>
-        <label className="fp-check fp-example-toggle">
-          <input
-            type="checkbox"
-            checked={showExampleInDraft}
-            onChange={(e) => toggleExampleFill(e.target.checked)}
-          />
-          显示示例稿作起点（请改成自己的话再提交）
-        </label>
-        <div className="fp-row">
-          <label className="fp-check">
-            <input
-              type="checkbox"
-              checked={criteriaMet}
-              onChange={(e) => setCriteriaMet(e.target.checked)}
-            />
-            对照完成标准
-          </label>
-          <label>
-            自评
-            <select value={selfRating} onChange={(e) => setSelfRating(e.target.value)}>
-              <option>吃力</option>
-              <option>还行</option>
-              <option>流畅</option>
-            </select>
-          </label>
+          <form className="fp-form" ref={formRef} onSubmit={(e) => void onSave(e)}>
+            <p className="fp-form-kicker">独立输出 · {activeTemplate.title.replace(/ · .*$/, '')}</p>
+            <label>
+              独立稿（必填）
+              <textarea
+                ref={draftRef}
+                id="fp-draft"
+                rows={5}
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder={placeholder}
+                required
+              />
+            </label>
+            <label className="fp-check fp-example-toggle">
+              <input
+                type="checkbox"
+                checked={showExampleInDraft}
+                onChange={(e) => toggleExampleFill(e.target.checked)}
+              />
+              显示示例稿作起点（请改成自己的话再提交）
+            </label>
+            <div className="fp-form-meta">
+              <label>
+                场景
+                <select value={scene} onChange={(e) => setScene(e.target.value as Scene)}>
+                  {SCENES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                任务标题
+                <input value={title} onChange={(e) => setTitle(e.target.value)} />
+              </label>
+              <label>
+                完成标准
+                <input
+                  value={criteria}
+                  onChange={(e) => setCriteria(e.target.value)}
+                  placeholder="可观察的结果，例如：对方能听懂你要什么"
+                />
+              </label>
+            </div>
+            <div className="fp-row">
+              <label className="fp-check">
+                <input
+                  type="checkbox"
+                  checked={criteriaMet}
+                  onChange={(e) => setCriteriaMet(e.target.checked)}
+                />
+                对照完成标准
+              </label>
+              <label>
+                自评
+                <select value={selfRating} onChange={(e) => setSelfRating(e.target.value)}>
+                  <option>吃力</option>
+                  <option>还行</option>
+                  <option>流畅</option>
+                </select>
+              </label>
+            </div>
+            {status ? <p className="fp-status">{status}</p> : null}
+            <BridgeButton type="submit" variant="primary" disabled={busy || !user}>
+              {busy ? '保存中…' : '存足迹并请求陪练'}
+            </BridgeButton>
+          </form>
         </div>
-        {status ? <p className="fp-status">{status}</p> : null}
-        <BridgeButton type="submit" variant="primary" disabled={busy || !user}>
-          {busy ? '保存中…' : '存足迹并请求陪练'}
-        </BridgeButton>
-      </form>
+      </div>
 
       {tips ? (
         <div className="fp-tips">
