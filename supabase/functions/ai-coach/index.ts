@@ -1,5 +1,6 @@
 // Edge Runtime Deno. Bridge AI coach via DeepSeek (or mock).
 // Hard boundaries: independent draft required; never wholesale rewrite.
+// Rate limit: per user + UTC day via bump_ai_coach_daily RPC.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
@@ -9,6 +10,9 @@ const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+/** Default daily coach calls per user (free-tier style). Override with AI_COACH_DAILY_LIMIT. */
+const DEFAULT_DAILY_LIMIT = 20;
 
 type CoachRequest = {
   draft: string;
@@ -184,6 +188,40 @@ Deno.serve(async (req) => {
       });
     }
 
+    const limit = Number(Deno.env.get("AI_COACH_DAILY_LIMIT") ?? DEFAULT_DAILY_LIMIT) ||
+      DEFAULT_DAILY_LIMIT;
+    const { data: quota, error: quotaError } = await supabase.rpc("bump_ai_coach_daily", {
+      p_limit: limit,
+    });
+    if (quotaError) {
+      console.error("quota_rpc", quotaError);
+      // Fail open with warning only if RPC missing; prefer fail closed for abuse
+      return new Response(
+        JSON.stringify({
+          error: "quota_unavailable",
+          message: quotaError.message,
+        }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+    const allowed = (quota as { allowed?: boolean } | null)?.allowed !== false;
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({
+          error: "rate_limited",
+          message: `今日陪练次数已达上限（${limit} 次 / 日）。明天再来。`,
+          meta: quota,
+        }),
+        {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
     const input = assertBoundaries(await req.json());
     const apiKey =
       Deno.env.get("DEEPSEEK_API_KEY") ??
@@ -214,6 +252,7 @@ Deno.serve(async (req) => {
           taskTitle: input.taskTitle ?? null,
           rewritten: false,
           boundary: "coach_only_no_ghostwrite",
+          quota,
         },
       }),
       {

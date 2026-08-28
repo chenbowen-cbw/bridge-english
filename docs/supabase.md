@@ -6,10 +6,10 @@
 | --- | --- | --- |
 | App shell | `web/` (Vite React) | Primary product UI |
 | Client | `web/src/lib/supabase/` | Browser client + shared types (anon key only) |
-| Features | `web/src/features/{auth,footprints,ai-coach}/` | Auth, footprints CRUD, coach invoke |
+| Features | `web/src/features/{auth,plans,footprints,reviews,ai-coach}/` | Auth, plan wizard, footprints CRUD, weekly review, coach invoke |
 | Migrations | `supabase/migrations/` | Postgres schema + RLS |
-| Edge | `supabase/functions/ai-coach/` | Server-side DeepSeek / mock coach |
-| Prototype | root `index.html` | Reference only — do not add new product logic here |
+| Edge | `supabase/functions/ai-coach/` | Server-side DeepSeek / mock coach（日配额） |
+| Prototype | `prototype/` | Reference only — localStorage keys use `bridge-proto-*` |
 
 Auth: **email + password**. Marketing (home / pricing) anonymous; footprints + coach require login.  
 Subscription: store `profiles.plan_tier` only (`free` \| `daily` \| `deep`) — **no payment**.
@@ -47,9 +47,12 @@ Or Dashboard → SQL Editor → paste `supabase/migrations/20260829000601_init_b
 ## Edge Function `ai-coach`
 
 - JWT required
+- Per-user daily quota via `bump_ai_coach_daily`（默认 20；可用 `AI_COACH_DAILY_LIMIT` 覆盖）
 - Rejects empty draft; rejects `rewrite_full` / `ghostwrite` / `polish_final`
 - With `DEEPSEEK_API_KEY` (or `AI_API_KEY`) → DeepSeek chat; on failure falls back to mock tips
 - Response: `{ tips: [{tag,text}], source: "mock"|"model", meta.rewritten: false }`
+
+`profiles.plan_tier` is **server-managed**: clients cannot UPDATE that column (column grants + trigger).
 
 Deploy + set secrets (Dashboard → Edge Functions → Secrets, or CLI):
 

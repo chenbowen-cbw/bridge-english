@@ -38,7 +38,19 @@ export async function requestCoachTips(
   })
 
   if (error) {
-    return { ok: false, error: error.message }
+    const msg = error.message || '陪练调用失败'
+    if (/rate|429|上限/i.test(msg)) {
+      return { ok: false, error: '今日陪练次数已达上限，请明天再试。' }
+    }
+    return { ok: false, error: msg }
+  }
+  // Functions may return error payload with 4xx inside data
+  const maybeErr = data as unknown as { error?: string; message?: string } | null
+  if (maybeErr && !('tips' in (maybeErr as object)) && maybeErr.error) {
+    if (maybeErr.error === 'rate_limited') {
+      return { ok: false, error: maybeErr.message ?? '今日陪练次数已达上限。' }
+    }
+    return { ok: false, error: maybeErr.message ?? maybeErr.error }
   }
   if (!data?.tips) {
     return { ok: false, error: '陪练返回为空' }

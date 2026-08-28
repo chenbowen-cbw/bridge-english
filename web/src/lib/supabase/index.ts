@@ -1,4 +1,5 @@
 export { supabase, isSupabaseConfigured } from './client'
+export type { Database, Json } from './database'
 export type {
   PlanTier,
   Profile,

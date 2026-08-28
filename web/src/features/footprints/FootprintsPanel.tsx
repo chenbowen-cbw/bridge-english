@@ -23,7 +23,13 @@ const SCENES: Scene[] = ['生活', '职场', '兴趣']
 
 const DEFAULT = TASK_TEMPLATES[0]
 
-export function FootprintsPanel() {
+type AuthNudge = () => void
+
+type Props = {
+  onNeedAuth?: AuthNudge
+}
+
+export function FootprintsPanel({ onNeedAuth }: Props) {
   const { user, configured } = useAuth()
   const draftRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -43,6 +49,7 @@ export function FootprintsPanel() {
   const [tips, setTips] = useState<CoachTip[] | null>(null)
   const [coachNote, setCoachNote] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  const [statusTone, setStatusTone] = useState<'ok' | 'warn'>('ok')
   const [focusDraftAfter, setFocusDraftAfter] = useState(0)
 
   const activeTemplate = getTemplate(activeId) ?? DEFAULT
@@ -75,6 +82,7 @@ export function FootprintsPanel() {
       setBody('')
     }
     setStatus(`已填入「${tpl.title}」——先自己写，AI 只点拨。`)
+    setStatusTone('ok')
     if (opts?.focus) setFocusDraftAfter((n) => n + 1)
   }
 
@@ -112,12 +120,15 @@ export function FootprintsPanel() {
   async function onSave(e: FormEvent) {
     e.preventDefault()
     if (!user) {
-      setStatus('请先登录后再把足迹写入云端。')
+      setStatus('请先登录，再把足迹写入云端。')
+      setStatusTone('warn')
+      onNeedAuth?.()
       return
     }
     const draft = body.trim()
     if (!draft) {
       setStatus('请先写独立稿，再存足迹或请求陪练。')
+      setStatusTone('warn')
       return
     }
     setBusy(true)
@@ -125,7 +136,7 @@ export function FootprintsPanel() {
     setTips(null)
     setCoachNote(null)
 
-    await createFootprint(
+    const created = await createFootprint(
       {
         scene,
         title: title.trim() || '未命名任务',
@@ -137,6 +148,15 @@ export function FootprintsPanel() {
       user.id,
     )
     await refresh()
+
+    if (created.cloud === 'failed') {
+      setStatus(
+        `本地已暂存，但云端写入失败：${created.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
+      )
+      setStatusTone('warn')
+      setBusy(false)
+      return
+    }
 
     const coach = await requestCoachTips({
       draft,
@@ -157,7 +177,8 @@ export function FootprintsPanel() {
 
     setBody('')
     setShowExampleInDraft(false)
-    setStatus('足迹已保存')
+    setStatus(created.cloud === 'ok' ? '足迹已写入云端' : '足迹已保存到本机')
+    setStatusTone('ok')
     setBusy(false)
   }
 
@@ -186,8 +207,7 @@ export function FootprintsPanel() {
           <p className="kicker">足迹 · 持久化</p>
           <h2>留下独立输出</h2>
           <p className="fp-lead">
-            先写自己的稿，再存证；AI 只点拨，不整段改写。真实任务卡 = 场景 · 受众 · 动作 ·
-            完成标准 · 证据。
+            先写自己的稿，再存证；AI 只点拨，不整段改写。打开笔记本对页：左页选模板，右页练习。
             {configured ? (
               <>
                 {' '}
@@ -202,15 +222,24 @@ export function FootprintsPanel() {
 
       {!user ? (
         <p className="fp-banner" role="status">
-          登录后足迹会写入 Postgres（RLS 仅本人可见）。匿名可浏览首页与订阅。
+          未登录可先写草稿（存于本机匿名本）。要写入云端并请求陪练，请先登录。
+          {onNeedAuth ? (
+            <>
+              {' '}
+              <button type="button" className="fp-banner-link" onClick={onNeedAuth}>
+                去登录
+              </button>
+            </>
+          ) : null}
         </p>
       ) : null}
 
-      <div className="fp-studio">
-        <aside className="fp-studio-list" aria-label="推荐模板">
+      <div className="fp-spread" aria-label="足迹对页">
+        <div className="fp-page fp-page--left" aria-label="推荐模板">
+          <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-recommend-head">
-            <p className="fp-section-label">推荐模板</p>
-            <p className="fp-section-hint">点选右侧即时预览；独立稿仍须你自己写。</p>
+            <p className="fp-section-label">左页 · 推荐模板</p>
+            <p className="fp-section-hint">点选后右页即时预览；独立稿仍须你自己写。</p>
           </div>
           <ul className="fp-template-list">
             {TASK_TEMPLATES.map((tpl) => (
@@ -231,12 +260,15 @@ export function FootprintsPanel() {
               </li>
             ))}
           </ul>
-        </aside>
+        </div>
 
-        <div className="fp-studio-detail">
+        <div className="fp-spine" aria-hidden="true" />
+
+        <div className="fp-page fp-page--right">
+          <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-detail-head">
             <p className="fp-section-label">
-              正在练习 <span className="fp-badge">示例 · 可模仿</span>
+              右页 · 正在练习 <span className="fp-badge">示例 · 可模仿</span>
             </p>
             <h3 className="fp-practicing">{activeTemplate.title}</h3>
             <p className="fp-section-hint">
@@ -333,10 +365,31 @@ export function FootprintsPanel() {
                 </select>
               </label>
             </div>
-            {status ? <p className="fp-status">{status}</p> : null}
-            <BridgeButton type="submit" variant="primary" disabled={busy || !user}>
-              {busy ? '保存中…' : '存足迹并请求陪练'}
-            </BridgeButton>
+            {status ? (
+              <p className={`fp-status${statusTone === 'warn' ? ' fp-status--warn' : ''}`}>{status}</p>
+            ) : null}
+            {user ? (
+              <BridgeButton type="submit" variant="primary" disabled={busy}>
+                {busy ? '保存中…' : '存足迹并请求陪练'}
+              </BridgeButton>
+            ) : (
+              <div className="fp-cta-anon">
+                <BridgeButton
+                  type="button"
+                  variant="primary"
+                  onClick={() => {
+                    setStatus('请先登录再存足迹。')
+                    setStatusTone('warn')
+                    onNeedAuth?.()
+                  }}
+                >
+                  先登录再存足迹
+                </BridgeButton>
+                <BridgeButton type="button" variant="ghost" arrow="none" onClick={() => onNeedAuth?.()}>
+                  登录
+                </BridgeButton>
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -371,10 +424,15 @@ export function FootprintsPanel() {
                 <h4>{fp.title}</h4>
                 <p className="fp-body">{fp.raw}</p>
                 <div className="fp-actions">
-                  <button type="button" onClick={() => void onToggleMigrate(fp)}>
+                  <button type="button" onClick={() => void onToggleMigrate(fp)} disabled={!user}>
                     {fp.migrateChecked ? '已迁移 ✓' : '标记迁移'}
                   </button>
-                  <button type="button" className="danger" onClick={() => void onDelete(fp)}>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => void onDelete(fp)}
+                    disabled={!user}
+                  >
                     删除
                   </button>
                 </div>

@@ -37,6 +37,30 @@
   outline-offset: 3px;
 }
 
+.bridge-btn:disabled,
+.bridge-btn[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.bridge-btn:disabled:hover,
+.bridge-btn[aria-disabled='true']:hover {
+  background: var(--btn-bg);
+  box-shadow: none;
+}
+
+.bridge-btn:disabled:hover .bridge-btn__arrow,
+.bridge-btn[aria-disabled='true']:hover .bridge-btn__arrow {
+  transform: none;
+}
+
+.bridge-btn:disabled:hover .bridge-btn__glare::before,
+.bridge-btn[aria-disabled='true']:hover .bridge-btn__glare::before {
+  left: -80%;
+}
+
 .bridge-btn--primary {
   padding: 0.875rem 1.625rem;
 }

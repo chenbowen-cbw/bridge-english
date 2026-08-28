@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from './database'
 
 /**
  * Prefer Vercel / local `VITE_*` env. Fallback is the linked project's
@@ -20,8 +21,8 @@ const anonKey =
 export const isSupabaseConfigured = Boolean(url && anonKey)
 
 /** Browser client — anon key only. Never import service_role here. */
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(url, anonKey, {
+export const supabase: SupabaseClient<Database> | null = isSupabaseConfigured
+  ? createClient<Database>(url, anonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,

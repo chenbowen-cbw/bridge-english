@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BridgeButton } from './components/BridgeButton'
 import { NotebookReveal } from './components/NotebookReveal'
 import { AuthPanel, useAuth } from './features/auth'
 import { FootprintsPanel, requestTemplate } from './features/footprints'
+import { PlanWizard } from './features/plans'
+import { WeeklyReviewPanel } from './features/reviews'
 import './App.css'
 
 const PLAN_SCENE_SEEDS = [
@@ -97,6 +99,14 @@ const PLANS = [
   },
 ] as const
 
+const NAV = [
+  { href: '#home', label: '首页' },
+  { href: '#app-plan', label: '计划' },
+  { href: '#app-footprints', label: '足迹' },
+  { href: '#app-review', label: '复盘' },
+  { href: '#pricing', label: '订阅' },
+] as const
+
 export default function App() {
   const { user, configured, signOut } = useAuth()
   const [goal, setGoal] = useState(
@@ -104,6 +114,32 @@ export default function App() {
   )
   const [billCycle, setBillCycle] = useState<'month' | 'year'>('month')
   const [showAuth, setShowAuth] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
+  const [planSeed, setPlanSeed] = useState('')
+
+  function openAuth() {
+    setShowAuth(true)
+    setNavOpen(false)
+  }
+
+  function closeAuth() {
+    setShowAuth(false)
+  }
+
+  function goPlan() {
+    setNavOpen(false)
+    setPlanSeed(goal.trim().slice(0, 200))
+    document.getElementById('app-plan')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    if (!showAuth) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeAuth()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showAuth])
 
   return (
     <div className="page">
@@ -114,12 +150,11 @@ export default function App() {
             <span>ENGLISH</span>
           </a>
           <nav className="links" aria-label="主导航">
-            <a className="on" href="#home">
-              首页
-            </a>
-            <a href="#plan">计划</a>
-            <a href="#app-footprints">足迹</a>
-            <a href="#pricing">订阅</a>
+            {NAV.map((item) => (
+              <a key={item.href} href={item.href}>
+                {item.label}
+              </a>
+            ))}
           </nav>
           <div className="nav-right">
             <button type="button" className="lang">
@@ -135,22 +170,52 @@ export default function App() {
                 </BridgeButton>
               </>
             ) : (
-              <BridgeButton variant="nav" arrow="none" onClick={() => setShowAuth(true)}>
+              <BridgeButton variant="nav" arrow="none" onClick={openAuth}>
                 登录
               </BridgeButton>
             )}
-            <BridgeButton
-              variant="nav"
-              arrow="none"
-              onClick={() => {
-                if (!user) setShowAuth(true)
-                else document.getElementById('app-footprints')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-            >
+            <BridgeButton variant="nav" arrow="none" onClick={goPlan}>
               定制计划
             </BridgeButton>
+            <button
+              type="button"
+              className={`nav-burger${navOpen ? ' on' : ''}`}
+              aria-expanded={navOpen}
+              aria-controls="mobile-nav"
+              aria-label={navOpen ? '关闭菜单' : '打开菜单'}
+              onClick={() => setNavOpen((o) => !o)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
+        {navOpen ? (
+          <nav className="mobile-nav" id="mobile-nav" aria-label="移动导航">
+            {NAV.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => setNavOpen(false)}
+              >
+                {item.label}
+              </a>
+            ))}
+            {!user ? (
+              <button type="button" onClick={openAuth}>
+                登录
+              </button>
+            ) : (
+              <button type="button" onClick={() => void signOut()}>
+                退出
+              </button>
+            )}
+            <button type="button" className="mobile-cta" onClick={goPlan}>
+              定制计划
+            </button>
+          </nav>
+        ) : null}
       </header>
 
       {!configured ? (
@@ -161,9 +226,17 @@ export default function App() {
       ) : null}
 
       {showAuth ? (
-        <div className="auth-overlay" role="dialog" aria-modal="true" aria-label="登录或注册">
+        <div
+          className="auth-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="登录或注册"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeAuth()
+          }}
+        >
           <div className="auth-sheet">
-            <AuthPanel onClose={() => setShowAuth(false)} onSuccess={() => setShowAuth(false)} />
+            <AuthPanel onClose={closeAuth} onSuccess={closeAuth} />
           </div>
         </div>
       ) : null}
@@ -191,17 +264,7 @@ export default function App() {
                 <button type="button" className="up" title="上传灵感" aria-label="上传灵感">
                   ↑
                 </button>
-                <BridgeButton
-                  variant="hero"
-                  arrow="up"
-                  onClick={() => {
-                    if (!user) setShowAuth(true)
-                    else
-                      document
-                        .getElementById('app-footprints')
-                        ?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                >
+                <BridgeButton variant="hero" arrow="up" onClick={goPlan}>
                   定制计划
                 </BridgeButton>
               </div>
@@ -213,7 +276,12 @@ export default function App() {
                   key={s.id}
                   type="button"
                   className="plan-seed"
-                  onClick={() => requestTemplate(s.id)}
+                  onClick={() => {
+                    requestTemplate(s.id)
+                    document
+                      .getElementById('app-footprints')
+                      ?.scrollIntoView({ behavior: 'smooth' })
+                  }}
                 >
                   {s.label}
                 </button>
@@ -258,7 +326,7 @@ export default function App() {
                 variant="ghost"
                 arrow="none"
                 onClick={() => {
-                  if (!user) setShowAuth(true)
+                  if (!user) openAuth()
                 }}
               >
                 {user ? '已登录' : '先登录'}
@@ -268,7 +336,19 @@ export default function App() {
         </section>
 
         <div className="wrap">
-          <FootprintsPanel />
+          <PlanWizard
+            key={planSeed || 'plan-default'}
+            seedGoal={planSeed || goal}
+            onNeedAuth={openAuth}
+          />
+        </div>
+
+        <div className="wrap">
+          <FootprintsPanel onNeedAuth={openAuth} />
+        </div>
+
+        <div className="wrap">
+          <WeeklyReviewPanel onNeedAuth={openAuth} />
         </div>
 
         <section className="pricing-band" id="pricing">
@@ -331,7 +411,8 @@ export default function App() {
                       variant={plan.ghost ? 'ghost' : 'primary'}
                       arrow="right"
                       onClick={() => {
-                        if (!user) setShowAuth(true)
+                        if (!user) openAuth()
+                        else document.getElementById('app-plan')?.scrollIntoView({ behavior: 'smooth' })
                       }}
                     >
                       {plan.cta}
@@ -344,7 +425,7 @@ export default function App() {
         </section>
       </main>
 
-      <p className="proto-note">Bridge web · Auth + 足迹持久化 · index.html 原型仍可参考</p>
+      <p className="proto-note">Bridge web · 计划 / 足迹 / 复盘 · 原型见 prototype/</p>
     </div>
   )
 }

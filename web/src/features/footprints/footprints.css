@@ -23,38 +23,83 @@
   font-size: 0.9rem;
 }
 
-/* —— Master / detail studio —— */
-.fp-studio {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.92fr) minmax(320px, 1.18fr);
-  gap: 28px 32px;
-  align-items: start;
-  margin: 0 0 36px;
+.fp-banner-link {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0;
 }
 
-.fp-studio-list {
+/* —— Open notebook spread (not SaaS sidebar) —— */
+.fp-spread {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 18px minmax(280px, 1.15fr);
+  gap: 0;
+  align-items: stretch;
+  margin: 0 0 36px;
+  border: 1px solid var(--paper-edge);
+  background:
+    linear-gradient(90deg, #faf6ec 0%, #fdfbf5 46%, #f3ebe0 50%, #fdfbf5 54%, #faf6ec 100%);
+  box-shadow: 0 18px 40px rgba(60, 45, 20, 0.1);
+  border-radius: 4px 12px 12px 4px;
+  overflow: hidden;
+}
+
+.fp-spine {
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    rgba(60, 45, 20, 0.08),
+    rgba(60, 45, 20, 0.18) 45%,
+    rgba(60, 45, 20, 0.06)
+  );
+  box-shadow:
+    inset 4px 0 10px rgba(60, 45, 20, 0.06),
+    inset -4px 0 10px rgba(60, 45, 20, 0.06);
+}
+
+.fp-page {
+  position: relative;
   min-width: 0;
-  padding-bottom: 4px;
-  border-bottom: none;
-  border-right: 1px solid var(--rule);
-  padding-right: 20px;
+  padding: 22px 22px 28px 28px;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent calc(1.55em - 1px),
+    rgba(196, 180, 152, 0.28) calc(1.55em - 1px),
+    rgba(196, 180, 152, 0.28) 1.55em
+  );
+  background-attachment: local;
+}
+
+.fp-page-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 18px;
+  width: 1px;
+  background: rgba(144, 88, 49, 0.22);
+  pointer-events: none;
+}
+
+.fp-page--right .fp-page-margin {
+  left: auto;
+  right: 18px;
 }
 
 .fp-recommend-head {
-  margin-bottom: 12px;
-}
-
-.fp-studio-detail {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 80px;
+  margin-bottom: 10px;
+  position: relative;
 }
 
 .fp-detail-head {
-  margin: 0;
+  margin: 0 0 8px;
+  position: relative;
 }
 
 .fp-practicing {
@@ -70,10 +115,12 @@
   display: grid;
   gap: 14px;
   max-width: none;
-  margin-bottom: 0;
-  padding: 18px 18px 20px;
-  border: 1px solid var(--paper-edge);
-  background: rgba(255, 254, 249, 0.7);
+  margin: 14px 0 0;
+  padding: 14px 0 0;
+  border: none;
+  border-top: 1px dashed var(--rule);
+  background: transparent;
+  position: relative;
 }
 
 .fp-form-kicker {
@@ -104,7 +151,7 @@
 .fp-form textarea,
 .fp-form select {
   border: 1px solid var(--paper-edge);
-  background: #fffef9;
+  background: rgba(255, 254, 249, 0.92);
   padding: 10px 12px;
   color: var(--ink);
   font: inherit;
@@ -127,6 +174,20 @@
   margin: 0;
   color: var(--accent);
   font-size: 0.9rem;
+}
+
+.fp-status--warn {
+  color: #8a3b2b;
+  padding: 10px 12px;
+  background: rgba(138, 59, 43, 0.08);
+  border-left: 3px solid #8a3b2b;
+}
+
+.fp-cta-anon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
 }
 
 .fp-tips {
@@ -216,6 +277,11 @@
   color: var(--muted);
 }
 
+.fp-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .fp-actions button.danger {
   color: #8a3b2b;
 }
@@ -249,6 +315,7 @@
   max-height: min(70vh, 640px);
   overflow: auto;
   scrollbar-gutter: stable;
+  position: relative;
 }
 
 .fp-template-list button {
@@ -256,9 +323,9 @@
   width: 100%;
   text-align: left;
   border: none;
-  border-top: 1px dashed var(--rule);
+  border-top: 1px dashed rgba(196, 180, 152, 0.65);
   background: transparent;
-  padding: 12px 4px 12px 0;
+  padding: 12px 4px 12px 8px;
   cursor: pointer;
   font: inherit;
   color: var(--ink);
@@ -275,12 +342,12 @@
 
 .fp-template-list button:hover,
 .fp-template-list button.on {
-  background: rgba(144, 88, 49, 0.06);
+  background: rgba(144, 88, 49, 0.07);
 }
 
 .fp-template-list button.on {
-  box-shadow: inset 3px 0 0 var(--accent);
-  padding-left: 10px;
+  box-shadow: inset 0 -2px 0 var(--accent);
+  padding-left: 8px;
 }
 
 .fp-template-list button:focus-visible {
@@ -295,7 +362,6 @@
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   color: var(--accent);
-  writing-mode: horizontal-tb;
   white-space: nowrap;
 }
 
@@ -332,10 +398,11 @@
 }
 
 .fp-example-card {
-  padding: 16px 18px;
-  border: 1px solid var(--paper-edge);
-  background: rgba(255, 254, 249, 0.65);
-  box-shadow: 0 10px 28px rgba(60, 45, 20, 0.06);
+  padding: 14px 0 4px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  position: relative;
 }
 
 .fp-example-std {
@@ -354,12 +421,7 @@
   font-size: 1.2rem;
   line-height: 1.7;
   color: var(--ink);
-  background: repeating-linear-gradient(
-    transparent,
-    transparent 1.65em,
-    rgba(196, 180, 152, 0.35) 1.65em,
-    rgba(196, 180, 152, 0.35) calc(1.65em + 1px)
-  );
+  background: rgba(255, 254, 249, 0.55);
   border-left: 2px solid var(--rule);
 }
 
@@ -375,20 +437,22 @@
 }
 
 @media (max-width: 860px) {
-  .fp-studio {
+  .fp-spread {
     grid-template-columns: 1fr;
-    gap: 20px;
+    border-radius: 8px;
   }
 
-  .fp-studio-list {
-    border-right: none;
-    padding-right: 0;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 8px;
+  .fp-spine {
+    display: none;
   }
 
-  .fp-studio-detail {
-    position: static;
+  .fp-page--left {
+    border-bottom: 1px solid var(--paper-edge);
+  }
+
+  .fp-page--right .fp-page-margin {
+    right: auto;
+    left: 18px;
   }
 
   .fp-template-list {

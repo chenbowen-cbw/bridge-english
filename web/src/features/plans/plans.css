@@ -1,0 +1,177 @@
+.plan-wizard {
+  padding: 48px 0 56px;
+  max-width: 640px;
+}
+
+.plan-wizard h2 {
+  margin: 0 0 8px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 400;
+}
+
+.plan-hint,
+.plan-meta,
+.plan-sub {
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.plan-goal {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.plan-progress {
+  height: 4px;
+  background: var(--paper-edge);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.plan-progress i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.plan-count {
+  margin: 0 0 18px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.plan-qbox {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.plan-bubble {
+  padding: 14px 16px;
+  background: rgba(255, 254, 249, 0.8);
+  border: 1px solid var(--paper-edge);
+}
+
+.plan-q {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.plan-free,
+.plan-other {
+  width: 100%;
+  border: 1px solid var(--paper-edge);
+  background: #fffef9;
+  padding: 12px;
+  font: inherit;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.plan-opt {
+  appearance: none;
+  text-align: left;
+  border: 1px solid var(--paper-edge);
+  background: rgba(253, 251, 245, 0.9);
+  padding: 12px 14px;
+  font: inherit;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.plan-opt.on {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: rgba(144, 88, 49, 0.08);
+}
+
+.plan-opt-wrap {
+  display: grid;
+  gap: 8px;
+}
+
+.plan-ai-bound {
+  padding: 14px 16px;
+  border-left: 3px solid var(--accent);
+  background: rgba(144, 88, 49, 0.06);
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.plan-quiz-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plan-focus {
+  margin: 24px 0;
+  padding: 18px 20px;
+  border: 1px solid var(--paper-edge);
+  background: rgba(255, 254, 249, 0.7);
+}
+
+.plan-focus h3,
+.plan-first-card h3 {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.plan-focus-one {
+  margin: 0 0 6px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: 1.25rem;
+}
+
+.plan-focus-why {
+  margin: 0;
+  color: var(--muted);
+}
+
+.plan-first-card {
+  margin: 0 0 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--paper-edge);
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 1.55em,
+      rgba(196, 180, 152, 0.25) 1.55em,
+      rgba(196, 180, 152, 0.25) calc(1.55em + 1px)
+    ),
+    rgba(253, 251, 245, 0.95);
+}
+
+.plan-first-title {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.plan-first-std {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.plan-first-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.plan-status {
+  margin: 12px 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+}

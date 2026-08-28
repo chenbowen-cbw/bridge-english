@@ -1,0 +1,146 @@
+.rv-panel {
+  padding: 48px 0 72px;
+  max-width: 720px;
+}
+
+.rv-panel h2 {
+  margin: 0 0 8px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 400;
+}
+
+.rv-lead {
+  margin: 0 0 20px;
+  color: var(--muted);
+}
+
+.rv-banner {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  background: rgba(144, 88, 49, 0.08);
+  border-left: 3px solid var(--accent);
+  font-size: 0.9rem;
+}
+
+.rv-link {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.rv-section {
+  margin-bottom: 28px;
+}
+
+.rv-section h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.rv-hint {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.rv-empty {
+  color: var(--muted);
+}
+
+.rv-picks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.rv-picks li {
+  padding: 14px 16px;
+  border: 1px solid var(--paper-edge);
+  background: rgba(255, 254, 249, 0.75);
+}
+
+.rv-pick-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.rv-picks p {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.rv-dims {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.rv-dims label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.rv-dims label span {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.rv-dims textarea,
+.rv-focus {
+  border: 1px solid var(--paper-edge);
+  background: #fffef9;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: 400;
+  color: var(--ink);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rv-check {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+  font-weight: 400 !important;
+  font-size: 0.875rem !important;
+}
+
+.rv-status {
+  margin: 0 0 14px;
+  color: var(--accent);
+}
+
+.rv-status--warn {
+  color: #8a3b2b;
+  padding: 10px 12px;
+  background: rgba(138, 59, 43, 0.08);
+  border-left: 3px solid #8a3b2b;
+}
+
+.rv-actions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  .rv-dims {
+    grid-template-columns: 1fr;
+  }
+}
