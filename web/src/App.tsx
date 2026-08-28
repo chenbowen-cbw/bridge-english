@@ -2,8 +2,15 @@ import { useState } from 'react'
 import { BridgeButton } from './components/BridgeButton'
 import { NotebookReveal } from './components/NotebookReveal'
 import { AuthPanel, useAuth } from './features/auth'
-import { FootprintsPanel } from './features/footprints'
+import { FootprintsPanel, requestTemplate } from './features/footprints'
 import './App.css'
+
+const PLAN_SCENE_SEEDS = [
+  { id: 'travel-order', label: '旅行点餐' },
+  { id: 'show-retell', label: '看剧复述' },
+  { id: 'chat-opener', label: '闲聊开场' },
+  { id: 'read-interest', label: '兴趣阅读' },
+] as const
 
 const STEPS = ['1 计划', '2 任务', '3 陪练', '4 足迹', '5 复盘'] as const
 
@@ -198,6 +205,19 @@ export default function App() {
                   定制计划
                 </BridgeButton>
               </div>
+            </div>
+            <p className="plan-seeds-label">或从一张日常任务卡练起</p>
+            <div className="plan-seeds" role="group" aria-label="推荐日常场景">
+              {PLAN_SCENE_SEEDS.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  className="plan-seed"
+                  onClick={() => requestTemplate(s.id)}
+                >
+                  {s.label}
+                </button>
+              ))}
             </div>
             <div className="steps">
               {STEPS.map((s) => (

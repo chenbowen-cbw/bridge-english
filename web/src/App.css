@@ -482,6 +482,41 @@ textarea {
   color: var(--ink);
 }
 
+.plan-seeds-label {
+  margin: 18px 0 8px;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.plan-seeds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  justify-content: center;
+}
+
+.plan-seed {
+  appearance: none;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  padding: 2px 0;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.plan-seed:hover {
+  border-bottom-color: var(--accent);
+}
+
+.plan-seed:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .footprint-band {
   padding: 72px 0 96px;
   background: linear-gradient(180deg, var(--paper-deep), var(--paper));

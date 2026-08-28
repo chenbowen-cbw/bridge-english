@@ -9,23 +9,74 @@ import {
   listFootprints,
   updateFootprintMigrated,
 } from './api'
+import {
+  EXAMPLE_TEMPLATES,
+  TASK_TEMPLATES,
+  consumeRequestedTemplate,
+  getTemplate,
+  onTemplateRequest,
+  type Scene,
+  type TaskTemplate,
+} from './templates'
 import './footprints.css'
 
-const SCENES = ['生活', '职场', '兴趣'] as const
+const SCENES: Scene[] = ['生活', '职场', '兴趣']
+
+const DEFAULT = TASK_TEMPLATES[0]
 
 export function FootprintsPanel() {
   const { user, configured } = useAuth()
   const [items, setItems] = useState<LocalFootprint[]>([])
   const [source, setSource] = useState<'supabase' | 'local'>('local')
   const [busy, setBusy] = useState(false)
-  const [scene, setScene] = useState<(typeof SCENES)[number]>('生活')
-  const [title, setTitle] = useState('旅行点餐卡 · 练习输出')
+  const [activeId, setActiveId] = useState(DEFAULT.id)
+  const [scene, setScene] = useState<Scene>(DEFAULT.scene)
+  const [title, setTitle] = useState(DEFAULT.title)
+  const [criteria, setCriteria] = useState(DEFAULT.criteria)
+  const [placeholder, setPlaceholder] = useState(DEFAULT.placeholder)
+  const [exampleDraft, setExampleDraft] = useState(DEFAULT.exampleDraft)
   const [body, setBody] = useState('')
+  const [showExampleInDraft, setShowExampleInDraft] = useState(false)
+  const [exampleIdx, setExampleIdx] = useState(0)
   const [criteriaMet, setCriteriaMet] = useState(true)
   const [selfRating, setSelfRating] = useState('还行')
   const [tips, setTips] = useState<CoachTip[] | null>(null)
   const [coachNote, setCoachNote] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+
+  function applyTemplate(tpl: TaskTemplate, opts?: { fillExample?: boolean }) {
+    setActiveId(tpl.id)
+    setScene(tpl.scene)
+    setTitle(tpl.title)
+    setCriteria(tpl.criteria)
+    setPlaceholder(tpl.placeholder)
+    setExampleDraft(tpl.exampleDraft)
+    const fill = opts?.fillExample ?? showExampleInDraft
+    if (fill) {
+      setBody(tpl.exampleDraft)
+      setShowExampleInDraft(true)
+    } else if (showExampleInDraft) {
+      setBody(tpl.exampleDraft)
+    } else {
+      setBody('')
+    }
+    setStatus(`已填入「${tpl.title}」——先自己写，AI 只点拨。`)
+    const ex = EXAMPLE_TEMPLATES.findIndex((t) => t.id === tpl.id)
+    if (ex >= 0) setExampleIdx(ex)
+  }
+
+  useEffect(() => {
+    const pending = consumeRequestedTemplate()
+    if (pending) {
+      const tpl = getTemplate(pending)
+      if (tpl) applyTemplate(tpl)
+    }
+    return onTemplateRequest((id) => {
+      const tpl = getTemplate(id)
+      if (tpl) applyTemplate(tpl)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount once for external requests
+  }, [])
 
   async function refresh() {
     const res = await listFootprints(user?.id)
@@ -69,7 +120,7 @@ export function FootprintsPanel() {
     const coach = await requestCoachTips({
       draft,
       taskTitle: title.trim(),
-      criteria: criteriaMet ? '关键信息说全即可' : undefined,
+      criteria: criteria.trim() || undefined,
       scene,
     })
     if (coach.ok) {
@@ -84,6 +135,7 @@ export function FootprintsPanel() {
     }
 
     setBody('')
+    setShowExampleInDraft(false)
     setStatus('足迹已保存')
     setBusy(false)
   }
@@ -100,6 +152,14 @@ export function FootprintsPanel() {
     await refresh()
   }
 
+  const currentExample = EXAMPLE_TEMPLATES[exampleIdx] ?? EXAMPLE_TEMPLATES[0]
+
+  function toggleExampleFill(on: boolean) {
+    setShowExampleInDraft(on)
+    if (on) setBody(exampleDraft)
+    else setBody('')
+  }
+
   return (
     <section className="fp-panel" id="app-footprints">
       <div className="fp-head">
@@ -107,7 +167,8 @@ export function FootprintsPanel() {
           <p className="kicker">足迹 · 持久化</p>
           <h2>留下独立输出</h2>
           <p className="fp-lead">
-            先写自己的稿，再存证；AI 只点拨，不整段改写。
+            先写自己的稿，再存证；AI 只点拨，不整段改写。真实任务卡 = 场景 · 受众 · 动作 ·
+            完成标准 · 证据。
             {configured ? (
               <>
                 {' '}
@@ -126,10 +187,90 @@ export function FootprintsPanel() {
         </p>
       ) : null}
 
+      <div className="fp-recommend" aria-label="推荐模板">
+        <div className="fp-recommend-head">
+          <p className="fp-section-label">推荐模板</p>
+          <p className="fp-section-hint">点选即填入场景与标题；独立稿仍须你自己写。</p>
+        </div>
+        <ul className="fp-template-list">
+          {TASK_TEMPLATES.map((tpl) => (
+            <li key={tpl.id}>
+              <button
+                type="button"
+                className={activeId === tpl.id ? 'on' : undefined}
+                onClick={() => applyTemplate(tpl)}
+              >
+                <span className="fp-tpl-scene">{tpl.scene}</span>
+                <span className="fp-tpl-title">{tpl.title}</span>
+                <span className="fp-tpl-meta">
+                  {tpl.timeHint} · {tpl.action}
+                </span>
+                <span className="fp-tpl-std">{tpl.criteria}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="fp-example" aria-label="独立输出示例">
+        <div className="fp-example-head">
+          <p className="fp-section-label">
+            示例 <span className="fp-badge">示例 · 可模仿</span>
+          </p>
+          <p className="fp-section-hint">短、可开口或可改写；不是范文代写。</p>
+        </div>
+        <div className="fp-example-tabs" role="tablist" aria-label="切换示例">
+          {EXAMPLE_TEMPLATES.map((tpl, i) => (
+            <button
+              key={tpl.id}
+              type="button"
+              role="tab"
+              aria-selected={i === exampleIdx}
+              className={i === exampleIdx ? 'on' : undefined}
+              onClick={() => setExampleIdx(i)}
+            >
+              {tpl.title.replace(/ · .*$/, '')}
+            </button>
+          ))}
+        </div>
+        {currentExample ? (
+          <article className="fp-example-card">
+            <header>
+              <h3>{currentExample.title}</h3>
+              <p>
+                受众：{currentExample.audience} · 动作：{currentExample.action}
+              </p>
+            </header>
+            <p className="fp-example-std">
+              <strong>完成标准：</strong>
+              {currentExample.criteria}
+            </p>
+            <pre className="fp-example-draft">{currentExample.exampleDraft}</pre>
+            <div className="fp-example-actions">
+              <BridgeButton
+                type="button"
+                variant="primary"
+                onClick={() => applyTemplate(currentExample)}
+              >
+                用这个模板练习
+              </BridgeButton>
+              <BridgeButton
+                type="button"
+                variant="ghost"
+                arrow="none"
+                onClick={() => applyTemplate(currentExample, { fillExample: true })}
+              >
+                填入示例稿（可改）
+              </BridgeButton>
+            </div>
+          </article>
+        ) : null}
+      </div>
+
       <form className="fp-form" onSubmit={(e) => void onSave(e)}>
         <label>
           场景
-          <select value={scene} onChange={(e) => setScene(e.target.value as (typeof SCENES)[number])}>
+          <select value={scene} onChange={(e) => setScene(e.target.value as Scene)}>
             {SCENES.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -142,14 +283,30 @@ export function FootprintsPanel() {
           <input value={title} onChange={(e) => setTitle(e.target.value)} />
         </label>
         <label>
+          完成标准
+          <input
+            value={criteria}
+            onChange={(e) => setCriteria(e.target.value)}
+            placeholder="可观察的结果，例如：对方能听懂你要什么"
+          />
+        </label>
+        <label>
           独立稿（必填）
           <textarea
             rows={5}
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder="先自己写一版……"
+            placeholder={placeholder}
             required
           />
+        </label>
+        <label className="fp-check fp-example-toggle">
+          <input
+            type="checkbox"
+            checked={showExampleInDraft}
+            onChange={(e) => toggleExampleFill(e.target.checked)}
+          />
+          显示示例稿作起点（请改成自己的话再提交）
         </label>
         <div className="fp-row">
           <label className="fp-check">
