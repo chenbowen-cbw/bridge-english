@@ -58,15 +58,16 @@ npx supabase secrets set DEEPSEEK_API_KEY=*** --project-ref ncmmwaehjeqcjgxavwjw
 npx supabase functions deploy ai-coach --project-ref ncmmwaehjeqcjgxavwjw
 ```
 
-## Local run
+## Vercel
 
-```bash
-cd web
-cp .env.example .env   # fill URL + anon key
-npm install
-npm run dev
-```
+- Project: `bridge-english` · Root Directory: `web`
+- Production: https://bridge-english-two.vercel.app
+- Set Dashboard env (recommended override): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- Client also ships public anon fallbacks for the linked project so preview works before env is filled
+- DeepSeek key: Supabase Edge Function Secrets only (`DEEPSEEK_API_KEY`) — never Vercel `VITE_*`
 
+After changing Auth settings, add Site URL / Redirect:
+`https://bridge-english-two.vercel.app`
 ## Dashboard switches Ethan may need
 
 1. **Authentication → Providers → Email**: enabled  
