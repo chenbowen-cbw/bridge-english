@@ -1,0 +1,166 @@
+.fp-panel {
+  padding: 48px 0 72px;
+}
+
+.fp-head h2 {
+  margin: 0 0 8px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 400;
+}
+
+.fp-lead {
+  margin: 0 0 20px;
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+.fp-banner {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  background: rgba(144, 88, 49, 0.08);
+  border-left: 3px solid var(--accent);
+  font-size: 0.9rem;
+}
+
+.fp-form {
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid var(--paper-edge);
+  background: rgba(255, 254, 249, 0.7);
+}
+
+.fp-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.fp-form input,
+.fp-form textarea,
+.fp-form select {
+  border: 1px solid var(--paper-edge);
+  background: #fffef9;
+  padding: 10px 12px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.fp-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+}
+
+.fp-check {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+}
+
+.fp-status {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.fp-tips {
+  max-width: 640px;
+  margin-bottom: 32px;
+  padding: 18px 20px;
+  border-top: 1px solid var(--rule);
+}
+
+.fp-tips h3,
+.fp-list h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.fp-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.fp-tips ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.fp-tips li .tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.fp-tips li p {
+  margin: 0;
+  color: var(--ink);
+}
+
+.fp-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.fp-list li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.fp-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.fp-list h4 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.fp-body {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+  color: var(--ink);
+}
+
+.fp-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.fp-actions button {
+  appearance: none;
+  border: 1px solid var(--paper-edge);
+  background: transparent;
+  padding: 6px 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.fp-actions button.danger {
+  color: #8a3b2b;
+}
+
+.fp-empty {
+  color: var(--muted);
+}

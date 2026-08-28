@@ -69,3 +69,10 @@ Aim for WCAG 2.2 AA on text contrast and focus visibility. Honor `prefers-reduce
 | 每周复盘 | Keep; light before/after |
 
 Main journey: **计划定制 → 今日任务 → 先独立尝试 → AI 陪练 → 独立输出存足迹 → 周复盘**.
+
+## Persistence (v1)
+
+- App shell: `web/` + Supabase (email/password auth)
+- Learner data: `profiles`, `learning_plans`, `footprints`, `weekly_reviews` with RLS
+- Subscription: `plan_tier` only (`free` / `daily` / `deep`) — no payment yet
+- See `docs/supabase.md`

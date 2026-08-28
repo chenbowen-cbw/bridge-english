@@ -1,0 +1,25 @@
+# Bridge English — linked to existing Supabase project (ap-northeast-2).
+# Local: npx supabase link --project-ref <ref>
+# Migrations live in supabase/migrations/
+
+[project]
+id = "ncmmwaehjeqcjgxavwjw"
+
+[api]
+enabled = true
+
+[db]
+major_version = 17
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173", "http://127.0.0.1:5173"]
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+
+[functions.ai-coach]
+verify_jwt = true

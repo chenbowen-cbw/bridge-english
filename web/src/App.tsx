@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { BridgeButton } from './components/BridgeButton'
 import { NotebookReveal } from './components/NotebookReveal'
+import { AuthPanel, useAuth } from './features/auth'
+import { FootprintsPanel } from './features/footprints'
 import './App.css'
 
 const STEPS = ['1 计划', '2 任务', '3 陪练', '4 足迹', '5 复盘'] as const
@@ -89,10 +91,12 @@ const PLANS = [
 ] as const
 
 export default function App() {
+  const { user, configured, signOut } = useAuth()
   const [goal, setGoal] = useState(
     'I want clearer English for travel chats and shows I love — real conversations, not word lists. I have about 30 minutes most evenings.',
   )
   const [billCycle, setBillCycle] = useState<'month' | 'year'>('month')
+  const [showAuth, setShowAuth] = useState(false)
 
   return (
     <div className="page">
@@ -107,21 +111,55 @@ export default function App() {
               首页
             </a>
             <a href="#plan">计划</a>
-            <a href="#tasks">任务</a>
-            <a href="#footprints">足迹</a>
-            <a href="#review">复盘</a>
+            <a href="#app-footprints">足迹</a>
             <a href="#pricing">订阅</a>
           </nav>
           <div className="nav-right">
             <button type="button" className="lang">
               中文
             </button>
-            <BridgeButton variant="nav" arrow="none">
+            {user ? (
+              <>
+                <span className="nav-user" title={user.email ?? ''}>
+                  {user.email?.split('@')[0]}
+                </span>
+                <BridgeButton variant="ghost" arrow="none" onClick={() => void signOut()}>
+                  退出
+                </BridgeButton>
+              </>
+            ) : (
+              <BridgeButton variant="nav" arrow="none" onClick={() => setShowAuth(true)}>
+                登录
+              </BridgeButton>
+            )}
+            <BridgeButton
+              variant="nav"
+              arrow="none"
+              onClick={() => {
+                if (!user) setShowAuth(true)
+                else document.getElementById('app-footprints')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
               定制计划
             </BridgeButton>
           </div>
         </div>
       </header>
+
+      {!configured ? (
+        <p className="env-banner" role="status">
+          未检测到 <code>VITE_SUPABASE_*</code>。复制 <code>web/.env.example</code> →{' '}
+          <code>web/.env</code> 后重启 <code>npm run dev</code>。
+        </p>
+      ) : null}
+
+      {showAuth ? (
+        <div className="auth-overlay" role="dialog" aria-modal="true" aria-label="登录或注册">
+          <div className="auth-sheet">
+            <AuthPanel onClose={() => setShowAuth(false)} onSuccess={() => setShowAuth(false)} />
+          </div>
+        </div>
+      ) : null}
 
       <main id="home">
         <section className="hero" id="hero-stage">
@@ -146,7 +184,17 @@ export default function App() {
                 <button type="button" className="up" title="上传灵感" aria-label="上传灵感">
                   ↑
                 </button>
-                <BridgeButton variant="hero" arrow="up">
+                <BridgeButton
+                  variant="hero"
+                  arrow="up"
+                  onClick={() => {
+                    if (!user) setShowAuth(true)
+                    else
+                      document
+                        .getElementById('app-footprints')
+                        ?.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                >
                   定制计划
                 </BridgeButton>
               </div>
@@ -178,13 +226,30 @@ export default function App() {
               ))}
             </ol>
             <div className="band-cta">
-              <BridgeButton variant="primary">看今日任务</BridgeButton>
-              <BridgeButton variant="ghost" arrow="none">
-                定制计划
+              <BridgeButton
+                variant="primary"
+                onClick={() =>
+                  document.getElementById('app-footprints')?.scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                写一条足迹
+              </BridgeButton>
+              <BridgeButton
+                variant="ghost"
+                arrow="none"
+                onClick={() => {
+                  if (!user) setShowAuth(true)
+                }}
+              >
+                {user ? '已登录' : '先登录'}
               </BridgeButton>
             </div>
           </div>
         </section>
+
+        <div className="wrap">
+          <FootprintsPanel />
+        </div>
 
         <section className="pricing-band" id="pricing">
           <div className="wrap">
@@ -211,7 +276,8 @@ export default function App() {
               </button>
             </div>
             <p className="bill-hint">
-              示意价 · CNY。年付按 <strong>8 个月价</strong>，多出来的 4 个月当作坚持奖励。
+              示意价 · CNY。年付按 <strong>8 个月价</strong>，多出来的 4 个月当作坚持奖励。当前仅存{' '}
+              <code>plan_tier</code>，未接支付。
             </p>
             <div className="plan-spread">
               {PLANS.map((plan) => {
@@ -244,6 +310,9 @@ export default function App() {
                     <BridgeButton
                       variant={plan.ghost ? 'ghost' : 'primary'}
                       arrow="right"
+                      onClick={() => {
+                        if (!user) setShowAuth(true)
+                      }}
                     >
                       {plan.cta}
                     </BridgeButton>
@@ -251,32 +320,11 @@ export default function App() {
                 )
               })}
             </div>
-            <p className="pricing-note">
-              <strong>卖的是：</strong>
-              陪练节奏、真实场景任务卡、更长的足迹对照、毕业任务。
-              <br />
-              <strong>不卖：</strong>
-              整段代写、题库冲刺、断签惩罚。
-            </p>
-            <div className="pricing-hooks">
-              <div className="hook">
-                <h4>什么时候换到日常本</h4>
-                <p>
-                  本周任务卡或陪练次数用尽，但仍想继续同一目标；或想翻开更多生活场景卡。
-                </p>
-              </div>
-              <div className="hook">
-                <h4>什么时候换到深练本</h4>
-                <p>
-                  语音想练得更勤；想做真实生活毕业任务；或希望足迹能跨季度对照。
-                </p>
-              </div>
-            </div>
           </div>
         </section>
       </main>
 
-      <p className="proto-note">交互原型 v4 · Bridge 纸质编辑风 · 数据为模拟</p>
+      <p className="proto-note">Bridge web · Auth + 足迹持久化 · index.html 原型仍可参考</p>
     </div>
   )
 }

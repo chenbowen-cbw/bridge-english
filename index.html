@@ -88,8 +88,7 @@
   .hero .inner::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:36px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(6px) saturate(160%);-webkit-backdrop-filter:blur(6px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -1px 0 rgba(255,255,255,.25);
     -webkit-mask-image:radial-gradient(circle var(--lr,0px) at var(--lx,50%) var(--ly,40%),transparent 0 45%,#000 75%);
     mask-image:radial-gradient(circle var(--lr,0px) at var(--lx,50%) var(--ly,40%),transparent 0 45%,#000 75%)}
-  .hero h1{font-size:clamp(40px,6vw,66px);max-width:820px;margin-bottom:18px;background:linear-gradient(90deg,#1a1a1a 0%,#905831 25%,#1a1a1a 50%,#905831 75%,#1a1a1a 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:textflow 7s linear infinite}
-  @keyframes textflow{to{background-position:200% center}}
+  .hero h1{font-size:clamp(40px,6vw,66px);max-width:820px;margin-bottom:18px;color:var(--text);text-wrap:balance}
   .nw{white-space:nowrap}
 
   /* ===== 笔记本背景板 ===== */
@@ -115,7 +114,7 @@
   .pencil{position:absolute;left:0;top:0;font-size:28px;pointer-events:none;z-index:30;transform:translate(-6px,-22px) rotate(-28deg);filter:drop-shadow(0 0 8px rgba(94,210,190,.95)) drop-shadow(0 0 14px rgba(94,210,190,.55)) drop-shadow(0 3px 4px rgba(0,0,0,.25));opacity:0;transition:opacity .2s;will-change:left,top,opacity}
   .spark{position:absolute;pointer-events:none;z-index:6;line-height:1;animation:spark .9s var(--ease) forwards;will-change:transform,opacity}
   @keyframes spark{0%{transform:scale(.2) rotate(0deg);opacity:0}25%{opacity:1}100%{transform:scale(1.15) rotate(70deg) translateY(12px);opacity:0}}
-  .nb-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.78);backdrop-filter:blur(6px);border:1px solid #e7dfcc;border-radius:999px;padding:8px 18px;font-size:13px;color:#767676;pointer-events:none;transition:opacity .4s;z-index:5}
+  .nb-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.78);backdrop-filter:blur(6px);border:1px solid #e7dfcc;border-radius:999px;padding:8px 18px;font-size:13px;color:var(--muted);pointer-events:none;transition:opacity .4s;z-index:5}
   .notebook.writing .nb-hint{opacity:0}
   .nb-controls{display:flex;align-items:center;gap:14px;justify-content:center;margin:16px 0 6px}
   .hero .lead{font-size:19px;color:var(--muted);max-width:560px;margin-bottom:10px}
@@ -143,9 +142,8 @@
   .trace-story .wrap{max-width:640px}
   .trace-story h2{font-family:'Special Elite',serif;font-size:clamp(26px,4vw,34px);font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin-bottom:12px;line-height:1.2}
   .trace-story .lead{font-size:15.5px;color:var(--muted);line-height:1.6;max-width:36rem;margin-bottom:36px;text-wrap:pretty}
-  .trace-demo{position:relative;padding:28px 26px 26px;background:#fdfbf5;border:1px solid #e7dfcc;border-radius:4px 18px 18px 4px;box-shadow:0 18px 40px rgba(60,45,20,.1);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px)}
-  .trace-demo::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:repeating-linear-gradient(#c4b498 0 1px,transparent 1px 28px);opacity:.4;border-radius:4px 0 0 4px}
-  .trace-demo-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px;padding-left:6px}
+  .trace-demo{position:relative;padding:28px 26px 26px;background:#fdfbf5;border:1px solid #e7dfcc;border-radius:14px;box-shadow:0 18px 40px rgba(60,45,20,.1);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px)}
+  .trace-demo-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
   .trace-demo-head h3{font-size:17px;font-weight:600;margin:0 0 4px;text-wrap:balance}
   .trace-demo-meta{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
   .trace-badge{flex:none;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(144,88,49,.35);border-radius:999px;padding:4px 10px;background:rgba(255,255,255,.65)}
@@ -163,8 +161,7 @@
 
   /* ===== 定制计划问卷（聊天感，一步一题） ===== */
   .plan-quiz{max-width:640px;margin:0 auto}
-  .plan-sheet{padding:36px 32px 28px;background:#fdfbf5;border:1px solid #e7dfcc;border-radius:4px 18px 18px 4px;box-shadow:0 18px 40px rgba(60,45,20,.1);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px);position:relative}
-  .plan-sheet::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:repeating-linear-gradient(#c4b498 0 1px,transparent 1px 28px);opacity:.4;border-radius:4px 0 0 4px}
+  .plan-sheet{padding:36px 32px 28px;background:#fdfbf5;border:1px solid #e7dfcc;border-radius:14px;box-shadow:0 18px 40px rgba(60,45,20,.1);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px);position:relative}
   .plan-chat-hint{font-size:13px;color:var(--muted);margin-bottom:6px}
   .progress{height:4px;background:rgba(144,88,49,.12);border-radius:99px;overflow:hidden;margin:16px 0 28px}
   .progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s var(--ease)}
@@ -185,40 +182,57 @@
   .quiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap}
   .quiz-foot .sub{font-size:13px}
 
-  /* ===== 计划结果 ===== */
-  .plan-result{max-width:820px;margin:0 auto}
-  .goal-line{font-size:clamp(18px,2.4vw,22px);font-weight:600;line-height:1.45;text-wrap:balance;margin:12px 0 8px;max-width:40rem}
-  .goal-meta{font-size:14px;color:var(--muted);margin-bottom:28px;max-width:38rem;line-height:1.5}
-  .plan-block{padding:22px 0;border-top:1px solid #e7dfcc}
-  .plan-block h3{font-size:15px;font-weight:600;margin:0 0 12px;letter-spacing:.02em}
-  .plan-block .hint{font-size:13px;color:var(--muted);margin:-4px 0 14px;line-height:1.45}
-  .start-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .start-item{padding:14px 12px;border-bottom:2px solid #e7dfcc;background:transparent}
-  .start-item .sk{font-size:12px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-  .start-item .sv{font-size:14px;font-weight:500}
-  .start-item .ss{font-size:12px;color:var(--muted);margin-top:4px}
-  .focus-one{font-size:17px;font-weight:600;color:var(--text);line-height:1.4;padding:4px 0 2px}
-  .focus-why{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.45}
-  .week-preview{display:flex;flex-direction:column;gap:10px}
-  .week-card{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;text-align:left;width:100%;padding:14px 16px;border:1px solid #e7dfcc;border-radius:12px;background:rgba(253,251,245,.9);cursor:pointer;font-family:inherit;color:inherit;transition:border-color .2s,transform .2s,box-shadow .25s}
-  .week-card:hover{border-color:var(--accent);transform:translateX(3px);box-shadow:0 8px 20px rgba(60,45,20,.08)}
+  /* ===== 计划结果（本子纸面，可扫读） ===== */
+  .plan-result{max-width:720px;margin:0 auto}
+  .plan-result-paper{
+    padding:32px 28px 36px;background:#fdfbf5;border:1px solid #e7dfcc;
+    border-radius:14px;box-shadow:0 18px 40px rgba(60,45,20,.1);
+    background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px);
+    position:relative;
+  }
+  .plan-result-paper > *{position:relative}
+  .pr-label{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--accent);margin:0 0 10px}
+  .pr-head h2{font-family:'Special Elite',serif;font-size:clamp(22px,3.2vw,28px);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0 0 18px;line-height:1.25}
+  .goal-line{font-size:clamp(17px,2.2vw,20px);font-weight:600;line-height:1.5;text-wrap:balance;margin:0 0 10px;max-width:38rem;color:var(--text)}
+  .goal-meta{font-size:13.5px;color:var(--muted);margin:0;max-width:36rem;line-height:1.5}
+  .plan-block{padding:22px 0 0;margin-top:22px;border-top:1px solid #e7dfcc}
+  .plan-block.pr-focus{border-top:none;margin-top:28px;padding-top:0}
+  .plan-block h3{font-family:'Special Elite',serif;font-size:17px;font-weight:400;margin:0 0 6px;letter-spacing:.02em}
+  .plan-block .hint{font-size:13px;color:var(--muted);margin:0 0 14px;line-height:1.45}
+  .plan-block.quiet h3{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .focus-panel{padding:4px 0 2px}
+  .focus-one{font-size:clamp(18px,2.4vw,22px);font-weight:600;color:var(--text);line-height:1.4;text-wrap:balance}
+  .focus-why{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.5;max-width:36rem}
+  .start-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+  .start-item{padding:10px 12px 12px 0;border-bottom:1px solid #e7dfcc;background:transparent}
+  .start-item:last-child{padding-right:0}
+  .start-item .sk{font-size:12px;color:var(--accent);letter-spacing:.04em;margin-bottom:4px}
+  .start-item .sv{font-size:13.5px;font-weight:500}
+  .start-item .ss{font-size:12px;color:var(--muted);margin-top:3px}
+  .week-preview{display:flex;flex-direction:column;gap:0;border-top:1px solid #e7dfcc}
+  .week-card{
+    display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;text-align:left;width:100%;
+    padding:14px 4px;border:none;border-bottom:1px solid #e7dfcc;border-radius:0;background:transparent;
+    cursor:pointer;font-family:inherit;color:inherit;transition:background .2s,padding-left .2s;
+  }
+  .week-card:hover{background:rgba(144,88,49,.05);padding-left:8px}
   .week-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .week-card .wn{font-family:'Special Elite',serif;font-size:18px;color:var(--accent);line-height:1;padding-top:2px}
+  .week-card .wn{font-family:'Special Elite',serif;font-size:16px;color:var(--accent);line-height:1;padding-top:3px}
   .week-card h4{font-size:15px;font-weight:600;margin:0 0 4px}
   .week-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.4}
-  .week-card .wt{font-size:12px;color:var(--muted);white-space:nowrap;padding-top:2px}
-  .retest-row{display:flex;flex-wrap:wrap;gap:10px}
-  .retest{font-size:13px;padding:8px 14px;border:1px solid #e7dfcc;border-radius:999px;color:var(--text);background:rgba(255,255,255,.5)}
-  .retest strong{color:var(--accent);font-weight:600}
-  .ai-table{width:100%;border-collapse:collapse;font-size:14px}
-  .ai-table th,.ai-table td{text-align:left;padding:10px 12px;border-bottom:1px solid #e7dfcc;vertical-align:top}
-  .ai-table th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .week-card .wt{font-size:12px;color:var(--muted);white-space:nowrap;padding-top:3px}
+  .retest-row{display:flex;flex-wrap:wrap;gap:8px 18px}
+  .retest{font-size:13px;padding:0;border:none;border-radius:0;color:var(--muted);background:transparent}
+  .retest strong{color:var(--text);font-weight:600}
+  .ai-table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .ai-table th,.ai-table td{text-align:left;padding:8px 10px 8px 0;border-bottom:1px solid #e7dfcc;vertical-align:top}
+  .ai-table th{font-size:12px;letter-spacing:.04em;color:var(--muted);font-weight:500}
   .ai-table .ok{color:var(--accent-dark)}
   .ai-table .no{color:var(--muted)}
-  .plan-cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px;padding-top:22px;border-top:1px solid #e7dfcc}
+  .plan-cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px;padding-top:24px;border-top:1px solid #e7dfcc}
 
   /* ===== 任务 ===== */
-  .chips{display:flex;gap:10px;margin:22px 0}
+  .chips{display:flex;gap:10px;margin:22px 0;flex-wrap:wrap}
   .chip{border:1px solid rgba(0,0,0,.15);background:rgba(255,255,255,.6);border-radius:999px;padding:8px 18px;font-size:13px;cursor:pointer;color:var(--muted);transition:all .2s}
   .chip:hover{transform:translateY(-2px)}
   .chip.on{background:var(--dark);border-color:var(--dark);color:#fafafa}
@@ -253,107 +267,155 @@
   .chat-input{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
   .chat-input input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:11px 18px;font-size:14px;outline:none;transition:all .2s;background:rgba(255,255,255,.7)}
   .chat-input input:focus{border-color:var(--accent)}
-  .independent{padding:22px}
-  .independent textarea{width:100%;min-height:120px;border:1.5px solid var(--line);border-radius:18px;padding:12px;font-size:14px;outline:none;resize:vertical;font-family:inherit;background:rgba(255,255,255,.7)}
-  .locknote{font-size:13px;color:var(--accent-dark);background:rgba(144,88,49,.08);border-radius:12px;padding:10px 14px;margin-bottom:14px}
-  .locknote.ok{color:var(--text);background:rgba(144,88,49,.06)}
-  .indep-modes{display:flex;gap:8px;margin-bottom:14px}
-  .fp-check{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);margin:10px 0;cursor:pointer;line-height:1.45}
+  .independent{
+    padding:22px 20px 24px;margin-top:18px;
+    background:#fdfbf5;border:1px solid #e7dfcc;border-radius:14px;
+    box-shadow:0 12px 28px rgba(60,45,20,.08);
+    background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.06) 28px);
+  }
+  .independent textarea{
+    width:100%;min-height:120px;border:1.5px solid #e7dfcc;border-radius:12px;padding:12px 14px;font-size:14px;
+    outline:none;resize:vertical;font-family:inherit;background:rgba(255,255,255,.85);
+  }
+  .independent textarea:focus{border-color:rgba(144,88,49,.45)}
+  .indep-flow{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid #e7dfcc}
+  .indep-flow span{font-size:12px;color:var(--muted);letter-spacing:.02em}
+  .indep-flow span.on{color:var(--accent);font-weight:600}
+  .indep-flow span.done{color:var(--text)}
+  .indep-sec{margin-top:16px;padding-top:14px;border-top:1px dashed #e0d4b8}
+  .indep-sec:first-of-type{margin-top:0;padding-top:0;border-top:none}
+  .indep-sec-label{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--accent);margin:0 0 8px}
+  .locknote{font-size:13.5px;color:var(--text);background:rgba(144,88,49,.07);border:1px solid rgba(144,88,49,.2);border-radius:10px;padding:12px 14px;margin:0;line-height:1.5}
+  .locknote.ok{color:var(--text);background:rgba(144,88,49,.05);border-color:#e7dfcc}
+  .indep-modes{display:flex;gap:8px;margin-bottom:12px}
+  .fp-check{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);margin:8px 0;cursor:pointer;line-height:1.45}
   .fp-check input{margin-top:3px;accent-color:var(--accent)}
-  .self-rate{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+  .self-rate{margin:0}
   .self-rate-q{font-size:13px;margin-bottom:8px;color:var(--text)}
   .self-rate-q .opt-hint{color:var(--muted);font-weight:400}
   .self-rate-opts{display:flex;flex-wrap:wrap;gap:8px}
-  .voice-demo{padding:16px;border:1.5px dashed var(--line);border-radius:18px;background:rgba(255,255,255,.5)}
+  .voice-demo{padding:14px;border:1.5px dashed #e7dfcc;border-radius:12px;background:rgba(255,255,255,.55)}
   .voice-status{font-size:13px;color:var(--muted);margin-top:10px}
-  .voice-transcript{font-size:14px;margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(253,251,245,.9);border:1px solid var(--line);font-family:'Caveat',Georgia,serif;line-height:1.5}
+  .voice-transcript{font-size:14px;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.85);border:1px solid #e7dfcc;font-family:'Caveat',Georgia,serif;line-height:1.5}
   .voice-demo.rec .voice-status{color:var(--accent)}
   .chat.locked .chat-input{opacity:.45;pointer-events:none}
   .chat.locked .chat-head::after{content:"独立输出中 · AI 已锁";font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--accent);margin-left:auto}
   .chat-head{gap:10px}
-  .ai-feedback{display:flex;flex-direction:column;gap:10px;margin-top:4px}
-  .ai-fb-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.65);border:1px solid var(--line)}
-  .ai-fb-item .n{width:22px;height:22px;flex:none;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .ai-feedback{display:flex;flex-direction:column;gap:0;margin-top:4px}
+  .ai-fb-item{
+    display:flex;gap:12px;align-items:flex-start;padding:12px 0;
+    border-bottom:1px solid #e7dfcc;background:transparent;border-radius:0;
+  }
+  .ai-fb-item:last-child{border-bottom:none}
+  .ai-fb-item .n{width:22px;height:22px;flex:none;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px}
   .ai-fb-item p{font-size:13.5px;color:var(--text);line-height:1.5;margin:0}
   .ai-fb-item .tag{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-bottom:2px}
+  .indep-actions{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap}
 
-  /* ===== 足迹 ===== */
-  .evi-list{display:flex;flex-direction:column;gap:14px;margin-top:18px}
-  .evi{display:flex;gap:16px;align-items:center;padding:18px 22px;border-radius:24px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(16px);transition:transform .3s var(--ease),box-shadow .3s var(--ease);cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit}
-  .evi:hover{transform:translateX(6px);box-shadow:0 10px 24px rgba(60,45,20,.08)}
-  .evi:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  .evi .ic{width:44px;height:44px;flex:none;border-radius:14px;background:rgba(144,88,49,.1);display:flex;align-items:center;justify-content:center;font-size:20px}
-  .evi h4{font-size:15px}
-  .evi p{font-size:13px;color:var(--muted);margin-top:2px}
-  .evi .meta-row{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:12px;color:var(--muted)}
-  .evi .date{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
-  .fp-empty{margin-top:28px;padding:36px 28px;text-align:center;border-radius:24px;border:1.5px dashed var(--line);background:rgba(255,255,255,.4)}
-  .fp-empty h3{font-family:'Special Elite',serif;font-size:22px;font-weight:400;margin-bottom:8px}
-  .fp-empty p{font-size:14px;color:var(--muted);max-width:28rem;margin:0 auto 18px;line-height:1.55}
-  .fp-detail{margin-top:22px;padding:24px;display:none}
+  /* ===== 足迹 + 复盘（同一套本子语言） ===== */
+  .nb-page-head{max-width:40rem;margin-bottom:6px}
+  .nb-page-head h2{font-family:'Special Elite',serif;font-size:clamp(24px,3.5vw,30px);font-weight:400;letter-spacing:.01em;text-wrap:balance;margin:0 0 8px;line-height:1.2}
+  .nb-page-head .sub{max-width:36rem;line-height:1.55;text-wrap:pretty}
+  .nb-label{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--accent);margin:0 0 10px}
+  .evi-list{display:flex;flex-direction:column;gap:0;margin-top:20px;border-top:1px solid #e7dfcc}
+  .evi{
+    display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;
+    padding:16px 4px;border:none;border-bottom:1px solid #e7dfcc;border-radius:0;
+    background:transparent;backdrop-filter:none;transition:background .2s,padding-left .2s;
+    cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;
+  }
+  .evi:hover{transform:none;box-shadow:none;background:rgba(144,88,49,.05);padding-left:8px}
+  .evi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .evi .ic{
+    width:36px;height:36px;flex:none;border-radius:10px;background:rgba(144,88,49,.1);
+    display:flex;align-items:center;justify-content:center;font-size:16px;margin-top:2px;
+  }
+  .evi h4{font-size:15px;font-weight:600;margin:0}
+  .evi p{margin-top:4px;line-height:1.45;font-family:'Caveat',Georgia,serif;font-size:18px;color:#26221c}
+  .evi .meta-row{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:6px;font-size:12px;color:var(--muted);font-family:'Geist',-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  .evi .date{margin-left:0;font-size:12px;color:var(--muted);white-space:nowrap;padding-top:4px;font-family:'Geist',-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  .fp-empty,.rv-empty{
+    margin-top:24px;padding:36px 24px;text-align:center;border-radius:14px;
+    border:1px dashed #c4b498;background:#fdfbf5;
+    background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.05) 28px);
+  }
+  .fp-empty h3,.rv-empty h3{font-family:'Special Elite',serif;font-size:22px;font-weight:400;margin-bottom:8px}
+  .fp-empty p,.rv-empty p{font-size:14px;color:var(--muted);max-width:28rem;margin:0 auto 18px;line-height:1.55}
+  .fp-detail{
+    margin-top:22px;padding:24px 22px;display:none;
+    background:#fdfbf5;border:1px solid #e7dfcc;border-radius:14px;
+    box-shadow:0 12px 28px rgba(60,45,20,.08);
+    background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.06) 28px);
+  }
   .fp-detail.open{display:block}
-  .fp-detail .fp-kicker{font-size:12px;color:var(--accent);letter-spacing:.06em;margin-bottom:8px}
-  .fp-detail h3{font-size:18px;margin-bottom:6px;text-wrap:balance}
-  .fp-detail .raw{margin-top:14px;padding:16px;border-radius:16px;background:rgba(253,251,245,.95);border:1px solid var(--line);font-size:15px;line-height:1.65;white-space:pre-wrap;font-family:'Caveat',Georgia,serif}
+  .fp-detail .fp-kicker{font-size:12px;color:var(--accent);letter-spacing:.04em;margin-bottom:8px}
+  .fp-detail h3{font-size:18px;margin-bottom:6px;text-wrap:balance;font-weight:600}
+  .fp-detail .raw{
+    margin-top:14px;padding:14px 0;border:none;border-top:1px solid #e7dfcc;border-bottom:1px solid #e7dfcc;
+    border-radius:0;background:transparent;font-size:18px;line-height:1.65;white-space:pre-wrap;
+    font-family:'Caveat',Georgia,serif;color:#26221c;
+  }
   .fp-detail .fp-flags{margin-top:14px;display:flex;flex-direction:column;gap:8px}
 
-  /* ===== 复盘（纸质轻量对照） ===== */
+  /* ===== 复盘（与足迹同本） ===== */
   .review-paper{
-    margin-top:18px;padding:28px 26px 32px;border-radius:4px 18px 18px 4px;border:1px solid #e7dfcc;
-    background-color:#fdfbf5;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.08) 28px);
-    box-shadow:0 16px 36px rgba(60,45,20,.08);position:relative;
+    margin-top:20px;padding:28px 26px 32px;border-radius:14px;border:1px solid #e7dfcc;
+    background-color:#fdfbf5;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.07) 28px);
+    box-shadow:0 18px 40px rgba(60,45,20,.1);position:relative;
   }
-  .review-paper::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(#c4b498 0 1px,transparent 1px 28px);opacity:.35;border-radius:4px 0 0 4px;pointer-events:none}
   .review-paper > *{position:relative}
-  .review-tone{font-size:14px;color:var(--muted);max-width:36rem;margin:0 0 22px;line-height:1.55}
-  .rv-empty{padding:28px 18px 8px;text-align:center}
-  .rv-empty h3{font-family:'Special Elite',serif;font-size:22px;font-weight:400;margin-bottom:8px}
-  .rv-empty p{font-size:14px;color:var(--muted);max-width:28rem;margin:0 auto 18px;line-height:1.55}
+  .review-tone{font-size:13.5px;color:var(--muted);max-width:36rem;margin:0 0 20px;line-height:1.55}
+  .rv-empty{margin-top:0;padding:28px 18px}
   .rv-empty .btn-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-  .rv-section{margin-top:22px;padding-top:18px;border-top:1px dashed #e0d4b8}
+  .rv-section{margin-top:22px;padding-top:18px;border-top:1px solid #e7dfcc}
   .rv-section:first-of-type{margin-top:0;padding-top:0;border-top:none}
-  .rv-section h3{font-family:'Special Elite',serif;font-size:18px;font-weight:400;margin:0 0 6px;letter-spacing:.02em}
+  .rv-section h3{font-family:'Special Elite',serif;font-size:17px;font-weight:400;margin:0 0 6px;letter-spacing:.02em}
   .rv-hint{font-size:13px;color:var(--muted);margin:0 0 14px;line-height:1.45}
-  .rv-picks{display:flex;flex-direction:column;gap:12px}
+  .rv-picks{display:flex;flex-direction:column;gap:0;border-top:1px solid #e7dfcc}
   .rv-pick{
-    display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:14px 16px;
-    border:1px solid #e7dfcc;border-radius:12px;background:rgba(255,255,255,.65);text-align:left;
+    display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;padding:14px 4px;
+    border:none;border-bottom:1px solid #e7dfcc;border-radius:0;background:transparent;text-align:left;
   }
   .rv-pick .meta{font-size:12px;color:var(--accent);letter-spacing:.04em;margin-bottom:4px}
   .rv-pick h4{font-size:15px;margin:0 0 4px;font-weight:600}
-  .rv-pick .snip{font-size:14px;line-height:1.5;color:var(--text);font-family:'Caveat',Georgia,serif;white-space:pre-wrap}
-  .rv-pick .flags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:12px;color:var(--muted)}
+  .rv-pick .snip{font-size:18px;line-height:1.45;color:#26221c;font-family:'Caveat',Georgia,serif;white-space:pre-wrap}
+  .rv-pick .flags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:12px;color:var(--muted);font-family:'Geist',-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
   .rv-pick .swap{align-self:center;white-space:nowrap}
-  .rv-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .rv-col{padding:14px 16px;border:1px solid #e7dfcc;border-radius:12px;background:rgba(255,255,255,.55)}
-  .rv-col .lab{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
+  .rv-compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #e7dfcc;border-radius:0;overflow:hidden}
+  .rv-col{padding:14px 16px;border:none;border-right:1px solid #e7dfcc;border-radius:0;background:rgba(255,255,255,.4)}
+  .rv-col:last-child{border-right:none}
+  .rv-col .lab{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--accent);margin-bottom:8px;text-transform:none}
   .rv-col h4{font-size:14px;margin:0 0 6px}
-  .rv-col .snip{font-size:14px;line-height:1.5;font-family:'Caveat',Georgia,serif;white-space:pre-wrap}
-  .rv-col.soft{color:var(--muted);font-size:14px;line-height:1.55;display:flex;align-items:center}
+  .rv-col .snip{font-size:17px;line-height:1.5;font-family:'Caveat',Georgia,serif;white-space:pre-wrap;color:#26221c}
+  .rv-col.soft{color:var(--muted);font-size:14px;line-height:1.55;display:flex;align-items:center;font-family:inherit}
   .rv-dims{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .rv-dim{padding:14px 16px;border:1px solid #e7dfcc;border-radius:12px;background:rgba(255,255,255,.55)}
+  .rv-dim{padding:0;border:none;border-radius:0;background:transparent}
   .rv-dim label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
   .rv-dim label span{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
   .rv-dim textarea,.rv-dim input[type=text]{
-    width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;
+    width:100%;border:1.5px solid #e7dfcc;border-radius:10px;padding:10px 12px;font-size:14px;
     font-family:inherit;background:rgba(255,255,255,.85);outline:none;resize:vertical;min-height:64px;
   }
   .rv-dim textarea:focus,.rv-dim input[type=text]:focus,#rvFocusOut:focus{border-color:rgba(144,88,49,.45)}
   .rv-migrate{margin-top:4px}
   .rv-migrate .fp-check{margin:0}
-  .rv-focus-box{padding:16px 18px;border:1px solid #e0d4b8;border-radius:12px;background:rgba(250,246,236,.9)}
+  .rv-focus-box{padding:12px 0;border:none;border-top:1px solid #e7dfcc;border-bottom:1px solid #e7dfcc;border-radius:0;background:transparent}
   .rv-focus-box #rvFocusOut{
     width:100%;border:none;background:transparent;font-family:'Special Elite',serif;font-size:18px;
     color:var(--text);outline:none;padding:4px 0;line-height:1.45;
   }
-  .rv-actions{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .rv-actions{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:18px;border-top:1px solid #e7dfcc}
   .rv-saved{font-size:13px;color:var(--muted)}
   @media(max-width:860px){
     .rv-compare,.rv-dims{grid-template-columns:1fr}
+    .rv-col{border-right:none;border-bottom:1px solid #e7dfcc}
+    .rv-col:last-child{border-bottom:none}
     .rv-pick{grid-template-columns:1fr}
     .rv-pick .swap{justify-self:start}
     .review-paper{padding:22px 18px 26px;border-radius:14px}
-    .review-paper::before{display:none}
+    .evi{grid-template-columns:auto 1fr;padding:14px 2px}
+    .evi .date{grid-column:2;padding-top:0}
+    .fp-detail{padding:20px 16px;border-radius:14px}
   }
 
   /* ===== 订阅 / 定价（笔记本定价板，非 SaaS 卡片墙） ===== */
@@ -366,10 +428,9 @@
   .bill-toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .bill-hint{font-size:13px;color:var(--muted);margin-bottom:32px}
   .bill-hint strong{color:var(--accent);font-weight:600}
-  .plan-spread{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:0;align-items:stretch;border:1px solid #e7dfcc;border-radius:4px 18px 18px 4px;overflow:visible;background:#fdfbf5;box-shadow:0 18px 40px rgba(60,45,20,.1);position:relative}
-  .plan-spread::before{content:"";position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(#c4b498 0 1px,transparent 1px 28px);opacity:.35;pointer-events:none;border-radius:4px 0 0 4px}
+  .plan-spread{display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:0;align-items:stretch;border:1px solid #e7dfcc;border-radius:14px;overflow:visible;background:#fdfbf5;box-shadow:0 18px 40px rgba(60,45,20,.1);position:relative}
   .plan-col{padding:28px 22px 30px;border-right:1px solid #e7dfcc;display:flex;flex-direction:column;min-height:100%;position:relative;background-color:#fdfbf5;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(120,100,60,.08) 28px);transition:background-color .25s var(--ease),box-shadow .3s var(--ease),transform .3s var(--ease)}
-  .plan-col:first-child{padding-left:28px}
+  .plan-col:first-child{padding-left:22px}
   .plan-col:last-child{border-right:none}
   .plan-col.quiet{opacity:.92}
   .plan-col.featured{z-index:1;margin:-10px -2px;padding:34px 26px 36px;background-color:#faf6ec;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(144,88,49,.1) 28px);border:1px solid #e0d4b8;border-radius:14px;box-shadow:0 22px 44px rgba(60,45,20,.14),0 1px 0 rgba(255,255,255,.55) inset;opacity:1}
@@ -406,8 +467,10 @@
     .trace-demo{padding:24px 20px 22px}
     .trace-subs p{font-size:20px}
     .week-card{grid-template-columns:auto 1fr}
+    .week-card .wt{grid-column:2;padding-top:0}
+    .plan-result-paper{padding:24px 18px 28px;border-radius:14px}
+    .start-grid{grid-template-columns:1fr 1fr}
     .plan-spread{grid-template-columns:1fr;border-radius:14px;overflow:hidden}
-    .plan-spread::before{display:none}
     .plan-col{border-right:none;border-bottom:1px solid #e7dfcc;padding-left:22px}
     .plan-col:first-child{padding-left:22px}
     .plan-col.featured{margin:0;z-index:auto;border-radius:0;border:none;border-bottom:1px solid #e7dfcc;box-shadow:inset 0 0 0 1px rgba(144,88,49,.12);background-color:#faf6ec}
@@ -417,7 +480,9 @@
   @media (prefers-reduced-motion:reduce){
     .plan-col{transition:none}
     .screen.active,.screen.active .rv{animation:none;opacity:1;transform:none;filter:none}
-    .opt:hover,.week-card:hover,.evi:hover,.step:hover{transform:none}
+    .opt:hover,.step:hover{transform:none}
+    .week-card:hover,.evi:hover{padding-left:4px;background:rgba(144,88,49,.04)}
+    .evi:hover{transform:none;box-shadow:none}
     .msg{animation:none}
     .trace-wave i{animation:none;opacity:.55;transform:none}
     #toast{transition:opacity .2s}
@@ -477,7 +542,7 @@
     <div class="hero-veil"></div>
     <div class="pencil" id="pencil">🧪</div>
     <div class="inner">
-      <span class="kicker rv">AI 时代的务实英语学习</span>
+      <p class="nb-label rv">AI 时代的务实英语学习</p>
       <h1 class="rv" style="--d:.05s">这一次，让英语不再停在<span class="nw">“开始”</span></h1>
       <p class="lead rv" style="--d:.12s">写下生活里想做成的一件英语小事——旅行点餐、看剧聊天、兴趣阅读。</p>
       <p class="lead-accent rv" style="--d:.18s">从这里定制计划，而不是又一次空开聊天</p>
@@ -495,8 +560,8 @@
   <!-- 首页第二屏：一张任务如何留下痕迹 -->
   <section class="trace-story" aria-labelledby="traceStoryTitle">
     <div class="wrap">
-      <span class="kicker rv">Footprint · 痕迹</span>
-      <h2 id="traceStoryTitle" class="rv" style="--d:.05s">留下痕迹，而不是打卡</h2>
+      <p class="nb-label rv">痕迹怎么留下</p>
+      <h2 id="traceStoryTitle" class="rv" style="--d:.05s">留下足迹，而不是打卡</h2>
       <p class="lead rv" style="--d:.1s">任务结束会保存你的原话与原文——写不好也算数。周复盘时再拿出来，和过去的自己轻量对照。</p>
 
       <article class="trace-demo rv" style="--d:.16s" aria-label="示例足迹：点餐开口">
@@ -539,7 +604,7 @@
   <section class="wrap">
     <div class="plan-quiz rv">
       <div class="plan-sheet">
-        <span class="kicker">Plan · 约 3 分钟</span>
+        <p class="pr-label" style="margin-bottom:8px">计划 · 约 3 分钟</p>
         <h2>先聊聊你想做成的事</h2>
         <p class="plan-chat-hint">像聊天一样答几题就好——不是测评，是一起定下周怎么练。</p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="qprog"><i id="qbar"></i></div>
@@ -557,57 +622,63 @@
 <!-- ③ 计划结果 -->
 <div class="screen" id="planResult">
   <section class="wrap">
-    <div class="plan-result">
-      <span class="kicker rv">Your 12-week plan · 示意</span>
-      <h2 class="rv" style="--d:.05s">这一本，专为你这一周</h2>
-      <p class="goal-line rv" id="goalLine" style="--d:.08s"></p>
-      <p class="goal-meta rv" id="goalMeta" style="--d:.1s"></p>
+    <div class="plan-result rv">
+      <div class="plan-result-paper">
+        <header class="pr-head">
+          <p class="pr-label">12 周计划 · 示意</p>
+          <h2>这一本，专为你这一周</h2>
+          <p class="goal-line" id="goalLine"></p>
+          <p class="goal-meta" id="goalMeta"></p>
+        </header>
 
-      <div class="plan-block rv" style="--d:.12s">
-        <h3>分项起点 · 自评示意</h3>
-        <p class="hint">先按你刚才说的卡点标一下——不是考试分数，是本周对照用。</p>
-        <div class="start-grid" id="startGrid"></div>
-      </div>
-
-      <div class="plan-block rv" style="--d:.14s">
-        <h3>本周唯一重点</h3>
-        <p class="hint">只动一个变量，别同时开太多线。</p>
-        <div class="focus-one" id="focusOne"></div>
-        <p class="focus-why" id="focusWhy"></p>
-      </div>
-
-      <div class="plan-block rv" style="--d:.16s">
-        <h3>本周任务卡预览</h3>
-        <p class="hint">点一张就能进现有任务屏练起来。</p>
-        <div class="week-preview" id="weekPreview"></div>
-      </div>
-
-      <div class="plan-block rv" style="--d:.18s">
-        <h3>复测节点</h3>
-        <div class="retest-row">
-          <span class="retest"><strong>第 7 天</strong> · 轻量对照</span>
-          <span class="retest"><strong>第 30 天</strong> · 中期校准</span>
-          <span class="retest"><strong>第 84 天</strong> · 目标验收</span>
+        <div class="plan-block pr-focus">
+          <h3>本周唯一重点</h3>
+          <p class="hint">只动一个变量，别同时开太多线。</p>
+          <div class="focus-panel">
+            <div class="focus-one" id="focusOne"></div>
+            <p class="focus-why" id="focusWhy"></p>
+          </div>
         </div>
-      </div>
 
-      <div class="plan-block rv" style="--d:.2s">
-        <h3>AI 权限</h3>
-        <table class="ai-table">
-          <thead><tr><th>可以</th><th>不可以</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="ok">提示思路、纠错、追问、讲解句型</td>
-              <td class="no">代答整题、整段重写、替你做判断</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="plan-block">
+          <h3>本周任务卡预览</h3>
+          <p class="hint">点一张就能进任务屏练起来。</p>
+          <div class="week-preview" id="weekPreview"></div>
+        </div>
 
-      <div class="plan-cta-row rv" style="--d:.22s">
-        <button type="button" class="btn" id="startFirstTask"><span class="btn-glare" aria-hidden="true"></span>开始本周第一张任务 <span class="arrow">→</span></button>
-        <button type="button" class="btn ghost" data-go="tasks">浏览全部任务卡</button>
-        <button type="button" class="btn ghost small" data-go="plan">再改一改答案</button>
+        <div class="plan-block quiet">
+          <h3>分项起点 · 自评示意</h3>
+          <p class="hint">按你刚才说的卡点标一下——不是考试分数，是本周对照用。</p>
+          <div class="start-grid" id="startGrid"></div>
+        </div>
+
+        <div class="plan-block quiet">
+          <h3>复测节点</h3>
+          <div class="retest-row">
+            <span class="retest"><strong>第 7 天</strong> · 轻量对照</span>
+            <span class="retest"><strong>第 30 天</strong> · 中期校准</span>
+            <span class="retest"><strong>第 84 天</strong> · 目标验收</span>
+          </div>
+        </div>
+
+        <div class="plan-block quiet">
+          <h3>AI 可以 / 不可以</h3>
+          <table class="ai-table">
+            <thead><tr><th>可以</th><th>不可以</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="ok">提示思路、纠错、追问、讲解句型</td>
+                <td class="no">代答整题、整段重写、替你做判断</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="plan-cta-row">
+          <button type="button" class="btn" id="startFirstTask"><span class="btn-glare" aria-hidden="true"></span>开始本周第一张任务 <span class="arrow">→</span></button>
+          <button type="button" class="btn ghost" data-go="tasks">浏览全部任务卡</button>
+          <button type="button" class="btn ghost small" data-go="plan">再改一改答案</button>
+        </div>
       </div>
     </div>
   </section>
@@ -616,7 +687,7 @@
 <!-- ④ 任务 -->
 <div class="screen" id="tasks">
   <section class="wrap">
-    <span class="kicker rv">Tasks</span>
+      <span class="kicker rv">场景任务</span>
     <h2 class="rv" style="--d:.05s">选一张真实场景任务卡</h2>
     <p class="sub rv" style="--d:.1s">每张卡 25–45 分钟，写明了“什么结果算完成”。</p>
     <div class="chips rv" style="--d:.14s" id="chips"></div>
@@ -636,44 +707,64 @@
         <div class="steps">
           <div class="step"><div class="n">1</div><div><h4>讲解</h4><p>AI 用中文讲清本场景的关键表达与句型。</p></div></div>
           <div class="step"><div class="n">2</div><div><h4>练习</h4><p>AI 生成练习并追问纠错，你来做选择。</p></div></div>
-          <div class="step"><div class="n">3</div><div><h4>独立输出</h4><p>锁 AI → 留下痕迹 → 再展开反馈。不考试，不整段改写。</p></div></div>
+          <div class="step"><div class="n">3</div><div><h4>独立输出</h4><p>锁 AI → 存足迹 → 再展开反馈。不考试，不整段改写。</p></div></div>
         </div>
         <div style="margin-top:18px"><button class="btn" id="startIndep">进入独立输出 <span class="arrow">→</span></button></div>
-        <div class="glass independent" id="indepBox" style="display:none;margin-top:18px">
+        <div class="independent" id="indepBox" style="display:none">
+          <div class="indep-flow" id="indepFlow" aria-label="结束态步骤">
+            <span class="on" data-phase="draft">① 独立输出</span>
+            <span data-phase="save">② 存足迹</span>
+            <span data-phase="fb">③ AI 反馈</span>
+          </div>
           <div id="indepDraftPhase">
-            <div class="locknote">🔒 AI 已锁定。先留下你的独立稿——写不好也没关系。不会整段改写你的原文。</div>
-            <div class="indep-modes" role="tablist" aria-label="输出方式">
-              <button type="button" class="chip on" id="modeText" data-mode="text">短文本</button>
-              <button type="button" class="chip" id="modeVoice" data-mode="voice">录音示意</button>
+            <div class="indep-sec">
+              <p class="indep-sec-label">锁 AI</p>
+              <div class="locknote">AI 已锁定。先留下你的独立稿——写不好也没关系。不会整段改写你的原文。</div>
             </div>
-            <div id="textModePanel">
-              <textarea id="indepText" placeholder="用英语完成本任务的产出，例如写一封报修邮件…"></textarea>
-            </div>
-            <div id="voiceModePanel" class="voice-demo" hidden>
-              <button type="button" class="btn ghost small" id="recBtn">● 开始录音（示意）</button>
-              <p class="voice-status" id="voiceStatus">录音仅为示意，不会实际上传或转写。</p>
-              <p class="voice-transcript" id="voiceTranscript" hidden></p>
-            </div>
-            <label class="fp-check"><input type="checkbox" id="stdCheck" checked> 勾选完成标准：<span id="stdCheckLabel">本任务完成标准</span></label>
-            <label class="fp-check"><input type="checkbox" id="saveFpCheck" checked> 一键存入足迹</label>
-            <div class="self-rate">
-              <p class="self-rate-q">今天能独立完成吗？ <span class="opt-hint">（可选）</span></p>
-              <div class="self-rate-opts" id="selfRate">
-                <button type="button" class="chip" data-r="能">能</button>
-                <button type="button" class="chip" data-r="勉强">勉强</button>
-                <button type="button" class="chip" data-r="不能">不能</button>
+            <div class="indep-sec">
+              <p class="indep-sec-label">写下独立稿</p>
+              <div class="indep-modes" role="tablist" aria-label="输出方式">
+                <button type="button" class="chip on" id="modeText" data-mode="text">短文本</button>
+                <button type="button" class="chip" id="modeVoice" data-mode="voice">录音示意</button>
+              </div>
+              <div id="textModePanel">
+                <textarea id="indepText" placeholder="用英语完成本任务的产出，例如写一封报修邮件…"></textarea>
+              </div>
+              <div id="voiceModePanel" class="voice-demo" hidden>
+                <button type="button" class="btn ghost small" id="recBtn">● 开始录音（示意）</button>
+                <p class="voice-status" id="voiceStatus">录音仅为示意，不会实际上传或转写。</p>
+                <p class="voice-transcript" id="voiceTranscript" hidden></p>
               </div>
             </div>
-            <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
-              <button type="button" class="btn small" id="saveEvi">完成并留下痕迹</button>
+            <div class="indep-sec">
+              <p class="indep-sec-label">存足迹（先存再反馈）</p>
+              <label class="fp-check"><input type="checkbox" id="stdCheck" checked> 勾选完成标准：<span id="stdCheckLabel">本任务完成标准</span></label>
+              <label class="fp-check"><input type="checkbox" id="saveFpCheck" checked> 一键存入足迹</label>
+            </div>
+            <div class="indep-sec">
+              <p class="indep-sec-label">自评 · 可选</p>
+              <div class="self-rate">
+                <p class="self-rate-q">今天能独立完成吗？ <span class="opt-hint">（可选）</span></p>
+                <div class="self-rate-opts" id="selfRate">
+                  <button type="button" class="chip" data-r="能">能</button>
+                  <button type="button" class="chip" data-r="勉强">勉强</button>
+                  <button type="button" class="chip" data-r="不能">不能</button>
+                </div>
+              </div>
+            </div>
+            <div class="indep-actions">
+              <button type="button" class="btn small" id="saveEvi"><span class="btn-glare" aria-hidden="true"></span>完成并存入足迹</button>
               <button type="button" class="btn ghost small" id="cancelIndep">取消</button>
             </div>
           </div>
           <div id="aiFeedbackPhase" hidden>
-            <div class="locknote ok">足迹已落下。下面是陪练反馈——只点拨分层，不整段改写。</div>
+            <div class="indep-sec">
+              <p class="indep-sec-label">足迹已存 · 陪练反馈</p>
+              <div class="locknote ok">先存再反馈。下面只点拨分层，不整段改写。</div>
+            </div>
             <div class="ai-feedback" id="aiFeedbackList"></div>
-            <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
-              <button type="button" class="btn small" id="gotoFootprints">去看足迹 <span class="arrow">→</span></button>
+            <div class="indep-actions">
+              <button type="button" class="btn small" id="gotoFootprints"><span class="btn-glare" aria-hidden="true"></span>去看足迹 <span class="arrow">→</span></button>
               <button type="button" class="btn ghost small" id="backToCoach">收起反馈</button>
             </div>
           </div>
@@ -694,17 +785,19 @@
 <!-- ⑥ 足迹 -->
 <div class="screen" id="evidence">
   <section class="wrap">
-    <span class="kicker rv">Footprint · 足迹</span>
-    <h2 class="rv" style="--d:.05s">一张任务留下的痕迹</h2>
-    <p class="sub rv" style="--d:.1s">嵌在任务结束态——不是档案墙。这里是你每一次真实产出的轻量沉淀。</p>
-    <div class="chips rv" style="--d:.12s" id="fpChips"></div>
+    <div class="nb-page-head rv">
+      <p class="nb-label">足迹</p>
+      <h2>一张任务留下的痕迹</h2>
+      <p class="sub">嵌在任务结束态——不是档案墙。这里是你每一次真实产出的轻量沉淀。</p>
+    </div>
+    <div class="chips rv" style="--d:.08s" id="fpChips"></div>
     <div class="evi-list" id="eviList"></div>
     <div class="fp-empty" id="fpEmpty" hidden>
       <h3>还没有足迹</h3>
       <p>完成一张任务卡的独立输出，勾选「存入足迹」，痕迹就会落在这里。写不好也算数。</p>
       <button type="button" class="btn small" data-go="tasks">去选一张任务卡 <span class="arrow">→</span></button>
     </div>
-    <div class="glass fp-detail" id="fpDetail" aria-live="polite">
+    <div class="fp-detail" id="fpDetail" aria-live="polite">
       <div class="fp-kicker" id="fpDetailMeta"></div>
       <h3 id="fpDetailTitle"></h3>
       <p class="sub" id="fpDetailDate" style="margin:0"></p>
@@ -723,11 +816,13 @@
 <!-- ⑦ 复盘 -->
 <div class="screen" id="review">
   <section class="wrap">
-    <span class="kicker rv">Weekly Review</span>
-    <h2 class="rv" style="--d:.05s">本周轻量对照</h2>
-    <p class="sub rv" style="--d:.1s">每周一次就够。不打分、不惩罚——只从足迹里抽出几条，问问自己。</p>
+    <div class="nb-page-head rv">
+      <p class="nb-label">每周复盘</p>
+      <h2>本周轻量对照</h2>
+      <p class="sub">每周一次就够。不打分、不惩罚——只从足迹里抽出几条，问问自己。</p>
+    </div>
 
-    <div class="review-paper rv" style="--d:.12s" id="reviewRoot">
+    <div class="review-paper rv" style="--d:.1s" id="reviewRoot">
       <p class="review-tone" id="rvWeekLabel">本周足迹 · 自动抽条</p>
 
       <div id="rvEmpty" class="rv-empty" hidden>
@@ -785,7 +880,7 @@
         </div>
 
         <div class="rv-actions">
-          <button type="button" class="btn small" id="saveReview">保存本周复盘</button>
+          <button type="button" class="btn small" id="saveReview"><span class="btn-glare" aria-hidden="true"></span>保存本周复盘</button>
           <span class="rv-saved" id="rvSavedNote" hidden></span>
         </div>
       </div>
@@ -878,7 +973,7 @@
 </div>
 
 <div id="toast"></div>
-<div class="proto-note">交互原型 v8 · 周复盘接足迹</div>
+<div class="proto-note">交互原型 v9 · 本子语言统一</div>
 
 <script>
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1464,6 +1559,20 @@
   function setChatLocked(on){
     chatPanel.classList.toggle('locked',!!on);
   }
+  function setIndepFlow(phase){
+    const flow=document.getElementById('indepFlow');
+    if(!flow)return;
+    flow.querySelectorAll('span').forEach(s=>{
+      const p=s.dataset.phase;
+      s.classList.remove('on','done');
+      if(phase==='draft'){
+        if(p==='draft')s.classList.add('on');
+      }else if(phase==='fb'){
+        if(p==='draft'||p==='save')s.classList.add('done');
+        if(p==='fb')s.classList.add('on');
+      }
+    });
+  }
   function resetIndepUI(){
     indepMode='text';
     selfRate=null;
@@ -1485,6 +1594,7 @@
     document.getElementById('indepDraftPhase').hidden=false;
     document.getElementById('aiFeedbackPhase').hidden=true;
     document.getElementById('aiFeedbackList').innerHTML='';
+    setIndepFlow('draft');
   }
   function addMsg(who,text){
     const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chatBody.appendChild(d);chatBody.scrollTop=chatBody.scrollHeight;
@@ -1595,7 +1705,7 @@
       raw=voiceRaw;
     }else{
       raw=document.getElementById('indepText').value.trim();
-      if(!raw){toast('先写点什么再留下痕迹');return;}
+      if(!raw){toast('先写点什么再存入足迹');return;}
     }
     const saveFp=document.getElementById('saveFpCheck').checked;
     const stdChecked=document.getElementById('stdCheck').checked;
@@ -1615,12 +1725,13 @@
       list.unshift(entry);
       saveFootprints(list);
     }
-    toast('已留下痕迹 · 周复盘时会再看见');
+    toast(saveFp?'足迹已存 · 下面展开反馈':'已完成 · 未勾选存足迹');
     const tips=buildAiFeedback(raw);
     document.getElementById('aiFeedbackList').innerHTML=tips.map((t,i)=>`
       <div class="ai-fb-item"><div class="n">${i+1}</div><div><div class="tag">${t.tag}</div><p>${t.text}</p></div></div>`).join('');
     document.getElementById('indepDraftPhase').hidden=true;
     document.getElementById('aiFeedbackPhase').hidden=false;
+    setIndepFlow('fb');
     setChatLocked(false);
     addMsg('ai','独立输出已完成。反馈在左侧展开——我只点拨，不替你改稿。');
   });

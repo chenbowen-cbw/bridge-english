@@ -42,6 +42,46 @@ textarea {
   min-height: 100vh;
 }
 
+.env-banner {
+  margin: 0;
+  padding: 10px 24px;
+  background: rgba(144, 88, 49, 0.1);
+  border-bottom: 1px solid var(--paper-edge);
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.env-banner code {
+  font-size: 0.8em;
+}
+
+.nav-user {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(26, 26, 26, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+.auth-sheet {
+  width: min(440px, 100%);
+  max-height: min(90vh, 720px);
+  overflow: auto;
+  box-shadow: 0 24px 60px rgba(40, 30, 10, 0.18);
+}
+
 .wrap {
   max-width: 1120px;
   margin: 0 auto;
