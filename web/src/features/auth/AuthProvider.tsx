@@ -11,17 +11,19 @@ import type { Session, User } from '@supabase/supabase-js'
 import { isSupabaseConfigured, supabase } from '../../lib/supabase'
 import { migrateLocalFootprintsToCloud } from '../footprints/api'
 
+type AuthResult = {
+  error: string | null
+  /** Present when Auth returned a session (e.g. email confirm disabled / autoconfirm). */
+  session: Session | null
+}
+
 type AuthContextValue = {
   configured: boolean
   loading: boolean
   session: Session | null
   user: User | null
-  signIn: (email: string, password: string) => Promise<{ error: string | null }>
-  signUp: (
-    email: string,
-    password: string,
-    displayName?: string,
-  ) => Promise<{ error: string | null }>
+  signIn: (email: string, password: string) => Promise<AuthResult>
+  signUp: (email: string, password: string, displayName?: string) => Promise<AuthResult>
   signOut: () => Promise<void>
 }
 
@@ -62,23 +64,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const signIn = useCallback(async (email: string, password: string) => {
-    if (!supabase) return { error: '未配置 Supabase（请填写 web/.env）' }
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error: error?.message ?? null }
+  const signIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
+    if (!supabase) return { error: '未配置 Supabase（请填写 web/.env）', session: null }
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    return { error: error?.message ?? null, session: data.session ?? null }
   }, [])
 
   const signUp = useCallback(
-    async (email: string, password: string, displayName?: string) => {
-      if (!supabase) return { error: '未配置 Supabase（请填写 web/.env）' }
-      const { error } = await supabase.auth.signUp({
+    async (email: string, password: string, displayName?: string): Promise<AuthResult> => {
+      if (!supabase) return { error: '未配置 Supabase（请填写 web/.env）', session: null }
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: displayName ? { display_name: displayName } : undefined,
         },
       })
-      return { error: error?.message ?? null }
+      return { error: error?.message ?? null, session: data.session ?? null }
     },
     [],
   )

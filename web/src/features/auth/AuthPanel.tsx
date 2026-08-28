@@ -32,7 +32,16 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
       setMessage(result.error)
       return
     }
-    setMessage(mode === 'signup' ? '注册成功。若开启邮箱确认，请查收邮件。' : '已登录')
+    if (mode === 'signup' && !result.session) {
+      // Confirm email ON: Auth creates the user but returns no session until the link/OTP is used.
+      setMessage(
+        '账号已创建。请打开邮箱，点击确认链接（或输入验证码）后再登录。未确认前无法进入应用。',
+      )
+      setMode('signin')
+      setPassword('')
+      return
+    }
+    setMessage(mode === 'signup' ? '注册成功，已登录' : '已登录')
     onSuccess?.()
   }
 
@@ -69,7 +78,9 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
       <p className="kicker">账户</p>
       <h2>{mode === 'signin' ? '登录 Bridge' : '注册 Bridge'}</h2>
       <p className="auth-lead">
-        邮箱 + 密码。首页与订阅可匿名浏览；计划、足迹、复盘需登录后持久化。
+        {mode === 'signup'
+          ? '用邮箱注册后即可保存计划、足迹与复盘。若项目开启了邮箱确认，注册后需先点邮件里的链接。'
+          : '邮箱 + 密码登录。首页与订阅可匿名浏览；计划、足迹、复盘需登录后持久化。'}
       </p>
       {!configured ? (
         <p className="auth-banner" role="status">

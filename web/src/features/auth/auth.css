@@ -94,6 +94,10 @@
 
 .auth-msg {
   margin: 0;
+  padding: 10px 12px;
   font-size: 0.875rem;
-  color: var(--accent);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(144, 88, 49, 0.08);
+  border-left: 3px solid var(--accent);
 }

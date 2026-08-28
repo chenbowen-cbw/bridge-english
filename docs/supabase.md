@@ -68,10 +68,24 @@ npx supabase functions deploy ai-coach --project-ref ncmmwaehjeqcjgxavwjw
 
 After changing Auth settings, add Site URL / Redirect:
 `https://bridge-english-two.vercel.app`
+
 ## Dashboard switches Ethan may need
 
 1. **Authentication → Providers → Email**: enabled  
-2. **Confirm email**: for local / demo, prefer **OFF** so signup returns a session immediately (otherwise confirm via email or SQL). Rate limits apply when confirm is ON.  
-3. **URL configuration**: Site URL `http://localhost:5173` and production Vercel URL; redirect allow-list both  
+2. **Confirm email → OFF**（演示必备）  
+   - Path: [Dashboard](https://supabase.com/dashboard/project/ncmmwaehjeqcjgxavwjw/auth/providers) → **Authentication → Providers → Email → Confirm email** 关掉  
+   - 等价字段：`mailer_autoconfirm: true`（自动确认 = 不要求点邮件）  
+   - MCP **无法**改 Auth 配置；本地 `supabase/config.toml` 已写 `enable_confirmations = false`，但 **不会自动同步到云端**  
+   - 有 Personal Access Token 时可用 Management API：
+
+```bash
+# Token: https://supabase.com/dashboard/account/tokens
+curl -X PATCH "https://api.supabase.com/v1/projects/ncmmwaehjeqcjgxavwjw/config/auth" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"mailer_autoconfirm": true}'
+```
+
+3. **URL configuration**: Site URL 建议生产 `https://bridge-english-two.vercel.app`；Redirect allow-list 同时包含该 URL 与本地 `http://localhost:5173`（确认邮件链接的 Site URL 错了会出现 `/verify` 失效）  
 4. **Edge Function secrets**: set `DEEPSEEK_API_KEY` (and optional `AI_API_KEY`) in Dashboard → Edge Functions → Secrets — without this, `ai-coach` returns `source: "mock"`  
 5. **Vercel env**: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (build-time). Never put DeepSeek key in `VITE_*`.
