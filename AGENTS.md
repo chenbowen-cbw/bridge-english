@@ -53,16 +53,21 @@ bridge-english/
 ├── README.md / docs/supabase.md
 ├── web/                     ← ★ 主应用
 │   ├── .env.example         ← 复制为 .env（勿提交真实值）
-│   ├── vercel.json
+│   ├── vercel.json          ← SPA rewrite → index.html
 │   └── src/
-│       ├── App.tsx / App.css / index.css
+│       ├── App.tsx          ← react-router 路由表（勿再堆单页长滚动）
+│       ├── App.css / index.css
+│       ├── layouts/         ← MarketingLayout · AppLayout
+│       ├── pages/           ← marketing/* · app/* · LoginPage
+│       ├── content/         ← 营销文案 / 价卡常量（静态）
 │       ├── components/      ← BridgeButton、NotebookReveal、amicro
 │       ├── lib/supabase/    ← browser client（仅 anon）+ types
 │       └── features/
-│           ├── auth/        ← 登录注册、AuthProvider
+│           ├── auth/        ← 登录注册、AuthProvider、RequireAuth
 │           ├── plans/       ← 计划问卷 → learning_plans
 │           ├── footprints/  ← 足迹 CRUD（localStorage 按用户隔离 + 云端）
 │           ├── reviews/     ← 周复盘 → weekly_reviews
+│           ├── profile/     ← 只读 plan_tier 展示
 │           └── ai-coach/    ← 调用 Edge Function
 ├── supabase/
 │   ├── migrations/          ← schema、RLS、plan_tier 锁、配额 RPC
@@ -71,9 +76,24 @@ bridge-english/
 └── scripts/smoke-supabase.mjs
 ```
 
-**新功能**：只进 `web/src/features/`（及必要的 `lib/` / `components/`）。  
+**新功能**：只进 `web/src/features/`（及必要的 `lib/` / `components/` / `pages/`）。  
 **Schema / RLS / 配额**：`supabase/migrations/`。  
 **陪练边界与提示词**：`supabase/functions/ai-coach/`。
+
+### 路由约定（同域分离）
+
+| 路径 | Layout | 说明 |
+| --- | --- | --- |
+| `/` `/method` `/pricing` `/login` | MarketingLayout | 营销站：Hero、方法故事、价卡；**禁止**挂载 PlanWizard / FootprintsPanel CRUD / WeeklyReviewPanel |
+| `/app` | AppLayout | 今日：有 active plan 摘要；无则引导定制 |
+| `/app/plan` | AppLayout + 登录 | 完整计划问卷 |
+| `/app/footprints` | AppLayout | 足迹；未登录可存 **1 条**本机匿名草稿；`?template=` 选模板 |
+| `/app/review` | AppLayout + 登录 | 周复盘 |
+
+- 主 CTA「定制计划」：未登录 → `/login?next=/app/plan`（可带 `goal`）；已登录 → `/app/plan`
+- 登录落地：有 `next` 用 `next`；否则有 active plan → `/app`，无 → `/app/plan`
+- 订阅完整价卡只在营销 `/pricing`（或首页次屏链过去）；`/app` 导航仅一行只读「当前：草稿本/日常本/深练本」（读 `plan_tier`，**不接支付**）
+- Vercel：`web/vercel.json` 已 rewrite 全部路径到 `index.html`
 
 ---
 

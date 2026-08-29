@@ -1014,3 +1014,176 @@ textarea {
     transition: none;
   }
 }
+
+/* —— Marketing / App shell split —— */
+
+.page--app .top--app {
+  background: rgba(246, 240, 227, 0.88);
+}
+
+.nav-tier {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.nav-site {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.nav-site:hover {
+  color: var(--ink);
+}
+
+.app-main {
+  padding: 28px 0 64px;
+  min-height: calc(100vh - 64px);
+}
+
+.app-panel {
+  max-width: 960px;
+}
+
+.app-panel > .plan-wizard,
+.app-panel > .fp-panel,
+.app-panel > .rv-panel {
+  margin-top: 0;
+}
+
+.app-loading {
+  margin: 48px auto;
+  text-align: center;
+  color: var(--muted);
+}
+
+.app-lead,
+.app-goal,
+.app-focus {
+  color: var(--muted);
+  max-width: 40rem;
+}
+
+.app-goal {
+  font-size: 1.125rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.app-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.app-today-card {
+  margin: 24px 0;
+  padding: 20px 22px;
+  border: 1px solid var(--paper-edge);
+  background: rgba(253, 251, 245, 0.9);
+  border-radius: 16px;
+}
+
+.app-today-label {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.app-today-title {
+  margin: 0 0 16px;
+  font-size: 1.125rem;
+}
+
+.band-soft {
+  margin-top: 20px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.band-soft a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.marketing-page {
+  padding-bottom: 48px;
+}
+
+.method-page {
+  padding-top: 48px;
+}
+
+.method-steps {
+  margin: 20px 0 28px;
+}
+
+.method-static {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0 8px;
+}
+
+.method-card {
+  padding: 20px 22px;
+  border: 1px solid var(--paper-edge);
+  background: #fffdf8;
+  border-radius: 16px;
+}
+
+.method-card--muted {
+  background: rgba(246, 240, 227, 0.65);
+}
+
+.method-card-kicker {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.method-card-title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.method-card-body {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.login-page {
+  padding: 48px 0 72px;
+}
+
+.login-wrap {
+  max-width: 440px;
+}
+
+.mobile-tier {
+  margin: 0;
+  padding: 8px 22px;
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+@media (max-width: 800px) {
+  .method-static {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-tier,
+  .nav-site {
+    display: none;
+  }
+}
+

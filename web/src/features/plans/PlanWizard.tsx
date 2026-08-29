@@ -88,7 +88,6 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Prop
     if (!built) return
     requestTemplate(built.firstTemplateId)
     onStartFirstTask?.(built.firstTemplateId)
-    document.getElementById('app-footprints')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   if (phase === 'result' && built) {

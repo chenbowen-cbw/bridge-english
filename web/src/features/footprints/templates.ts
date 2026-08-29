@@ -123,7 +123,7 @@ export function getTemplate(id: string): TaskTemplate | undefined {
 const EVENT = 'bridge:fp-template'
 const STORAGE_KEY = 'bridge-fp-template'
 
-/** 计划页等处一键跳到足迹并选用模板 */
+/** 计划页等处选用模板；路由由调用方导航到 /app/footprints?template=… */
 export function requestTemplate(id: string) {
   try {
     sessionStorage.setItem(STORAGE_KEY, id)
@@ -131,7 +131,6 @@ export function requestTemplate(id: string) {
     /* ignore */
   }
   window.dispatchEvent(new CustomEvent(EVENT, { detail: id }))
-  document.getElementById('app-footprints')?.scrollIntoView({ behavior: 'smooth' })
 }
 
 export function consumeRequestedTemplate(): string | null {

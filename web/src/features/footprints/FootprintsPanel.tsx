@@ -119,18 +119,52 @@ export function FootprintsPanel({ onNeedAuth }: Props) {
 
   async function onSave(e: FormEvent) {
     e.preventDefault()
-    if (!user) {
-      setStatus('请先登录，再把足迹写入云端。')
-      setStatusTone('warn')
-      onNeedAuth?.()
-      return
-    }
     const draft = body.trim()
     if (!draft) {
       setStatus('请先写独立稿，再存足迹或请求陪练。')
       setStatusTone('warn')
       return
     }
+
+    // Anonymous: allow one local draft only (no AI coach).
+    if (!user) {
+      const existing = items.length
+        ? items
+        : (await listFootprints(null)).items
+      if (existing.length >= 1) {
+        setStatus('匿名草稿限一条。登录后可写入云端并请求陪练。')
+        setStatusTone('warn')
+        onNeedAuth?.()
+        return
+      }
+      setBusy(true)
+      setStatus(null)
+      setTips(null)
+      setCoachNote(null)
+      const created = await createFootprint(
+        {
+          scene,
+          title: title.trim() || '未命名任务',
+          body: draft,
+          criteria_met: criteriaMet,
+          self_rating: selfRating,
+          mode: 'text',
+        },
+        null,
+      )
+      await refresh()
+      setBody('')
+      setShowExampleInDraft(false)
+      setStatus(
+        created.cloud === 'skipped'
+          ? '已存一条本机匿名草稿。登录后可同步云端并开启陪练。'
+          : '足迹已保存到本机',
+      )
+      setStatusTone('ok')
+      setBusy(false)
+      return
+    }
+
     setBusy(true)
     setStatus(null)
     setTips(null)
@@ -374,19 +408,11 @@ export function FootprintsPanel({ onNeedAuth }: Props) {
               </BridgeButton>
             ) : (
               <div className="fp-cta-anon">
-                <BridgeButton
-                  type="button"
-                  variant="primary"
-                  onClick={() => {
-                    setStatus('请先登录再存足迹。')
-                    setStatusTone('warn')
-                    onNeedAuth?.()
-                  }}
-                >
-                  先登录再存足迹
+                <BridgeButton type="submit" variant="primary" disabled={busy}>
+                  {busy ? '保存中…' : '存一条本机草稿'}
                 </BridgeButton>
                 <BridgeButton type="button" variant="ghost" arrow="none" onClick={() => onNeedAuth?.()}>
-                  登录
+                  登录以云端保存
                 </BridgeButton>
               </div>
             )}
