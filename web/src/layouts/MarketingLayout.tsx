@@ -1,22 +1,37 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate, useSearchParams } from 'react-router-dom'
+import { AccountMenu } from '../components/AccountMenu'
 import { BridgeButton } from '../components/BridgeButton'
 import { useAuth } from '../features/auth'
+import { useWorkbenchPath } from '../features/plans'
 
 const NAV = [
   { to: '/method', label: '方法' },
   { to: '/pricing', label: '定价' },
 ] as const
 
+function safeNext(raw: string | null): string | null {
+  if (raw && raw.startsWith('/') && !raw.startsWith('//')) return raw
+  return null
+}
+
 export function MarketingLayout() {
   const { user, configured, signOut } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const [navOpen, setNavOpen] = useState(false)
+  const workbenchPath = useWorkbenchPath()
+
+  const loginTo = `/login?next=${encodeURIComponent(safeNext(params.get('next')) ?? '/app')}`
 
   function goPlan() {
     setNavOpen(false)
-    if (user) navigate('/app/plan')
-    else navigate('/login?next=' + encodeURIComponent('/app/plan'))
+    navigate('/login?next=' + encodeURIComponent('/app/plan'))
+  }
+
+  function goWorkbench() {
+    setNavOpen(false)
+    navigate(workbenchPath)
   }
 
   useEffect(() => {
@@ -49,21 +64,21 @@ export function MarketingLayout() {
             </button>
             {user ? (
               <>
-                <Link className="nav-user" to="/app" title={user.email ?? ''}>
-                  {user.email?.split('@')[0]}
-                </Link>
-                <BridgeButton variant="ghost" arrow="none" onClick={() => void signOut()}>
-                  退出
+                <AccountMenu email={user.email} onSignOut={signOut} />
+                <BridgeButton variant="nav" arrow="none" onClick={goWorkbench}>
+                  进入工作台
                 </BridgeButton>
               </>
             ) : (
-              <BridgeButton variant="nav" arrow="none" onClick={() => navigate('/login')}>
-                登录
-              </BridgeButton>
+              <>
+                <Link className="nav-text" to={loginTo} onClick={() => setNavOpen(false)}>
+                  登录
+                </Link>
+                <BridgeButton variant="nav" arrow="none" onClick={goPlan}>
+                  定制计划
+                </BridgeButton>
+              </>
             )}
-            <BridgeButton variant="nav" arrow="none" onClick={goPlan}>
-              定制计划
-            </BridgeButton>
             <button
               type="button"
               className={`nav-burger${navOpen ? ' on' : ''}`}
@@ -85,29 +100,25 @@ export function MarketingLayout() {
                 {item.label}
               </Link>
             ))}
-            {!user ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setNavOpen(false)
-                  navigate('/login')
-                }}
-              >
-                登录
-              </button>
-            ) : (
+            {user ? (
               <>
-                <Link to="/app" onClick={() => setNavOpen(false)}>
+                <button type="button" className="mobile-cta" onClick={goWorkbench}>
                   进入工作台
-                </Link>
+                </button>
                 <button type="button" onClick={() => void signOut()}>
                   退出
                 </button>
               </>
+            ) : (
+              <>
+                <Link to={loginTo} onClick={() => setNavOpen(false)}>
+                  登录
+                </Link>
+                <button type="button" className="mobile-cta" onClick={goPlan}>
+                  定制计划
+                </button>
+              </>
             )}
-            <button type="button" className="mobile-cta" onClick={goPlan}>
-              定制计划
-            </button>
           </nav>
         ) : null}
       </header>

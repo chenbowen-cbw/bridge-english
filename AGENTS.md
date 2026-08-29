@@ -90,10 +90,25 @@ bridge-english/
 | `/app/footprints` | AppLayout | 足迹；未登录可存 **1 条**本机匿名草稿；`?template=` 选模板 |
 | `/app/review` | AppLayout + 登录 | 周复盘 |
 
-- 主 CTA「定制计划」：未登录 → `/login?next=/app/plan`（可带 `goal`）；已登录 → `/app/plan`
+- 两套壳互不混装：**营销是顶栏**（方法 · 定价）；**产品是左栏工作台**（功能入口 + 最近练习会话），不要顶栏横向「今日/计划/足迹/复盘」。
+- Logo：营销 `bridge.` → `/`；工作台左栏 `bridge.` → `/app`。
+- 营销右侧：未登录 = `登录`（`/login?next=/app`，已有 next 则尊重）+ `定制计划`（`/login?next=/app/plan`，可带 goal）；已登录 = **进入工作台**（有 active plan → `/app`，无 → `/app/plan`），退出放账户菜单。
+- 产品左栏下：只读「当前：草稿本/日常本/深练本」+ 账户菜单（退出、回到首页 `/`）。不要在顶栏钉「官网」。
+- 左栏「最近练习」点一条 → `/app/footprints?id=` 选中该足迹。未登录浅试也用这套壳。
 - 登录落地：有 `next` 用 `next`；否则有 active plan → `/app`，无 → `/app/plan`
-- 订阅完整价卡只在营销 `/pricing`（或首页次屏链过去）；`/app` 导航仅一行只读「当前：草稿本/日常本/深练本」（读 `plan_tier`，**不接支付**）
+- 未登录进 `/app/plan` `/app/review` 仍 RequireAuth；足迹允许匿名浅试。
 - Vercel：`web/vercel.json` 已 rewrite 全部路径到 `index.html`
+
+| 从 | 动作 | 到 |
+| --- | --- | --- |
+| 营销未登录 · 定制计划 | CTA | `/login?next=/app/plan` |
+| 营销已登录 · 进入工作台 | CTA | `/app` 或 `/app/plan` |
+| 营销 · 方法/定价 | 顶栏 | `/method` `/pricing` |
+| 产品 · 今日/计划/足迹/复盘 | 左栏 | `/app` `/app/plan` `/app/footprints` `/app/review` |
+| 产品 · 最近练习 | 左栏会话 | `/app/footprints?id=` |
+| 产品 · 回到首页 | 左栏账户菜单 | `/` |
+| 产品 · logo | 左栏顶 | `/app` |
+| 营销 · logo | | `/` |
 
 ---
 

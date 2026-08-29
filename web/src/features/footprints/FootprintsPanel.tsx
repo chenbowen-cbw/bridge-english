@@ -9,6 +9,7 @@ import {
   listFootprints,
   updateFootprintMigrated,
 } from './api'
+import { notifyFootprintsChanged } from './events'
 import {
   TASK_TEMPLATES,
   consumeRequestedTemplate,
@@ -27,12 +28,15 @@ type AuthNudge = () => void
 
 type Props = {
   onNeedAuth?: AuthNudge
+  /** Sidebar session → highlight / open this footprint. */
+  focusId?: string | null
 }
 
-export function FootprintsPanel({ onNeedAuth }: Props) {
+export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
   const { user, configured } = useAuth()
   const draftRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
+  const appliedFocusRef = useRef<string | null>(null)
   const [items, setItems] = useState<LocalFootprint[]>([])
   const [source, setSource] = useState<'supabase' | 'local'>('local')
   const [busy, setBusy] = useState(false)
@@ -51,6 +55,7 @@ export function FootprintsPanel({ onNeedAuth }: Props) {
   const [status, setStatus] = useState<string | null>(null)
   const [statusTone, setStatusTone] = useState<'ok' | 'warn'>('ok')
   const [focusDraftAfter, setFocusDraftAfter] = useState(0)
+  const [focusedId, setFocusedId] = useState<string | null>(focusId ?? null)
 
   const activeTemplate = getTemplate(activeId) ?? DEFAULT
 
@@ -111,11 +116,32 @@ export function FootprintsPanel({ onNeedAuth }: Props) {
     const res = await listFootprints(user?.id)
     setItems(res.items)
     setSource(res.source)
+    notifyFootprintsChanged()
   }
 
   useEffect(() => {
     void refresh()
   }, [user?.id])
+
+  useEffect(() => {
+    if (!focusId) {
+      appliedFocusRef.current = null
+      setFocusedId(null)
+      return
+    }
+    setFocusedId(focusId)
+    if (appliedFocusRef.current === focusId) return
+    const fp = items.find((item) => item.id === focusId)
+    if (!fp) return
+    appliedFocusRef.current = focusId
+    setTitle(fp.title)
+    setBody(fp.raw)
+    if (SCENES.includes(fp.scene as Scene)) setScene(fp.scene as Scene)
+    setStatus(`正在看「${fp.title}」`)
+    setStatusTone('ok')
+    const el = document.getElementById(`fp-item-${focusId}`)
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [focusId, items])
 
   async function onSave(e: FormEvent) {
     e.preventDefault()
@@ -442,7 +468,11 @@ export function FootprintsPanel({ onNeedAuth }: Props) {
         ) : (
           <ul>
             {items.map((fp) => (
-              <li key={fp.id}>
+              <li
+                key={fp.id}
+                id={`fp-item-${fp.id}`}
+                className={focusedId === fp.id ? 'fp-item-on' : undefined}
+              >
                 <div className="fp-meta">
                   {fp.scene} · {new Date(fp.date).toLocaleString()}
                   {fp.selfRate ? ` · 自评 ${fp.selfRate}` : ''}

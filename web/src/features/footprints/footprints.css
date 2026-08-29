@@ -244,6 +244,12 @@
   border-bottom: 1px solid var(--rule);
 }
 
+.fp-list li.fp-item-on {
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+  background: rgba(144, 88, 49, 0.06);
+}
+
 .fp-meta {
   font-size: 0.8rem;
   color: var(--muted);

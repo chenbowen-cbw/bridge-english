@@ -1,35 +1,50 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { BridgeButton } from '../components/BridgeButton'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../features/auth'
+import { FOOTPRINTS_CHANGED, listFootprints } from '../features/footprints'
 import { getProfilePlanTier } from '../features/profile/api'
-import { planTierLabel } from '../lib/planTier'
-import type { PlanTier } from '../lib/supabase'
+import type { LocalFootprint, PlanTier } from '../lib/supabase'
+import { WorkbenchSidebar } from './WorkbenchSidebar'
 
-const NAV = [
-  { to: '/app', end: true, label: '今日' },
-  { to: '/app/plan', end: false, label: '计划' },
-  { to: '/app/footprints', end: false, label: '足迹' },
-  { to: '/app/review', end: false, label: '复盘' },
-] as const
+const PAGE_TITLE: Record<string, string> = {
+  '/app': '今日',
+  '/app/plan': '计划',
+  '/app/footprints': '足迹',
+  '/app/review': '复盘',
+}
 
 export function AppLayout() {
-  const { user, configured, signOut, loading } = useAuth()
-  const navigate = useNavigate()
+  const { user, configured, loading } = useAuth()
+  const location = useLocation()
   const [navOpen, setNavOpen] = useState(false)
   const [tier, setTier] = useState<PlanTier>('free')
+  const [sessions, setSessions] = useState<LocalFootprint[]>([])
+  const displayTier = user ? tier : 'free'
+  const pageTitle = PAGE_TITLE[location.pathname] ?? '工作台'
 
   useEffect(() => {
-    if (!user) {
-      setTier('free')
-      return
-    }
+    if (!user) return
     let cancelled = false
     void getProfilePlanTier(user.id).then((t) => {
       if (!cancelled) setTier(t)
     })
     return () => {
       cancelled = true
+    }
+  }, [user])
+
+  useEffect(() => {
+    let cancelled = false
+    function load() {
+      void listFootprints(user?.id).then((res) => {
+        if (!cancelled) setSessions(res.items)
+      })
+    }
+    load()
+    window.addEventListener(FOOTPRINTS_CHANGED, load)
+    return () => {
+      cancelled = true
+      window.removeEventListener(FOOTPRINTS_CHANGED, load)
     }
   }, [user?.id])
 
@@ -44,109 +59,56 @@ export function AppLayout() {
 
   return (
     <div className="page page--app">
-      <header className="top top--app">
-        <div className="wrap nav">
-          <Link className="wordmark" to="/app" onClick={() => setNavOpen(false)}>
-            bridge.
-            <span>WORKBENCH</span>
-          </Link>
-          <nav className="links" aria-label="产品导航">
-            {NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) => (isActive ? 'on' : undefined)}
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-          <div className="nav-right">
-            <p className="nav-tier" title="订阅档位只读，支付未接">
-              当前：{planTierLabel(tier)}
-            </p>
-            {user ? (
-              <>
-                <span className="nav-user" title={user.email ?? ''}>
-                  {user.email?.split('@')[0]}
-                </span>
-                <BridgeButton variant="ghost" arrow="none" onClick={() => void signOut()}>
-                  退出
-                </BridgeButton>
-              </>
-            ) : (
-              <BridgeButton
-                variant="nav"
-                arrow="none"
-                onClick={() => navigate('/login?next=' + encodeURIComponent('/app'))}
-              >
-                登录
-              </BridgeButton>
-            )}
-            <Link className="nav-site" to="/">
-              官网
-            </Link>
-            <button
-              type="button"
-              className={`nav-burger${navOpen ? ' on' : ''}`}
-              aria-expanded={navOpen}
-              aria-controls="app-mobile-nav"
-              aria-label={navOpen ? '关闭菜单' : '打开菜单'}
-              onClick={() => setNavOpen((o) => !o)}
-            >
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-        </div>
-        {navOpen ? (
-          <nav className="mobile-nav" id="app-mobile-nav" aria-label="移动导航">
-            {NAV.map((item) => (
-              <Link key={item.to} to={item.to} onClick={() => setNavOpen(false)}>
-                {item.label}
-              </Link>
-            ))}
-            <p className="mobile-tier">当前：{planTierLabel(tier)}</p>
-            <Link to="/" onClick={() => setNavOpen(false)}>
-              官网
-            </Link>
-            {!user ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setNavOpen(false)
-                  navigate('/login?next=' + encodeURIComponent('/app'))
-                }}
-              >
-                登录
-              </button>
-            ) : (
-              <button type="button" onClick={() => void signOut()}>
-                退出
-              </button>
-            )}
-          </nav>
-        ) : null}
-      </header>
-
-      {!configured ? (
-        <p className="env-banner" role="status">
-          未检测到 <code>VITE_SUPABASE_*</code>。复制 <code>web/.env.example</code> →{' '}
-          <code>web/.env</code> 后重启 <code>npm run dev</code>。
-        </p>
+      {navOpen ? (
+        <button
+          type="button"
+          className="app-sidebar-backdrop"
+          aria-label="关闭侧栏"
+          onClick={() => setNavOpen(false)}
+        />
       ) : null}
 
-      <main className="app-main">
-        {loading ? (
-          <p className="app-loading" role="status">
-            正在读取会话…
+      <WorkbenchSidebar
+        open={navOpen}
+        tier={displayTier}
+        sessions={sessions}
+        onNavigate={() => setNavOpen(false)}
+      />
+
+      <div className="app-workspace">
+        <header className="app-thinbar">
+          <button
+            type="button"
+            className={`nav-burger${navOpen ? ' on' : ''}`}
+            aria-expanded={navOpen}
+            aria-controls="app-sidebar"
+            aria-label={navOpen ? '关闭菜单' : '打开菜单'}
+            onClick={() => setNavOpen((o) => !o)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+          <p className="app-thinbar-title">{pageTitle}</p>
+        </header>
+
+        {!configured ? (
+          <p className="env-banner" role="status">
+            未检测到 <code>VITE_SUPABASE_*</code>。复制 <code>web/.env.example</code> →{' '}
+            <code>web/.env</code> 后重启 <code>npm run dev</code>。
           </p>
-        ) : (
-          <Outlet />
-        )}
-      </main>
+        ) : null}
+
+        <main className="app-main">
+          {loading ? (
+            <p className="app-loading" role="status">
+              正在读取会话…
+            </p>
+          ) : (
+            <Outlet />
+          )}
+        </main>
+      </div>
     </div>
   )
 }
