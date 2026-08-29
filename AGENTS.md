@@ -1,6 +1,6 @@
 # Bridge English — Agent 说明书
 
-> 给后续 AI agent 的项目入口。业界常见文件名是 `AGENTS.md`；本仓库**主文件为 `agent.md`**（用户约定）。二者等价时以本文件为准。
+> 给后续 AI agent 的项目入口。本仓库主文件为 `AGENTS.md`（业界常见命名）；后续工具与约定以本文件为准。
 
 更细的产品/设计/后端见：`PRODUCT.md` · `DESIGN.md` · `docs/supabase.md` · `README.md`。
 
@@ -48,7 +48,7 @@
 
 ```
 bridge-english/
-├── agent.md                 ← 本文件
+├── AGENTS.md                ← 本文件
 ├── PRODUCT.md / DESIGN.md   ← 战略 & 设计 tokens
 ├── README.md / docs/supabase.md
 ├── web/                     ← ★ 主应用
