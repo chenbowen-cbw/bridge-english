@@ -4,6 +4,7 @@ import { maskAccountIdentity } from '../lib/accountLabel'
 
 type Props = {
   email?: string | null
+  className?: string
   /** Product shell: way back to the marketing homepage. */
   showHome?: boolean
   /** Sidebar footer opens upward so the menu stays on screen. */
@@ -11,7 +12,13 @@ type Props = {
   onSignOut?: () => void | Promise<void>
 }
 
-export function AccountMenu({ email, showHome = false, placement = 'down', onSignOut }: Props) {
+export function AccountMenu({
+  email,
+  className,
+  showHome = false,
+  placement = 'down',
+  onSignOut,
+}: Props) {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -44,7 +51,7 @@ export function AccountMenu({ email, showHome = false, placement = 'down', onSig
   }, [open])
 
   return (
-    <div className="account-menu" ref={rootRef}>
+    <div className={['account-menu', className].filter(Boolean).join(' ')} ref={rootRef}>
       <button
         ref={triggerRef}
         type="button"

@@ -1121,6 +1121,8 @@ textarea {
   padding: 18px 14px 16px;
   background: var(--paper-deep);
   border-right: 1px solid var(--paper-edge);
+  /* Clip drawer slide-off; keep the account menu inside this box so it is not sliced. */
+  overflow: hidden;
 }
 
 .app-sidebar-brand {
@@ -1211,16 +1213,82 @@ textarea {
 .app-sidebar-foot {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 12px 10px 4px;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  margin-top: auto;
+  padding: 12px 0 2px;
   border-top: 1px solid var(--paper-edge);
+  position: relative;
+  z-index: 3;
+  overflow: visible;
+}
+
+.app-sidebar-tier {
+  margin: 0;
+  padding: 6px 10px 2px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--accent);
+  overflow: visible;
+  white-space: normal;
+}
+
+.app-sidebar-account {
+  width: 100%;
+}
+
+.app-sidebar-foot .account-menu-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.875rem;
+  color: var(--ink);
+  text-align: left;
+}
+
+.app-sidebar-foot .account-menu-trigger:hover,
+.app-sidebar-foot .account-menu-trigger[aria-expanded='true'] {
+  background: rgba(253, 251, 245, 0.7);
+  color: var(--ink);
+}
+
+.app-sidebar-foot .account-menu-panel,
+.app-sidebar-foot .account-menu-panel--up {
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-width: 0;
+  top: auto;
+  bottom: calc(100% + 6px);
 }
 
 .app-sidebar-anon {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-sidebar-anon .nav-text {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--ink);
+  text-align: left;
+}
+
+.app-sidebar-anon .nav-text:hover {
+  background: rgba(253, 251, 245, 0.7);
+  color: var(--ink);
 }
 
 .app-sidebar-backdrop {

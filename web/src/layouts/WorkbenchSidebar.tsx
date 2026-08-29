@@ -95,11 +95,17 @@ export function WorkbenchSidebar({
       </div>
 
       <div className="app-sidebar-foot">
-        <p className="nav-tier" title="订阅档位只读，支付未接">
+        <p className="app-sidebar-tier" title="订阅档位只读，支付未接">
           当前：{planTierLabel(tier)}
         </p>
         {user ? (
-          <AccountMenu email={user.email} showHome placement="up" onSignOut={signOut} />
+          <AccountMenu
+            className="app-sidebar-account"
+            email={user.email}
+            showHome
+            placement="up"
+            onSignOut={signOut}
+          />
         ) : (
           <div className="app-sidebar-anon">
             <Link
