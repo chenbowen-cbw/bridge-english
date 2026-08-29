@@ -11,3 +11,14 @@ export async function resolvePostLoginPath(
   const plan = await getActivePlan(userId)
   return plan ? '/app' : '/app/plan'
 }
+
+/** 「稍后再说」：不要 history.back。足迹浅试回工作台路径，其余回首页。 */
+export function resolveLoginDismissPath(nextParam: string | null): string {
+  if (nextParam && nextParam.startsWith('/app/footprints') && !nextParam.startsWith('//')) {
+    return nextParam
+  }
+  if (nextParam && nextParam.startsWith('/app') && !nextParam.startsWith('//')) {
+    return '/app'
+  }
+  return '/'
+}

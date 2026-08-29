@@ -1,4 +1,5 @@
-import { Link, NavLink, useSearchParams } from 'react-router-dom'
+import type { Ref } from 'react'
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { AccountMenu } from '../components/AccountMenu'
 import { useAuth } from '../features/auth'
 import { planTierLabel } from '../lib/planTier'
@@ -21,22 +22,36 @@ function formatSessionDate(iso: string) {
 
 type Props = {
   open: boolean
+  drawerHidden: boolean
+  sidebarRef?: Ref<HTMLElement>
   tier: PlanTier
   sessions: LocalFootprint[]
   onNavigate: () => void
 }
 
-export function WorkbenchSidebar({ open, tier, sessions, onNavigate }: Props) {
+export function WorkbenchSidebar({
+  open,
+  drawerHidden,
+  sidebarRef,
+  tier,
+  sessions,
+  onNavigate,
+}: Props) {
   const { user, signOut } = useAuth()
+  const location = useLocation()
   const [params] = useSearchParams()
   const focusId = params.get('id')
   const recent = sessions.slice(0, SESSION_LIMIT)
+  const loginNext = `${location.pathname}${location.search}` || '/app'
 
   return (
     <aside
+      ref={sidebarRef}
       className={`app-sidebar${open ? ' open' : ''}`}
       id="app-sidebar"
       aria-label="工作台侧栏"
+      inert={drawerHidden || undefined}
+      aria-hidden={drawerHidden || undefined}
     >
       <Link className="wordmark app-sidebar-brand" to="/app" onClick={onNavigate}>
         bridge.
@@ -89,7 +104,7 @@ export function WorkbenchSidebar({ open, tier, sessions, onNavigate }: Props) {
           <div className="app-sidebar-anon">
             <Link
               className="nav-text"
-              to={'/login?next=' + encodeURIComponent('/app')}
+              to={'/login?next=' + encodeURIComponent(loginNext)}
               onClick={onNavigate}
             >
               登录

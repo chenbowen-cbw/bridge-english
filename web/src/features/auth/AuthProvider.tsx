@@ -9,7 +9,6 @@ import {
 } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { isSupabaseConfigured, supabase } from '../../lib/supabase'
-import { migrateLocalFootprintsToCloud } from '../footprints/api'
 
 type AuthResult = {
   error: string | null
@@ -44,18 +43,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (cancelled) return
       setSession(data.session)
       setLoading(false)
-      if (data.session?.user.id) {
-        void migrateLocalFootprintsToCloud(data.session.user.id)
-      }
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next)
-      if (next?.user.id) {
-        void migrateLocalFootprintsToCloud(next.user.id)
-      }
     })
 
     return () => {

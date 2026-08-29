@@ -171,5 +171,5 @@ export const SCENE_TO_TEMPLATE: Record<SceneKey, string> = {
   show: 'show-retell',
   chat: 'chat-opener',
   read: 'read-interest',
-  other: 'travel-order',
+  other: 'airport-checkin',
 }

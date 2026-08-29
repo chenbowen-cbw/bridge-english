@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthPanel } from '../features/auth'
-import { resolvePostLoginPath } from '../features/auth/postLoginPath'
+import { resolveLoginDismissPath, resolvePostLoginPath } from '../features/auth/postLoginPath'
 import { supabase } from '../lib/supabase'
 
 export function LoginPage() {
@@ -12,7 +12,7 @@ export function LoginPage() {
     <main className="marketing-page login-page">
       <div className="wrap login-wrap">
         <AuthPanel
-          onClose={() => navigate(-1)}
+          onClose={() => navigate(resolveLoginDismissPath(next), { replace: true })}
           onSuccess={() => {
             void (async () => {
               const session = supabase

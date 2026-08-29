@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../features/auth'
-import { FOOTPRINTS_CHANGED, listFootprints } from '../features/footprints'
+import { AnonMigrateBanner, FOOTPRINTS_CHANGED, listFootprints } from '../features/footprints'
 import { getProfilePlanTier } from '../features/profile/api'
 import type { LocalFootprint, PlanTier } from '../lib/supabase'
 import { WorkbenchSidebar } from './WorkbenchSidebar'
@@ -13,14 +13,31 @@ const PAGE_TITLE: Record<string, string> = {
   '/app/review': '复盘',
 }
 
+const DRAWER_MQ = '(max-width: 860px)'
+
 export function AppLayout() {
   const { user, configured, loading } = useAuth()
   const location = useLocation()
+  const burgerRef = useRef<HTMLButtonElement>(null)
+  const sidebarRef = useRef<HTMLElement>(null)
+  const wasDrawerOpen = useRef(false)
   const [navOpen, setNavOpen] = useState(false)
+  const [isNarrow, setIsNarrow] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(DRAWER_MQ).matches : false,
+  )
   const [tier, setTier] = useState<PlanTier>('free')
   const [sessions, setSessions] = useState<LocalFootprint[]>([])
   const displayTier = user ? tier : 'free'
   const pageTitle = PAGE_TITLE[location.pathname] ?? '工作台'
+  const drawerHidden = isNarrow && !navOpen
+
+  useEffect(() => {
+    const mq = window.matchMedia(DRAWER_MQ)
+    const sync = () => setIsNarrow(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
 
   useEffect(() => {
     if (!user) return
@@ -57,6 +74,25 @@ export function AppLayout() {
     return () => window.removeEventListener('keydown', onKey)
   }, [navOpen])
 
+  useEffect(() => {
+    if (!isNarrow) {
+      wasDrawerOpen.current = false
+      return
+    }
+    if (navOpen) {
+      const first = sidebarRef.current?.querySelector<HTMLElement>(
+        'a, button, [href], [tabindex]:not([tabindex="-1"])',
+      )
+      first?.focus()
+      wasDrawerOpen.current = true
+      return
+    }
+    if (wasDrawerOpen.current) {
+      burgerRef.current?.focus()
+      wasDrawerOpen.current = false
+    }
+  }, [navOpen, isNarrow])
+
   return (
     <div className="page page--app">
       {navOpen ? (
@@ -70,6 +106,8 @@ export function AppLayout() {
 
       <WorkbenchSidebar
         open={navOpen}
+        drawerHidden={drawerHidden}
+        sidebarRef={sidebarRef}
         tier={displayTier}
         sessions={sessions}
         onNavigate={() => setNavOpen(false)}
@@ -78,6 +116,7 @@ export function AppLayout() {
       <div className="app-workspace">
         <header className="app-thinbar">
           <button
+            ref={burgerRef}
             type="button"
             className={`nav-burger${navOpen ? ' on' : ''}`}
             aria-expanded={navOpen}
@@ -98,6 +137,8 @@ export function AppLayout() {
             <code>web/.env</code> 后重启 <code>npm run dev</code>。
           </p>
         ) : null}
+
+        <AnonMigrateBanner />
 
         <main className="app-main">
           {loading ? (

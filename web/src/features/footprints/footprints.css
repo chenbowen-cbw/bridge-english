@@ -183,7 +183,8 @@
   border-left: 3px solid #8a3b2b;
 }
 
-.fp-cta-anon {
+.fp-cta-anon,
+.fp-cta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;

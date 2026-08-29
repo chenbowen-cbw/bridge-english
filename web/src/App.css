@@ -1323,6 +1323,31 @@ textarea {
   margin-top: 0;
 }
 
+.app-migrate-banner {
+  margin: 12px 20px 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(144, 88, 49, 0.08);
+  border-left: 3px solid var(--accent);
+}
+
+.app-migrate-banner p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink);
+  max-width: 52ch;
+}
+
+.app-migrate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .app-loading {
   margin: 48px auto;
   text-align: center;

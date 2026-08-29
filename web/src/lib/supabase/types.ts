@@ -40,6 +40,8 @@ export type LocalFootprint = {
   migrateChecked: boolean
   selfRate: string | null
   mode: FootprintMode
+  /** Local-only / unsynced with cloud. Kept when listFootprints merges a successful cloud payload. */
+  pending?: boolean
 }
 
 export type NewFootprintInput = {

@@ -188,6 +188,17 @@ Deno.serve(async (req) => {
       });
     }
 
+    let rawBody: unknown;
+    try {
+      rawBody = await req.json();
+    } catch {
+      return new Response(JSON.stringify({ error: "invalid_body" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const input = assertBoundaries(rawBody);
+
     const limit = Number(Deno.env.get("AI_COACH_DAILY_LIMIT") ?? DEFAULT_DAILY_LIMIT) ||
       DEFAULT_DAILY_LIMIT;
     const { data: quota, error: quotaError } = await supabase.rpc("bump_ai_coach_daily", {
@@ -221,8 +232,6 @@ Deno.serve(async (req) => {
         },
       );
     }
-
-    const input = assertBoundaries(await req.json());
     const apiKey =
       Deno.env.get("DEEPSEEK_API_KEY") ??
       Deno.env.get("AI_API_KEY") ??

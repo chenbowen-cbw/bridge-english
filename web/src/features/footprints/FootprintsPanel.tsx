@@ -7,6 +7,8 @@ import {
   createFootprint,
   deleteFootprint,
   listFootprints,
+  loadLocalFootprints,
+  updateFootprint,
   updateFootprintMigrated,
 } from './api'
 import { notifyFootprintsChanged } from './events'
@@ -30,9 +32,18 @@ type Props = {
   onNeedAuth?: AuthNudge
   /** Sidebar session → highlight / open this footprint. */
   focusId?: string | null
+  queryWarning?: string | null
+  onClearFocus?: () => void
+  onInvalidFocus?: () => void
 }
 
-export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
+export function FootprintsPanel({
+  onNeedAuth,
+  focusId,
+  queryWarning,
+  onClearFocus,
+  onInvalidFocus,
+}: Props) {
   const { user, configured } = useAuth()
   const draftRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -56,6 +67,7 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
   const [statusTone, setStatusTone] = useState<'ok' | 'warn'>('ok')
   const [focusDraftAfter, setFocusDraftAfter] = useState(0)
   const [focusedId, setFocusedId] = useState<string | null>(focusId ?? null)
+  const [listReady, setListReady] = useState(false)
 
   const activeTemplate = getTemplate(activeId) ?? DEFAULT
 
@@ -116,10 +128,18 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
     const res = await listFootprints(user?.id)
     setItems(res.items)
     setSource(res.source)
+    setListReady(true)
+    notifyFootprintsChanged()
+  }
+
+  function showLocalAfterCloudFail() {
+    setItems(loadLocalFootprints(user?.id))
+    setSource('local')
     notifyFootprintsChanged()
   }
 
   useEffect(() => {
+    setListReady(false)
     void refresh()
   }, [user?.id])
 
@@ -129,19 +149,47 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
       setFocusedId(null)
       return
     }
+    if (!listReady) return
+    const fp = items.find((item) => item.id === focusId)
+    if (!fp) {
+      onInvalidFocus?.()
+      return
+    }
     setFocusedId(focusId)
     if (appliedFocusRef.current === focusId) return
-    const fp = items.find((item) => item.id === focusId)
-    if (!fp) return
     appliedFocusRef.current = focusId
     setTitle(fp.title)
     setBody(fp.raw)
     if (SCENES.includes(fp.scene as Scene)) setScene(fp.scene as Scene)
-    setStatus(`正在看「${fp.title}」`)
+    setCriteriaMet(fp.stdChecked)
+    if (fp.selfRate) setSelfRating(fp.selfRate)
+    const tpl = TASK_TEMPLATES.find((t) => t.title === fp.title)
+    if (tpl) {
+      setActiveId(tpl.id)
+      setCriteria(tpl.criteria)
+      setPlaceholder(tpl.placeholder)
+      setExampleDraft(tpl.exampleDraft)
+    }
+    setStatus(`正在改「${fp.title}」——保存会更新这条，不会另存一条。`)
     setStatusTone('ok')
     const el = document.getElementById(`fp-item-${focusId}`)
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }, [focusId, items])
+  }, [focusId, items, listReady, onInvalidFocus])
+
+  const editingId =
+    focusedId && items.some((item) => item.id === focusedId) ? focusedId : null
+
+  function writeAnotherWithSameTemplate() {
+    const tpl = getTemplate(activeId) ?? DEFAULT
+    setBody('')
+    setShowExampleInDraft(false)
+    setFocusedId(null)
+    appliedFocusRef.current = null
+    onClearFocus?.()
+    setStatus(`用「${tpl.title}」再写一条。写完会存成新足迹。`)
+    setStatusTone('ok')
+    setFocusDraftAfter((n) => n + 1)
+  }
 
   async function onSave(e: FormEvent) {
     e.preventDefault()
@@ -152,12 +200,19 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
       return
     }
 
-    // Anonymous: allow one local draft only (no AI coach).
+    const payload = {
+      scene,
+      title: title.trim() || '未命名任务',
+      body: draft,
+      criteria_met: criteriaMet,
+      self_rating: selfRating,
+      mode: 'text' as const,
+    }
+
+    // Anonymous: one local draft; updating that same row is allowed.
     if (!user) {
-      const existing = items.length
-        ? items
-        : (await listFootprints(null)).items
-      if (existing.length >= 1) {
+      const existing = items.length ? items : (await listFootprints(null)).items
+      if (!editingId && existing.length >= 1) {
         setStatus('匿名草稿限一条。登录后可写入云端并请求陪练。')
         setStatusTone('warn')
         onNeedAuth?.()
@@ -167,17 +222,19 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
       setStatus(null)
       setTips(null)
       setCoachNote(null)
-      const created = await createFootprint(
-        {
-          scene,
-          title: title.trim() || '未命名任务',
-          body: draft,
-          criteria_met: criteriaMet,
-          self_rating: selfRating,
-          mode: 'text',
-        },
-        null,
-      )
+      if (editingId) {
+        const updated = await updateFootprint(editingId, payload, null)
+        await refresh()
+        setStatus(
+          updated.cloud === 'failed'
+            ? `本机这条还在，未能写入：${updated.cloudError ?? '未知错误'}。`
+            : '已更新这条本机草稿（同一条，没有另存）。',
+        )
+        setStatusTone(updated.cloud === 'failed' ? 'warn' : 'ok')
+        setBusy(false)
+        return
+      }
+      const created = await createFootprint(payload, null)
       await refresh()
       setBody('')
       setShowExampleInDraft(false)
@@ -196,20 +253,27 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
     setTips(null)
     setCoachNote(null)
 
-    const created = await createFootprint(
-      {
-        scene,
-        title: title.trim() || '未命名任务',
-        body: draft,
-        criteria_met: criteriaMet,
-        self_rating: selfRating,
-        mode: 'text',
-      },
-      user.id,
-    )
-    await refresh()
+    if (editingId) {
+      const updated = await updateFootprint(editingId, payload, user.id)
+      if (updated.cloud === 'failed') {
+        showLocalAfterCloudFail()
+        setStatus(
+          `本地已更新这条足迹，但云端同步失败：${updated.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
+        )
+        setStatusTone('warn')
+        setBusy(false)
+        return
+      }
+      await refresh()
+      setStatus(updated.cloud === 'ok' ? '已更新这条足迹（同一条）' : '已更新本机足迹')
+      setStatusTone('ok')
+      setBusy(false)
+      return
+    }
 
+    const created = await createFootprint(payload, user.id)
     if (created.cloud === 'failed') {
+      showLocalAfterCloudFail()
       setStatus(
         `本地已暂存，但云端写入失败：${created.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
       )
@@ -217,6 +281,8 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
       setBusy(false)
       return
     }
+
+    await refresh()
 
     const coach = await requestCoachTips({
       draft,
@@ -251,6 +317,7 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
   async function onDelete(fp: LocalFootprint) {
     if (!user) return
     await deleteFootprint(fp.id, user.id)
+    if (focusedId === fp.id) onClearFocus?.()
     await refresh()
   }
 
@@ -362,7 +429,10 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
           </article>
 
           <form className="fp-form" ref={formRef} onSubmit={(e) => void onSave(e)}>
-            <p className="fp-form-kicker">独立输出 · {activeTemplate.title.replace(/ · .*$/, '')}</p>
+            <p className="fp-form-kicker">
+              {editingId ? '独立输出 · 正在改原条' : '独立输出'} ·{' '}
+              {activeTemplate.title.replace(/ · .*$/, '')}
+            </p>
             <label>
               独立稿（必填）
               <textarea
@@ -425,15 +495,35 @@ export function FootprintsPanel({ onNeedAuth, focusId }: Props) {
                 </select>
               </label>
             </div>
+            {queryWarning ? (
+              <p className="fp-status fp-status--warn" role="status">
+                {queryWarning}
+              </p>
+            ) : null}
             {status ? (
               <p className={`fp-status${statusTone === 'warn' ? ' fp-status--warn' : ''}`}>{status}</p>
             ) : null}
-            {user ? (
+            {editingId ? (
+              <div className="fp-cta-row">
+                <BridgeButton type="submit" variant="primary" disabled={busy}>
+                  {busy ? '更新中…' : '更新这条足迹'}
+                </BridgeButton>
+                <BridgeButton
+                  type="button"
+                  variant="ghost"
+                  arrow="none"
+                  disabled={busy}
+                  onClick={writeAnotherWithSameTemplate}
+                >
+                  用同一模板再写一条
+                </BridgeButton>
+              </div>
+            ) : user ? (
               <BridgeButton type="submit" variant="primary" disabled={busy}>
                 {busy ? '保存中…' : '存足迹并请求陪练'}
               </BridgeButton>
             ) : (
-              <div className="fp-cta-anon">
+              <div className="fp-cta-row">
                 <BridgeButton type="submit" variant="primary" disabled={busy}>
                   {busy ? '保存中…' : '存一条本机草稿'}
                 </BridgeButton>

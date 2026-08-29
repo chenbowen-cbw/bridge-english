@@ -146,6 +146,7 @@ export function consumeRequestedTemplate(): string | null {
 export function onTemplateRequest(handler: (id: string) => void) {
   const fn = (e: Event) => {
     const id = (e as CustomEvent<string>).detail
+    consumeRequestedTemplate()
     if (id) handler(id)
   }
   window.addEventListener(EVENT, fn)
