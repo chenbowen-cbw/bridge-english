@@ -44,19 +44,17 @@ export function FootprintsPanel({
   onClearFocus,
   onInvalidFocus,
 }: Props) {
-  const { user, configured } = useAuth()
+  const { user } = useAuth()
   const draftRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const appliedFocusRef = useRef<string | null>(null)
   const [items, setItems] = useState<LocalFootprint[]>([])
-  const [source, setSource] = useState<'supabase' | 'local'>('local')
   const [busy, setBusy] = useState(false)
   const [activeId, setActiveId] = useState(DEFAULT.id)
   const [scene, setScene] = useState<Scene>(DEFAULT.scene)
   const [title, setTitle] = useState(DEFAULT.title)
   const [criteria, setCriteria] = useState(DEFAULT.criteria)
   const [placeholder, setPlaceholder] = useState(DEFAULT.placeholder)
-  const [exampleDraft, setExampleDraft] = useState(DEFAULT.exampleDraft)
   const [body, setBody] = useState('')
   const [showExampleInDraft, setShowExampleInDraft] = useState(false)
   const [criteriaMet, setCriteriaMet] = useState(true)
@@ -88,7 +86,6 @@ export function FootprintsPanel({
     setTitle(tpl.title)
     setCriteria(tpl.criteria)
     setPlaceholder(tpl.placeholder)
-    setExampleDraft(tpl.exampleDraft)
     const fill = opts?.fillExample ?? showExampleInDraft
     if (fill) {
       setBody(tpl.exampleDraft)
@@ -127,14 +124,12 @@ export function FootprintsPanel({
   async function refresh() {
     const res = await listFootprints(user?.id)
     setItems(res.items)
-    setSource(res.source)
     setListReady(true)
     notifyFootprintsChanged()
   }
 
   function showLocalAfterCloudFail() {
     setItems(loadLocalFootprints(user?.id))
-    setSource('local')
     notifyFootprintsChanged()
   }
 
@@ -168,7 +163,6 @@ export function FootprintsPanel({
       setActiveId(tpl.id)
       setCriteria(tpl.criteria)
       setPlaceholder(tpl.placeholder)
-      setExampleDraft(tpl.exampleDraft)
     }
     setStatus(`正在改「${fp.title}」——保存会更新这条，不会另存一条。`)
     setStatusTone('ok')
@@ -238,11 +232,11 @@ export function FootprintsPanel({
       await refresh()
       setBody('')
       setShowExampleInDraft(false)
-      setStatus(
-        created.cloud === 'skipped'
-          ? '已存一条本机匿名草稿。登录后可同步云端并开启陪练。'
-          : '练习已保存到本机',
-      )
+        setStatus(
+          created.cloud === 'skipped'
+            ? '已存一条本机草稿。登录后可同步并开启陪练。'
+            : '练习已保存',
+        )
       setStatusTone('ok')
       setBusy(false)
       return
@@ -265,7 +259,7 @@ export function FootprintsPanel({
         return
       }
       await refresh()
-      setStatus(updated.cloud === 'ok' ? '已更新这条练习（同一条）' : '已更新本机练习')
+      setStatus(updated.cloud === 'ok' ? '已更新这条练习' : '已更新这条练习（还在这台设备）')
       setStatusTone('ok')
       setBusy(false)
       return
@@ -292,18 +286,14 @@ export function FootprintsPanel({
     })
     if (coach.ok) {
       setTips(coach.data.tips)
-      setCoachNote(
-        coach.data.source === 'model'
-          ? '陪练来自服务端模型（未代写整段）'
-          : '陪练为服务端 mock / 降级模板（结构与真模型一致）',
-      )
+      setCoachNote('AI 只点拨，没有改你的整段稿。')
     } else {
       setCoachNote(`陪练暂不可用：${coach.error}`)
     }
 
     setBody('')
     setShowExampleInDraft(false)
-    setStatus(created.cloud === 'ok' ? '练习已写入云端' : '练习已保存到本机')
+    setStatus(created.cloud === 'ok' ? '练习已保存' : '练习已保存到这台设备')
     setStatusTone('ok')
     setBusy(false)
   }
@@ -321,30 +311,11 @@ export function FootprintsPanel({
     await refresh()
   }
 
-  function toggleExampleFill(on: boolean) {
-    setShowExampleInDraft(on)
-    if (on) setBody(exampleDraft)
-    else setBody('')
-  }
-
   return (
     <section className="fp-panel" id="app-footprints">
       <div className="fp-head">
-        <div>
-          <p className="kicker">练习 · 持久化</p>
-          <h2>留下独立输出</h2>
-          <p className="fp-lead">
-            先写自己的稿，再存证；AI 只点拨，不整段改写。打开笔记本对页：左页选模板，右页练习。
-            {configured ? (
-              <>
-                {' '}
-                当前数据源：<strong>{source === 'supabase' ? 'Supabase' : '本地缓存'}</strong>
-              </>
-            ) : (
-              ' （未配置 env 时仅本地）'
-            )}
-          </p>
-        </div>
+        <h2>练习</h2>
+        <p className="fp-lead">先写自己的稿，再开 AI。左页选模板，右页写。</p>
       </div>
 
       {!user ? (
@@ -365,8 +336,7 @@ export function FootprintsPanel({
         <div className="fp-page fp-page--left" aria-label="推荐模板">
           <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-recommend-head">
-            <p className="fp-section-label">左页 · 推荐模板</p>
-            <p className="fp-section-hint">点选后右页即时预览；独立稿仍须你自己写。</p>
+            <p className="fp-section-label">模板</p>
           </div>
           <ul className="fp-template-list">
             {TASK_TEMPLATES.map((tpl) => (
@@ -379,10 +349,7 @@ export function FootprintsPanel({
                 >
                   <span className="fp-tpl-scene">{tpl.scene}</span>
                   <span className="fp-tpl-title">{tpl.title}</span>
-                  <span className="fp-tpl-meta">
-                    {tpl.timeHint} · {tpl.action}
-                  </span>
-                  <span className="fp-tpl-std">{tpl.criteria}</span>
+                  <span className="fp-tpl-meta">{tpl.timeHint}</span>
                 </button>
               </li>
             ))}
@@ -394,21 +361,11 @@ export function FootprintsPanel({
         <div className="fp-page fp-page--right">
           <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-detail-head">
-            <p className="fp-section-label">
-              右页 · 正在练习 <span className="fp-badge">示例 · 可模仿</span>
-            </p>
             <h3 className="fp-practicing">{activeTemplate.title}</h3>
-            <p className="fp-section-hint">
-              受众：{activeTemplate.audience} · 动作：{activeTemplate.action}
-            </p>
+            <p className="fp-stamp">{activeTemplate.criteria}</p>
           </div>
 
-          <article className="fp-example-card" aria-live="polite">
-            <p className="fp-example-std">
-              <strong>完成标准：</strong>
-              {activeTemplate.criteria}
-            </p>
-            <pre className="fp-example-draft">{activeTemplate.exampleDraft}</pre>
+          {!editingId ? (
             <div className="fp-example-actions">
               <BridgeButton
                 type="button"
@@ -417,41 +374,28 @@ export function FootprintsPanel({
               >
                 用这个模板练习
               </BridgeButton>
-              <BridgeButton
+              <button
                 type="button"
-                variant="ghost"
-                arrow="none"
+                className="fp-quiet-link"
                 onClick={() => practiceWithTemplate(activeTemplate, true)}
               >
-                填入示例稿（可改）
-              </BridgeButton>
+                填入示例稿
+              </button>
             </div>
-          </article>
+          ) : null}
 
           <form className="fp-form" ref={formRef} onSubmit={(e) => void onSave(e)}>
-            <p className="fp-form-kicker">
-              {editingId ? '独立输出 · 正在改原条' : '独立输出'} ·{' '}
-              {activeTemplate.title.replace(/ · .*$/, '')}
-            </p>
-            <label>
-              独立稿（必填）
+            <label className="fp-draft-label">
+              {editingId ? '改这条独立稿' : '独立稿'}
               <textarea
                 ref={draftRef}
                 id="fp-draft"
-                rows={5}
+                rows={8}
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 placeholder={placeholder}
                 required
               />
-            </label>
-            <label className="fp-check fp-example-toggle">
-              <input
-                type="checkbox"
-                checked={showExampleInDraft}
-                onChange={(e) => toggleExampleFill(e.target.checked)}
-              />
-              显示示例稿作起点（请改成自己的话再提交）
             </label>
             <div className="fp-form-meta">
               <label>
@@ -467,14 +411,6 @@ export function FootprintsPanel({
               <label>
                 任务标题
                 <input value={title} onChange={(e) => setTitle(e.target.value)} />
-              </label>
-              <label>
-                完成标准
-                <input
-                  value={criteria}
-                  onChange={(e) => setCriteria(e.target.value)}
-                  placeholder="可观察的结果，例如：对方能听懂你要什么"
-                />
               </label>
             </div>
             <div className="fp-row">
@@ -554,7 +490,10 @@ export function FootprintsPanel({
       <div className="fp-list">
         <h3>最近练习</h3>
         {!items.length ? (
-          <p className="fp-empty">还没有练习。完成上面的独立稿即可留下第一条。</p>
+          <div className="fp-empty">
+            <p>还没有练习。</p>
+            <p>选左边一个模板，在右页写完独立稿，第一条就会出现在这里。</p>
+          </div>
         ) : (
           <ul>
             {items.map((fp) => (

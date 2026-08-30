@@ -9,6 +9,7 @@ type Props = {
   showHome?: boolean
   /** Sidebar footer opens upward so the menu stays on screen. */
   placement?: 'down' | 'up'
+  onReplayGuide?: () => void
   onSignOut?: () => void | Promise<void>
 }
 
@@ -17,6 +18,7 @@ export function AccountMenu({
   className,
   showHome = false,
   placement = 'down',
+  onReplayGuide,
   onSignOut,
 }: Props) {
   const [open, setOpen] = useState(false)
@@ -70,6 +72,18 @@ export function AccountMenu({
           role="menu"
         >
           {identity ? <p className="account-menu-id">{identity}</p> : null}
+          {onReplayGuide ? (
+            <button
+              role="menuitem"
+              type="button"
+              onClick={() => {
+                setOpen(false)
+                onReplayGuide()
+              }}
+            >
+              再看一遍引导
+            </button>
+          ) : null}
           {showHome ? (
             <Link role="menuitem" to="/" onClick={() => setOpen(false)}>
               回到首页

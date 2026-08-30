@@ -20,9 +20,10 @@ type Props = {
   seedGoal?: string
   onNeedAuth?: () => void
   onStartFirstTask?: (templateId: string) => void
+  onCancel?: () => void
 }
 
-export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Props) {
+export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCancel }: Props) {
   const { user } = useAuth()
   const [answers, setAnswers] = useState<PlanAnswers>(() => {
     const a = emptyAnswers()
@@ -61,7 +62,7 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Prop
     setPhase('result')
 
     if (!user) {
-      setStatus('计划已生成（本机示意）。登录后可写入云端 learning_plans。')
+      setStatus('计划已生成。登录后才能保存到你的本子。')
       return
     }
 
@@ -72,7 +73,7 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Prop
       setStatus(`计划已生成，但云端写入失败：${saved.error}`)
       return
     }
-    setStatus('计划已写入云端。点「本周第一张任务」开始练习。')
+    setStatus('计划已保存。点「本周第一张任务」开始练习。')
   }
 
   function goNext() {
@@ -93,7 +94,6 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Prop
   if (phase === 'result' && built) {
     return (
       <section className="plan-wizard" id="app-plan">
-        <p className="kicker">计划 · 结果</p>
         <h2>这一本，专为你这一周</h2>
         <p className="plan-goal">{built.goalSentence}</p>
         <p className="plan-meta">{built.metaLine}</p>
@@ -138,9 +138,15 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask }: Prop
 
   return (
     <section className="plan-wizard" id="app-plan">
-      <p className="kicker">计划 · 约 3 分钟</p>
+      {onCancel ? (
+        <p className="plan-desk-note">
+          <button type="button" className="plan-text-btn" onClick={onCancel}>
+            回到当前计划
+          </button>
+        </p>
+      ) : null}
       <h2>先聊聊你想做成的事</h2>
-      <p className="plan-hint">像聊天一样答几题——不是测评，是一起定下周怎么练。</p>
+      <p className="plan-hint">答几题，定下周怎么练。不是测评。</p>
 
       <div
         className="plan-progress"

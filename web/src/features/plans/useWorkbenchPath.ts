@@ -10,8 +10,14 @@ export function useWorkbenchPath() {
   useEffect(() => {
     if (!user) return
     let cancelled = false
-    void getActivePlan(user.id).then((plan) => {
-      if (!cancelled) setPath(plan ? '/app' : '/app/plan')
+    void getActivePlan(user.id).then((res) => {
+      if (cancelled) return
+      // Fetch failure is not “no plan” — stay on today, which can retry.
+      if (!res.ok) {
+        setPath('/app')
+        return
+      }
+      setPath(res.plan ? '/app' : '/app/plan')
     })
     return () => {
       cancelled = true

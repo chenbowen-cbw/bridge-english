@@ -1,25 +1,25 @@
 .rv-panel {
-  padding: 48px 0 72px;
+  padding: 4px 0 32px;
   max-width: 720px;
 }
 
 .rv-panel h2 {
   margin: 0 0 8px;
   font-family: 'Special Elite', Georgia, serif;
-  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-size: 1.75rem;
   font-weight: 400;
 }
 
 .rv-lead {
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   color: var(--muted);
 }
 
 .rv-banner {
-  margin: 0 0 20px;
-  padding: 12px 14px;
+  margin: 0 0 16px;
+  padding: 10px 12px;
   background: rgba(144, 88, 49, 0.08);
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--paper-edge);
   font-size: 0.9rem;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .rv-section {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .rv-section h3 {
@@ -52,6 +52,13 @@
 
 .rv-empty {
   color: var(--muted);
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.rv-empty p {
+  margin: 0;
 }
 
 .rv-picks {
@@ -131,7 +138,7 @@
   color: #8a3b2b;
   padding: 10px 12px;
   background: rgba(138, 59, 43, 0.08);
-  border-left: 3px solid #8a3b2b;
+  border: 1px solid rgba(138, 59, 43, 0.2);
 }
 
 .rv-actions {

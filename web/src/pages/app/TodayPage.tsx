@@ -2,41 +2,49 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BridgeButton } from '../../components/BridgeButton'
 import { useAuth } from '../../features/auth'
-import { getActivePlan, type LearningPlanRow } from '../../features/plans/api'
+import { requestOnboardReplay } from '../../features/onboard'
+import { getActivePlan, planFirstTask, type LearningPlanRow } from '../../features/plans/api'
 
 export function TodayPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [plan, setPlan] = useState<LearningPlanRow | null>(null)
   const [loading, setLoading] = useState(!!user)
+  const [error, setError] = useState<string | null>(null)
+  const [loadKey, setLoadKey] = useState(0)
 
   useEffect(() => {
     if (!user) {
       setPlan(null)
+      setError(null)
       setLoading(false)
       return
     }
     let cancelled = false
     setLoading(true)
-    void getActivePlan(user.id).then((p) => {
-      if (!cancelled) {
-        setPlan(p)
+    setError(null)
+    void getActivePlan(user.id).then((res) => {
+      if (cancelled) return
+      if (!res.ok) {
+        setPlan(null)
+        setError(res.error)
         setLoading(false)
+        return
       }
+      setPlan(res.plan)
+      setError(null)
+      setLoading(false)
     })
     return () => {
       cancelled = true
     }
-  }, [user?.id])
+  }, [user?.id, loadKey])
 
   if (!user) {
     return (
-      <div className="wrap app-panel">
-        <p className="kicker">今日</p>
-        <h2>先登录，再打开今日任务</h2>
-        <p className="app-lead">
-          未登录可先到练习页浅试一条本机草稿。完整计划与周复盘需要账号。
-        </p>
+      <div className="wrap app-panel app-panel--tight">
+        <h2>今日</h2>
+        <p className="app-lead">未登录可先到练习浅试一条草稿。计划和复盘需要账号。</p>
         <div className="app-actions">
           <BridgeButton
             variant="primary"
@@ -48,6 +56,11 @@ export function TodayPage() {
             浅试练习
           </BridgeButton>
         </div>
+        <p className="band-soft">
+          <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
+            再看一遍引导
+          </button>
+        </p>
       </div>
     )
   }
@@ -62,44 +75,53 @@ export function TodayPage() {
     )
   }
 
-  if (!plan) {
+  if (error) {
     return (
-      <div className="wrap app-panel">
-        <p className="kicker">今日</p>
-        <h2>还没有进行中的计划</h2>
-        <p className="app-lead">描述一件生活里的英语小事，三分钟定制本周练法。</p>
-        <BridgeButton variant="primary" onClick={() => navigate('/app/plan')}>
-          去定制计划
+      <div className="wrap app-panel app-panel--tight">
+        <h2>今日</h2>
+        <p className="app-lead">{error}</p>
+        <BridgeButton variant="primary" onClick={() => setLoadKey((n) => n + 1)}>
+          重试
         </BridgeButton>
       </div>
     )
   }
 
-  const firstTitle =
-    typeof plan.tasks_progress?.firstTaskTitle === 'string'
-      ? plan.tasks_progress.firstTaskTitle
-      : null
-  const firstTemplate =
-    typeof plan.tasks_progress?.firstTemplateId === 'string'
-      ? plan.tasks_progress.firstTemplateId
-      : null
+  if (!plan) {
+    return (
+      <div className="wrap app-panel app-panel--tight">
+        <h2>今日还没有任务卡</h2>
+        <p className="app-lead">先定一件生活里的英语小事，再摊开这一周。</p>
+        <BridgeButton variant="primary" onClick={() => navigate('/app/plan')}>
+          去定制计划
+        </BridgeButton>
+        <p className="band-soft">
+          <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
+            再看一遍引导
+          </button>
+        </p>
+      </div>
+    )
+  }
+
+  const task = planFirstTask(plan)
 
   return (
-    <div className="wrap app-panel">
-      <p className="kicker">今日</p>
-      <h2>这一周的焦点</h2>
+    <div className="wrap app-panel app-panel--tight">
+      <h2>今日</h2>
       <p className="app-goal">{plan.goal_sentence ?? '（未写目标句）'}</p>
       {plan.week_focus ? <p className="app-focus">{plan.week_focus}</p> : null}
-      {firstTitle ? (
+      {task.title ? (
         <div className="app-today-card">
-          <p className="app-today-label">本周第一张任务</p>
-          <p className="app-today-title">{firstTitle}</p>
+          <p className="app-today-label">这一张</p>
+          <p className="app-today-title">{task.title}</p>
+          {task.criteria ? <p className="app-today-stamp">{task.criteria}</p> : null}
           <BridgeButton
             variant="primary"
             onClick={() =>
               navigate(
-                firstTemplate
-                  ? `/app/footprints?template=${encodeURIComponent(firstTemplate)}`
+                task.templateId
+                  ? `/app/footprints?template=${encodeURIComponent(task.templateId)}`
                   : '/app/footprints',
               )
             }
@@ -113,9 +135,13 @@ export function TodayPage() {
         </BridgeButton>
       )}
       <p className="band-soft">
-        <Link to="/app/plan">改计划</Link>
+        <Link to="/app/plan">看当前计划</Link>
         {' · '}
         <Link to="/app/review">本周复盘</Link>
+        {' · '}
+        <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
+          再看一遍引导
+        </button>
       </p>
     </div>
   )

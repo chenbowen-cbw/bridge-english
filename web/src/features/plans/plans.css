@@ -1,5 +1,5 @@
 .plan-wizard {
-  padding: 48px 0 56px;
+  padding: 4px 0 32px;
   max-width: 640px;
 }
 
@@ -85,7 +85,6 @@
 
 .plan-opt.on {
   border-color: var(--accent);
-  box-shadow: inset 3px 0 0 var(--accent);
   background: rgba(144, 88, 49, 0.08);
 }
 
@@ -96,7 +95,7 @@
 
 .plan-ai-bound {
   padding: 14px 16px;
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--paper-edge);
   background: rgba(144, 88, 49, 0.06);
   color: var(--ink);
   font-size: 0.95rem;
@@ -174,4 +173,148 @@
   margin: 12px 0;
   color: var(--accent);
   font-size: 0.9rem;
+}
+
+.plan-desk {
+  padding: 4px 0 32px;
+  max-width: 640px;
+}
+
+.plan-desk-note {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.plan-desk-goal {
+  margin: 0 0 10px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.plan-desk-focus {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-size: 1.05rem;
+}
+
+.plan-desk-task {
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--paper-edge);
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent 1.55em,
+      rgba(196, 180, 152, 0.25) 1.55em,
+      rgba(196, 180, 152, 0.25) calc(1.55em + 1px)
+    ),
+    rgba(253, 251, 245, 0.95);
+}
+
+.plan-desk-task-label {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.plan-desk-task-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.plan-stamp {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 6px 10px;
+  border: 1px dashed rgba(144, 88, 49, 0.5);
+  color: var(--accent);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  max-width: 42ch;
+}
+
+.plan-desk-retest {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.plan-desk-secondary {
+  margin: 0 0 24px;
+}
+
+.plan-text-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.plan-text-btn:hover {
+  color: var(--ink);
+}
+
+.plan-text-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.plan-history h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.plan-history ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.plan-history button {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-top: 1px dashed var(--rule);
+  background: transparent;
+  padding: 10px 0;
+  font: inherit;
+  cursor: pointer;
+  color: var(--ink);
+  display: grid;
+  gap: 2px;
+}
+
+.plan-history button:hover {
+  background: rgba(144, 88, 49, 0.05);
+}
+
+.plan-history button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.plan-history-goal {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.plan-history-date {
+  font-size: 0.75rem;
+  color: var(--muted);
 }

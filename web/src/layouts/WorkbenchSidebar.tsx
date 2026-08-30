@@ -2,6 +2,7 @@ import type { Ref } from 'react'
 import { Link, NavLink, useLocation, useSearchParams } from 'react-router-dom'
 import { AccountMenu } from '../components/AccountMenu'
 import { useAuth } from '../features/auth'
+import { requestOnboardReplay } from '../features/onboard'
 import { planTierLabel } from '../lib/planTier'
 import type { LocalFootprint, PlanTier } from '../lib/supabase'
 
@@ -90,7 +91,12 @@ export function WorkbenchSidebar({
             ))}
           </ul>
         ) : (
-          <p className="app-sidebar-empty">完成一张任务后会出现在这里</p>
+          <p className="app-sidebar-empty">
+            还没有练习。{' '}
+            <Link to="/app/footprints" onClick={onNavigate}>
+              选模板写稿
+            </Link>
+          </p>
         )}
       </div>
 
@@ -104,6 +110,7 @@ export function WorkbenchSidebar({
             email={user.email}
             showHome
             placement="up"
+            onReplayGuide={requestOnboardReplay}
             onSignOut={signOut}
           />
         ) : (

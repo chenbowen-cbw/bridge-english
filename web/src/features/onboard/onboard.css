@@ -1,0 +1,98 @@
+.onboard-back {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(40, 32, 18, 0.32);
+}
+
+.onboard-sheet {
+  position: relative;
+  width: min(26rem, 100%);
+  padding: 28px 28px 22px 32px;
+  background:
+    repeating-linear-gradient(
+      transparent,
+      transparent calc(1.55em - 1px),
+      rgba(196, 180, 152, 0.28) calc(1.55em - 1px),
+      rgba(196, 180, 152, 0.28) 1.55em
+    ),
+    var(--paper);
+  border: 1px solid var(--paper-edge);
+  box-shadow: 0 18px 40px rgba(60, 45, 20, 0.12);
+}
+
+.onboard-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 18px;
+  width: 1px;
+  background: rgba(144, 88, 49, 0.22);
+  pointer-events: none;
+}
+
+.onboard-count {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+
+.onboard-sheet h2 {
+  margin: 0 0 10px;
+  font-family: 'Special Elite', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.onboard-body {
+  margin: 0 0 22px;
+  max-width: 36ch;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.onboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onboard-skip {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.onboard-skip:hover {
+  color: var(--ink);
+}
+
+.onboard-skip:focus-visible,
+.onboard-sheet :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboard-back,
+  .onboard-sheet {
+    transition: none;
+  }
+}

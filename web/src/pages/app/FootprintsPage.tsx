@@ -50,7 +50,7 @@ export function FootprintsPage() {
       : ''
 
   return (
-    <div className="wrap app-panel">
+    <div className="wrap app-panel app-panel--wide">
       <FootprintsPanel
         focusId={focusId}
         queryWarning={queryWarning}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../features/auth'
 import { AnonMigrateBanner, FOOTPRINTS_CHANGED, listFootprints } from '../features/footprints'
+import { OnboardSheet } from '../features/onboard'
 import { getProfilePlanTier } from '../features/profile/api'
 import type { LocalFootprint, PlanTier } from '../lib/supabase'
 import { WorkbenchSidebar } from './WorkbenchSidebar'
@@ -150,6 +151,8 @@ export function AppLayout() {
           )}
         </main>
       </div>
+
+      <OnboardSheet />
     </div>
   )
 }

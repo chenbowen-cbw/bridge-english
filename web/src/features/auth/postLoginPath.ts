@@ -8,8 +8,9 @@ export async function resolvePostLoginPath(
   if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) {
     return nextParam
   }
-  const plan = await getActivePlan(userId)
-  return plan ? '/app' : '/app/plan'
+  const res = await getActivePlan(userId)
+  if (!res.ok) return '/app'
+  return res.plan ? '/app' : '/app/plan'
 }
 
 /** 「稍后再说」：不要 history.back。练习浅试回工作台路径，其余回首页。 */

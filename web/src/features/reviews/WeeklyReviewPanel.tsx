@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BridgeButton } from '../../components/BridgeButton'
 import { useAuth } from '../auth'
 import type { LocalFootprint } from '../../lib/supabase'
@@ -25,6 +26,7 @@ const emptyDims = (): ReviewDims => ({
 
 export function WeeklyReviewPanel({ onNeedAuth }: Props) {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [picks, setPicks] = useState<LocalFootprint[]>([])
   const [dims, setDims] = useState<ReviewDims>(emptyDims)
   const [focusNext, setFocusNext] = useState('本周只盯一个变量，别同时开太多线。')
@@ -64,21 +66,18 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       setStatusTone('warn')
       return
     }
-    setStatus('本周复盘已写入云端。')
+    setStatus('本周复盘已保存。')
     setStatusTone('ok')
   }
 
   return (
     <section className="rv-panel" id="app-review">
-      <p className="kicker">每周复盘</p>
-      <h2>本周轻量对照</h2>
-      <p className="rv-lead">
-        {weekRangeLabel()} · 不打分、不惩罚——从练习里抽出几条，问问自己。
-      </p>
+      <h2>复盘</h2>
+      <p className="rv-lead">{weekRangeLabel()} · 不打分，对照留下的痕迹。</p>
 
       {!user ? (
         <p className="rv-banner" role="status">
-          登录后可把复盘写入 <code>weekly_reviews</code>。
+          登录后才能保存本周复盘。
           {onNeedAuth ? (
             <>
               {' '}
@@ -92,9 +91,14 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
 
       <div className="rv-section">
         <h3>本周练习</h3>
-        <p className="rv-hint">系统抽了最多 3 条（优先本周）。</p>
+        <p className="rv-hint">从本周练习里抽出几条对照。</p>
         {!picks.length ? (
-          <p className="rv-empty">还没有可复盘的练习。先完成一张任务卡的独立输出。</p>
+          <div className="rv-empty">
+            <p>还没有可复盘的练习。</p>
+            <BridgeButton variant="primary" onClick={() => navigate('/app/footprints')}>
+              去选模板写稿
+            </BridgeButton>
+          </div>
         ) : (
           <ul className="rv-picks">
             {picks.map((fp) => (

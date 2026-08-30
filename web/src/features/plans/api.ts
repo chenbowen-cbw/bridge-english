@@ -15,13 +15,45 @@ export type LearningPlanRow = {
   updated_at: string
 }
 
+export type PlanQueryResult =
+  | { ok: true; plan: LearningPlanRow | null }
+  | { ok: false; error: string }
+
+export type PlanListResult =
+  | { ok: true; plans: LearningPlanRow[] }
+  | { ok: false; error: string }
+
+export type PlanFirstTask = {
+  title: string | null
+  templateId: string | null
+  criteria: string | null
+}
+
+const UNREACHABLE = '暂时读不到计划，请稍后重试。'
+
+export function planFirstTask(plan: LearningPlanRow): PlanFirstTask {
+  const progress = plan.tasks_progress ?? {}
+  return {
+    title: typeof progress.firstTaskTitle === 'string' ? progress.firstTaskTitle : null,
+    templateId: typeof progress.firstTemplateId === 'string' ? progress.firstTemplateId : null,
+    criteria: typeof progress.firstTaskCriteria === 'string' ? progress.firstTaskCriteria : null,
+  }
+}
+
+export function formatPlanDate(iso: string | null | undefined): string | null {
+  if (!iso) return null
+  const d = new Date(iso.length === 10 ? `${iso}T00:00:00` : iso)
+  if (Number.isNaN(d.getTime())) return iso
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+}
+
 export async function saveLearningPlan(
   userId: string,
   answers: PlanAnswers,
   built: BuiltPlan,
 ): Promise<{ ok: true; plan: LearningPlanRow } | { ok: false; error: string }> {
   if (!supabase || !isSupabaseConfigured) {
-    return { ok: false, error: 'Supabase 未配置' }
+    return { ok: false, error: '还没连上保存服务，计划先留在这一页。' }
   }
 
   // Archive prior active plans (soft)
@@ -71,10 +103,10 @@ export async function saveLearningPlan(
   return { ok: true, plan: data as LearningPlanRow }
 }
 
-export async function getActivePlan(
-  userId: string,
-): Promise<LearningPlanRow | null> {
-  if (!supabase || !isSupabaseConfigured) return null
+export async function getActivePlan(userId: string): Promise<PlanQueryResult> {
+  if (!supabase || !isSupabaseConfigured) {
+    return { ok: false, error: UNREACHABLE }
+  }
   const { data, error } = await supabase
     .from('learning_plans')
     .select('*')
@@ -83,6 +115,34 @@ export async function getActivePlan(
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle()
-  if (error || !data) return null
-  return data as LearningPlanRow
+  if (error) return { ok: false, error: UNREACHABLE }
+  return { ok: true, plan: (data as LearningPlanRow | null) ?? null }
+}
+
+export async function listArchivedPlans(userId: string): Promise<PlanListResult> {
+  if (!supabase || !isSupabaseConfigured) {
+    return { ok: false, error: UNREACHABLE }
+  }
+  const { data, error } = await supabase
+    .from('learning_plans')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'archived')
+    .order('updated_at', { ascending: false })
+  if (error) return { ok: false, error: UNREACHABLE }
+  return { ok: true, plans: (data as LearningPlanRow[]) ?? [] }
+}
+
+export async function getPlanById(userId: string, planId: string): Promise<PlanQueryResult> {
+  if (!supabase || !isSupabaseConfigured) {
+    return { ok: false, error: UNREACHABLE }
+  }
+  const { data, error } = await supabase
+    .from('learning_plans')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('id', planId)
+    .maybeSingle()
+  if (error) return { ok: false, error: UNREACHABLE }
+  return { ok: true, plan: (data as LearningPlanRow | null) ?? null }
 }
