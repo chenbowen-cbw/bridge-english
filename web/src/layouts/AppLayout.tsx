@@ -9,7 +9,7 @@ import { WorkbenchSidebar } from './WorkbenchSidebar'
 const PAGE_TITLE: Record<string, string> = {
   '/app': '今日',
   '/app/plan': '计划',
-  '/app/footprints': '足迹',
+  '/app/footprints': '练习',
   '/app/review': '复盘',
 }
 

@@ -79,8 +79,8 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
       <h2>{mode === 'signin' ? '登录 Bridge' : '注册 Bridge'}</h2>
       <p className="auth-lead">
         {mode === 'signup'
-          ? '用邮箱注册后即可保存计划、足迹与复盘。若项目开启了邮箱确认，注册后需先点邮件里的链接。'
-          : '邮箱 + 密码登录。营销页可匿名浏览；工作台内计划与周复盘需登录，足迹可先试一条本机草稿。'}
+          ? '用邮箱注册后即可保存计划、练习与复盘。若项目开启了邮箱确认，注册后需先点邮件里的链接。'
+          : '邮箱 + 密码登录。营销页可匿名浏览；工作台内计划与周复盘需登录，练习可先试一条本机草稿。'}
       </p>
       {!configured ? (
         <p className="auth-banner" role="status">

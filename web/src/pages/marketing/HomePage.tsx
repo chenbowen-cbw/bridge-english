@@ -69,10 +69,10 @@ export function HomePage() {
 
       <section className="footprint-band" id="method-teaser">
         <div className="wrap">
-          <p className="kicker">足迹 · 不是档案墙</p>
+          <p className="kicker">练习 · 不是档案墙</p>
           <h2>一张任务，如何留下痕迹</h2>
           <p className="band-lead">
-            足迹嵌在任务结束态：独立输出先存证，再展开 AI 点拨；周复盘只做轻量前后对比。
+            练习嵌在任务结束态：独立输出先存证，再展开 AI 点拨；周复盘只做轻量前后对比。
           </p>
           <ol className="trail">
             {METHOD_TRAIL.map((item) => (
@@ -94,13 +94,13 @@ export function HomePage() {
               arrow="none"
               onClick={() => navigate('/app/footprints')}
             >
-              浅试一条足迹
+              浅试一条练习
             </BridgeButton>
           </div>
           <p className="band-soft">
             完整计划与周复盘在{' '}
             <Link to={user ? '/app' : '/login?next=%2Fapp'}>工作台</Link>
-            ；未登录也可在足迹页试一条本机草稿。
+            ；未登录也可在练习页试一条本机草稿。
           </p>
         </div>
       </section>

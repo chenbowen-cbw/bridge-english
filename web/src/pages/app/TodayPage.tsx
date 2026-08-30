@@ -35,7 +35,7 @@ export function TodayPage() {
         <p className="kicker">今日</p>
         <h2>先登录，再打开今日任务</h2>
         <p className="app-lead">
-          未登录可先到足迹页浅试一条本机草稿。完整计划与周复盘需要账号。
+          未登录可先到练习页浅试一条本机草稿。完整计划与周复盘需要账号。
         </p>
         <div className="app-actions">
           <BridgeButton
@@ -45,7 +45,7 @@ export function TodayPage() {
             登录
           </BridgeButton>
           <BridgeButton variant="ghost" arrow="none" onClick={() => navigate('/app/footprints')}>
-            浅试足迹
+            浅试练习
           </BridgeButton>
         </div>
       </div>
@@ -104,12 +104,12 @@ export function TodayPage() {
               )
             }
           >
-            去写足迹
+            去写练习
           </BridgeButton>
         </div>
       ) : (
         <BridgeButton variant="primary" onClick={() => navigate('/app/footprints')}>
-          打开足迹
+          打开练习
         </BridgeButton>
       )}
       <p className="band-soft">

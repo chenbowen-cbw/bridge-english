@@ -22,7 +22,7 @@ export function FootprintsPage() {
   useEffect(() => {
     if (!template) return
     if (!getTemplate(template)) {
-      setQueryWarning('没有这个任务模板，已回到足迹页。')
+      setQueryWarning('没有这个任务模板，已回到练习页。')
       const next = new URLSearchParams(params)
       next.delete('template')
       const search = next.toString()
@@ -39,7 +39,7 @@ export function FootprintsPage() {
   }, [replaceQuery])
 
   const onInvalidFocus = useCallback(() => {
-    setQueryWarning('找不到这条足迹，已取消选中。')
+    setQueryWarning('找不到这条练习，已取消选中。')
     replaceQuery((next) => next.delete('id'))
   }, [replaceQuery])
 

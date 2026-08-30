@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>桥英语 Bridge — 定制计划，留下足迹</title>
+<title>桥英语 Bridge — 定制计划，留下痕迹</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Geist:wght@400;500;600;700&family=Caveat:wght@400;600&family=Long+Cang&display=swap" rel="stylesheet">
@@ -499,7 +499,7 @@
       <button data-go="home" class="on">首页</button>
       <button data-go="plan">计划</button>
       <button data-go="tasks">任务卡</button>
-      <button data-go="evidence">足迹</button>
+      <button data-go="evidence">练习</button>
       <button data-go="review">每周复盘</button>
       <button data-go="pricing">订阅</button>
     </div>
@@ -552,7 +552,7 @@
         <button class="cta" id="heroPlanCta"><span class="btn-glare" aria-hidden="true"></span><span class="cta-arrow" aria-hidden="true">↑</span>定制计划</button>
       </div>
       <div class="hero-steps rv" style="--d:.26s">
-        <span>1 计划</span><span>2 任务</span><span>3 陪练</span><span>4 足迹</span><span>5 复盘</span>
+        <span>1 计划</span><span>2 任务</span><span>3 陪练</span><span>4 练习</span><span>5 复盘</span>
       </div>
     </div>
   </div>
@@ -561,10 +561,10 @@
   <section class="trace-story" aria-labelledby="traceStoryTitle">
     <div class="wrap">
       <p class="nb-label rv">痕迹怎么留下</p>
-      <h2 id="traceStoryTitle" class="rv" style="--d:.05s">留下足迹，而不是打卡</h2>
+      <h2 id="traceStoryTitle" class="rv" style="--d:.05s">留下痕迹，而不是打卡</h2>
       <p class="lead rv" style="--d:.1s">任务结束会保存你的原话与原文——写不好也算数。周复盘时再拿出来，和过去的自己轻量对照。</p>
 
-      <article class="trace-demo rv" style="--d:.16s" aria-label="示例足迹：点餐开口">
+      <article class="trace-demo rv" style="--d:.16s" aria-label="示例练习：点餐开口">
         <div class="trace-demo-head">
           <div>
             <h3>15 分钟 · 点餐开口</h3>
@@ -707,13 +707,13 @@
         <div class="steps">
           <div class="step"><div class="n">1</div><div><h4>讲解</h4><p>AI 用中文讲清本场景的关键表达与句型。</p></div></div>
           <div class="step"><div class="n">2</div><div><h4>练习</h4><p>AI 生成练习并追问纠错，你来做选择。</p></div></div>
-          <div class="step"><div class="n">3</div><div><h4>独立输出</h4><p>锁 AI → 存足迹 → 再展开反馈。不考试，不整段改写。</p></div></div>
+          <div class="step"><div class="n">3</div><div><h4>独立输出</h4><p>锁 AI → 存练习 → 再展开反馈。不考试，不整段改写。</p></div></div>
         </div>
         <div style="margin-top:18px"><button class="btn" id="startIndep">进入独立输出 <span class="arrow">→</span></button></div>
         <div class="independent" id="indepBox" style="display:none">
           <div class="indep-flow" id="indepFlow" aria-label="结束态步骤">
             <span class="on" data-phase="draft">① 独立输出</span>
-            <span data-phase="save">② 存足迹</span>
+            <span data-phase="save">② 存练习</span>
             <span data-phase="fb">③ AI 反馈</span>
           </div>
           <div id="indepDraftPhase">
@@ -737,9 +737,9 @@
               </div>
             </div>
             <div class="indep-sec">
-              <p class="indep-sec-label">存足迹（先存再反馈）</p>
+              <p class="indep-sec-label">存练习（先存再反馈）</p>
               <label class="fp-check"><input type="checkbox" id="stdCheck" checked> 勾选完成标准：<span id="stdCheckLabel">本任务完成标准</span></label>
-              <label class="fp-check"><input type="checkbox" id="saveFpCheck" checked> 一键存入足迹</label>
+              <label class="fp-check"><input type="checkbox" id="saveFpCheck" checked> 一键存入练习</label>
             </div>
             <div class="indep-sec">
               <p class="indep-sec-label">自评 · 可选</p>
@@ -753,18 +753,18 @@
               </div>
             </div>
             <div class="indep-actions">
-              <button type="button" class="btn small" id="saveEvi"><span class="btn-glare" aria-hidden="true"></span>完成并存入足迹</button>
+              <button type="button" class="btn small" id="saveEvi"><span class="btn-glare" aria-hidden="true"></span>完成并存入练习</button>
               <button type="button" class="btn ghost small" id="cancelIndep">取消</button>
             </div>
           </div>
           <div id="aiFeedbackPhase" hidden>
             <div class="indep-sec">
-              <p class="indep-sec-label">足迹已存 · 陪练反馈</p>
+              <p class="indep-sec-label">练习已存 · 陪练反馈</p>
               <div class="locknote ok">先存再反馈。下面只点拨分层，不整段改写。</div>
             </div>
             <div class="ai-feedback" id="aiFeedbackList"></div>
             <div class="indep-actions">
-              <button type="button" class="btn small" id="gotoFootprints"><span class="btn-glare" aria-hidden="true"></span>去看足迹 <span class="arrow">→</span></button>
+              <button type="button" class="btn small" id="gotoFootprints"><span class="btn-glare" aria-hidden="true"></span>去看练习 <span class="arrow">→</span></button>
               <button type="button" class="btn ghost small" id="backToCoach">收起反馈</button>
             </div>
           </div>
@@ -786,15 +786,15 @@
 <div class="screen" id="evidence">
   <section class="wrap">
     <div class="nb-page-head rv">
-      <p class="nb-label">足迹</p>
+      <p class="nb-label">练习</p>
       <h2>一张任务留下的痕迹</h2>
       <p class="sub">嵌在任务结束态——不是档案墙。这里是你每一次真实产出的轻量沉淀。</p>
     </div>
     <div class="chips rv" style="--d:.08s" id="fpChips"></div>
     <div class="evi-list" id="eviList"></div>
     <div class="fp-empty" id="fpEmpty" hidden>
-      <h3>还没有足迹</h3>
-      <p>完成一张任务卡的独立输出，勾选「存入足迹」，痕迹就会落在这里。写不好也算数。</p>
+      <h3>还没有练习</h3>
+      <p>完成一张任务卡的独立输出，勾选「存入练习」，痕迹就会落在这里。写不好也算数。</p>
       <button type="button" class="btn small" data-go="tasks">去选一张任务卡 <span class="arrow">→</span></button>
     </div>
     <div class="fp-detail" id="fpDetail" aria-live="polite">
@@ -819,15 +819,15 @@
     <div class="nb-page-head rv">
       <p class="nb-label">每周复盘</p>
       <h2>本周轻量对照</h2>
-      <p class="sub">每周一次就够。不打分、不惩罚——只从足迹里抽出几条，问问自己。</p>
+      <p class="sub">每周一次就够。不打分、不惩罚——只从练习里抽出几条，问问自己。</p>
     </div>
 
     <div class="review-paper rv" style="--d:.1s" id="reviewRoot">
-      <p class="review-tone" id="rvWeekLabel">本周足迹 · 自动抽条</p>
+      <p class="review-tone" id="rvWeekLabel">本周练习 · 自动抽条</p>
 
       <div id="rvEmpty" class="rv-empty" hidden>
-        <h3>还没有可复盘的足迹</h3>
-        <p>先完成一张任务卡并勾选「存入足迹」，或者看首页示例感受一下痕迹怎么留下。写不好也算数。</p>
+        <h3>还没有可复盘的练习</h3>
+        <p>先完成一张任务卡并勾选「存入练习」，或者看首页示例感受一下痕迹怎么留下。写不好也算数。</p>
         <div class="btn-row">
           <button type="button" class="btn small" data-go="tasks">去完成一张任务 <span class="arrow">→</span></button>
           <button type="button" class="btn ghost small" data-go="home">看首页示例</button>
@@ -836,7 +836,7 @@
 
       <div id="rvBody" hidden>
         <div class="rv-section">
-          <h3>本周足迹</h3>
+          <h3>本周练习</h3>
           <p class="rv-hint">系统抽了 2–3 条。不喜欢就点「换一条」——换展示，不删痕迹。</p>
           <div class="rv-picks" id="rvPicks"></div>
         </div>
@@ -866,7 +866,7 @@
             <div class="rv-dim rv-migrate">
               <label>迁移<span>这周有没有在真实生活里用过？</span></label>
               <label class="fp-check"><input type="checkbox" id="rvMigrateLive"> 有——点餐 / 问路 / 回消息…用回生活了</label>
-              <textarea id="rvMigrateNote" rows="2" placeholder="可选：用在哪一次？（和足迹页「一周后迁移」呼应）" style="margin-top:10px"></textarea>
+              <textarea id="rvMigrateNote" rows="2" placeholder="可选：用在哪一次？（和练习页「一周后迁移」呼应）" style="margin-top:10px"></textarea>
             </div>
           </div>
         </div>
@@ -893,7 +893,7 @@
   <section class="wrap">
     <div class="pricing-head rv">
       <h2>选一本陪你日常练英语的本子</h2>
-      <p class="sub">计划、任务卡、陪练边界，再把输出留成足迹。付费换更稳的节奏与更长的对照——卖陪练与痕迹，不卖代写。</p>
+      <p class="sub">计划、任务卡、陪练边界，再把输出留成练习。付费换更稳的节奏与更长的对照——卖陪练与痕迹，不卖代写。</p>
       <div class="bill-toggle" role="group" aria-label="计费周期">
         <button type="button" class="on" data-bill="month" id="billMonth">按月</button>
         <button type="button" data-bill="year" id="billYear">按年 · 坚持奖励</button>
@@ -905,14 +905,14 @@
       <article class="plan-col quiet">
         <span class="plan-badge">免费</span>
         <h3>草稿本</h3>
-        <p class="plan-tagline">先把「计划 → 任务 → 足迹」跑通，不急着付费。</p>
+        <p class="plan-tagline">先把「计划 → 任务 → 练习」跑通，不急着付费。</p>
         <div class="plan-price"><span class="amt" data-price-free>0</span><span class="unit">元 / 永久</span></div>
         <p class="plan-price-note">随时可换本，进度保留</p>
         <ul class="plan-list">
           <li>1 个进行中的生活微目标计划</li>
           <li>每周 3 张核心场景任务卡</li>
           <li>每月 8 次 AI 陪练（先独立稿 · 讲解→练习→追问）</li>
-          <li>独立输出存足迹（最近 14 天）</li>
+          <li>独立输出存练习（最近 14 天）</li>
           <li>轻量周复盘清单</li>
           <li class="omit">暂不含语音陪练与毕业任务</li>
         </ul>
@@ -929,7 +929,7 @@
           <li>多目标计划切换 · 今日计划提醒</li>
           <li>旅行 / 看剧 / 聊天 / 兴趣阅读场景任务卡</li>
           <li>每月 40 次 AI 陪练（先独立稿 · 禁整段改写）</li>
-          <li>足迹完整历史 · 月度前后对比</li>
+          <li>练习完整历史 · 月度前后对比</li>
           <li>周复盘：完成 · 质量 · 保持 · 迁移</li>
           <li>每月 8 次语音陪练</li>
         </ul>
@@ -947,7 +947,7 @@
           <li>每月 100 次 AI 陪练（边界同上）</li>
           <li>语音陪练更宽裕（约 30 次 / 月）</li>
           <li>毕业任务：把场景用回真实生活</li>
-          <li>足迹跨季对比 · 可导出笔记</li>
+          <li>练习跨季对比 · 可导出笔记</li>
           <li class="omit">同样不做整段代写</li>
         </ul>
         <button class="btn ghost" id="ctaDeep">选择深练本 <span class="arrow">→</span></button>
@@ -955,7 +955,7 @@
     </div>
 
     <p class="pricing-note rv" style="--d:.14s">
-      <strong>卖的是：</strong>陪练节奏、真实场景任务卡、更长的足迹对照、毕业任务。<br>
+      <strong>卖的是：</strong>陪练节奏、真实场景任务卡、更长的练习对照、毕业任务。<br>
       <strong>不卖：</strong>整段代写、题库冲刺、断签惩罚。
     </p>
 
@@ -966,7 +966,7 @@
       </div>
       <div class="hook">
         <h4>什么时候换到深练本</h4>
-        <p>语音想练得更勤；想做真实生活毕业任务；或希望足迹能跨季度对照。</p>
+        <p>语音想练得更勤；想做真实生活毕业任务；或希望练习能跨季度对照。</p>
       </div>
     </div>
   </section>
@@ -1705,7 +1705,7 @@
       raw=voiceRaw;
     }else{
       raw=document.getElementById('indepText').value.trim();
-      if(!raw){toast('先写点什么再存入足迹');return;}
+      if(!raw){toast('先写点什么再存入练习');return;}
     }
     const saveFp=document.getElementById('saveFpCheck').checked;
     const stdChecked=document.getElementById('stdCheck').checked;
@@ -1725,7 +1725,7 @@
       list.unshift(entry);
       saveFootprints(list);
     }
-    toast(saveFp?'足迹已存 · 下面展开反馈':'已完成 · 未勾选存足迹');
+    toast(saveFp?'练习已存 · 下面展开反馈':'已完成 · 未勾选存练习');
     const tips=buildAiFeedback(raw);
     document.getElementById('aiFeedbackList').innerHTML=tips.map((t,i)=>`
       <div class="ai-fb-item"><div class="n">${i+1}</div><div><div class="tag">${t.tag}</div><p>${t.text}</p></div></div>`).join('');
@@ -1955,7 +1955,7 @@
           <div class="flags">
             ${e.stdChecked?'<span>完成标准 ✓</span>':''}
             ${rate?`<span>${rate}</span>`:''}
-            ${e.migrateChecked?'<span>足迹已勾迁移</span>':''}
+            ${e.migrateChecked?'<span>练习已勾迁移</span>':''}
           </div>
         </div>
         <button type="button" class="btn ghost small swap" data-swap="${idx}" ${all.length<=1?'disabled':''}>换一条</button>
@@ -1965,7 +1965,7 @@
       btn.addEventListener('click',()=>{
         const i=+btn.dataset.swap;
         const nid=nextSwapCandidate(i);
-        if(!nid){toast('暂时没有更多足迹可换');return;}
+        if(!nid){toast('暂时没有更多练习可换');return;}
         rvPickIds[i]=nid;
         renderRvPicks();
         renderRvCompare();
@@ -2051,7 +2051,7 @@
   });
   document.getElementById('saveReview').addEventListener('click',()=>{
     const all=loadFootprints();
-    if(!all.length){toast('先留一条足迹再复盘');return;}
+    if(!all.length){toast('先留一条练习再复盘');return;}
     const wk=weekKey(new Date());
     const migrateLive=document.getElementById('rvMigrateLive').checked;
     const payload={

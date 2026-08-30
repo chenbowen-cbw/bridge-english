@@ -17,10 +17,10 @@
 1. **真实任务** — 生活微目标 → 计划 → 今日任务卡  
 2. **先独立稿** — 学习者先写，再开 AI  
 3. **AI 不代写** — 只点拨；禁止整段改写 / ghostwrite / polish_final  
-4. **足迹** — 独立输出可见留存（导航叫「足迹」，不是证据博物馆）  
+4. **练习** — 独立输出可见留存（导航叫「练习」，不是证据博物馆）  
 5. **周复盘** — 轻量 before/after，不搞分数羞辱  
 
-主旅程：`计划定制 → 今日任务 → 先独立尝试 → AI 陪练 → 独立输出存足迹 → 周复盘`。
+主旅程：`计划定制 → 今日任务 → 先独立尝试 → AI 陪练 → 独立输出存练习 → 周复盘`。
 
 主 CTA：描述生活微目标 → **定制计划**（不是「开始诊断」、不是裸聊）。
 
@@ -65,7 +65,7 @@ bridge-english/
 │       └── features/
 │           ├── auth/        ← 登录注册、AuthProvider、RequireAuth
 │           ├── plans/       ← 计划问卷 → learning_plans
-│           ├── footprints/  ← 足迹 CRUD（localStorage 按用户隔离 + 云端）
+│           ├── footprints/  ← 练习 CRUD（代码目录/表名不改；localStorage 按用户隔离 + 云端）
 │           ├── reviews/     ← 周复盘 → weekly_reviews
 │           ├── profile/     ← 只读 plan_tier 展示
 │           └── ai-coach/    ← 调用 Edge Function
@@ -87,16 +87,16 @@ bridge-english/
 | `/` `/method` `/pricing` `/login` | MarketingLayout | 营销站：Hero、方法故事、价卡；**禁止**挂载 PlanWizard / FootprintsPanel CRUD / WeeklyReviewPanel |
 | `/app` | AppLayout | 今日：有 active plan 摘要；无则引导定制 |
 | `/app/plan` | AppLayout + 登录 | 完整计划问卷 |
-| `/app/footprints` | AppLayout | 足迹；未登录可存 **1 条**本机匿名草稿；`?template=` 选模板 |
+| `/app/footprints` | AppLayout | 练习；未登录可存 **1 条**本机匿名草稿；`?template=` 选模板 |
 | `/app/review` | AppLayout + 登录 | 周复盘 |
 
-- 两套壳互不混装：**营销是顶栏**（方法 · 定价）；**产品是左栏工作台**（功能入口 + 最近练习会话），不要顶栏横向「今日/计划/足迹/复盘」。
+- 两套壳互不混装：**营销是顶栏**（方法 · 定价）；**产品是左栏工作台**（功能入口 + 最近练习会话），不要顶栏横向「今日/计划/练习/复盘」。
 - Logo：营销 `bridge.` → `/`；工作台左栏 `bridge.` → `/app`。
 - 营销右侧：未登录 = `登录`（`/login?next=/app`，已有 next 则尊重）+ `定制计划`（`/login?next=/app/plan`，可带 goal）；已登录 = **进入工作台**（有 active plan → `/app`，无 → `/app/plan`），退出放账户菜单。
 - 产品左栏下：只读「当前：草稿本/日常本/深练本」+ 账户菜单（退出、回到首页 `/`）。不要在顶栏钉「官网」。
-- 左栏「最近练习」点一条 → `/app/footprints?id=` 选中该足迹。未登录浅试也用这套壳。
+- 左栏「最近练习」点一条 → `/app/footprints?id=` 选中该条练习。未登录浅试也用这套壳。
 - 登录落地：有 `next` 用 `next`；否则有 active plan → `/app`，无 → `/app/plan`
-- 未登录进 `/app/plan` `/app/review` 仍 RequireAuth；足迹允许匿名浅试。
+- 未登录进 `/app/plan` `/app/review` 仍 RequireAuth；练习允许匿名浅试。
 - Vercel：`web/vercel.json` 已 rewrite 全部路径到 `index.html`
 
 | 从 | 动作 | 到 |
@@ -104,7 +104,7 @@ bridge-english/
 | 营销未登录 · 定制计划 | CTA | `/login?next=/app/plan` |
 | 营销已登录 · 进入工作台 | CTA | `/app` 或 `/app/plan` |
 | 营销 · 方法/定价 | 顶栏 | `/method` `/pricing` |
-| 产品 · 今日/计划/足迹/复盘 | 左栏 | `/app` `/app/plan` `/app/footprints` `/app/review` |
+| 产品 · 今日/计划/练习/复盘 | 左栏 | `/app` `/app/plan` `/app/footprints` `/app/review` |
 | 产品 · 最近练习 | 左栏会话 | `/app/footprints?id=` |
 | 产品 · 回到首页 | 左栏账户菜单 | `/` |
 | 产品 · logo | 左栏顶 | `/app` |
@@ -124,7 +124,7 @@ bridge-english/
 
 - 表默认 **RLS**：用户只能碰自己的行（`user_id = auth.uid()`）  
 - **`plan_tier` 不可客户端改**（列级 GRANT + `guard_plan_tier` trigger）；勿在前端「升级套餐」写库  
-- 足迹 localStorage：**按用户隔离** — `bridge-footprints:${userId}` / `bridge-footprints:anon`；勿混账号、勿写回未加用户后缀的全局 key  
+- 练习 localStorage：**按用户隔离** — `bridge-footprints:${userId}` / `bridge-footprints:anon`（key 不改）；勿混账号、勿写回未加用户后缀的全局 key  
 - 原型 key 前缀 `bridge-proto-*`，与生产切断  
 
 ### AI 陪练（`ai-coach`）
@@ -201,7 +201,7 @@ Vercel：改 `web/` 后 push `main` 即部署；Dashboard 建议配置 `VITE_SUP
 4. 不要在 `prototype/` 或根 HTML 上堆产品功能  
 5. 不要改成紫渐变 SaaS 皮，或丢掉笔记本 tokens  
 6. 不要破坏 RLS / 配额 / plan_tier 锁 / 按用户隔离的 localStorage  
-7. 不要用考试/词表/连胜羞辱叙事替换「真实任务 + 足迹 + 周复盘」主故事  
+7. 不要用考试/词表/连胜羞辱叙事替换「真实任务 + 练习 + 周复盘」主故事  
 
 ---
 

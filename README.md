@@ -20,7 +20,7 @@ npm run dev
 | `web/src/lib/supabase/` | 浏览器 client + 类型（仅 anon） |
 | `web/src/features/auth/` | 邮箱密码登录 / 注册 |
 | `web/src/features/plans/` | 计划定制问卷 → `learning_plans` |
-| `web/src/features/footprints/` | 足迹 CRUD（按用户隔离的 localStorage + 云端） |
+| `web/src/features/footprints/` | 练习 CRUD（代码目录/表名不改；按用户隔离的 localStorage + 云端） |
 | `web/src/features/reviews/` | 周复盘 MVP → `weekly_reviews` |
 | `web/src/features/ai-coach/` | 调用 Edge Function（日配额） |
 | `supabase/migrations/` | Schema + RLS + GRANTs |

@@ -171,7 +171,7 @@ export async function updateFootprint(
         pending: true,
       },
       cloud: 'failed',
-      cloudError: '找不到这条足迹',
+      cloudError: '找不到这条练习',
     }
   }
 

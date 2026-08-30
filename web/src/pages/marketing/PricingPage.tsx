@@ -24,7 +24,7 @@ export function PricingPage() {
           <div className="pricing-head">
             <h2>选一本陪你日常练英语的本子</h2>
             <p className="band-lead">
-              计划、任务卡、陪练边界，再把输出留成足迹。付费换更稳的节奏与更长的对照——卖陪练与痕迹，不卖代写。
+              计划、任务卡、陪练边界，再把输出留成练习。付费换更稳的节奏与更长的对照——卖陪练与痕迹，不卖代写。
             </p>
           </div>
           <div className="bill-toggle" role="group" aria-label="计费周期">

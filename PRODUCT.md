@@ -49,7 +49,7 @@ Voice: like a well-used notebook and a calm coach — concrete, unhurried, never
 ## Design Principles
 
 1. **Identity over fashion**: the paper-notebook + warm terracotta accent is a deliberate brand choice; preserve it rather than chasing cool-neutral SaaS trends.
-2. **Show the habit, not the archive**: second screen explains how one task leaves a footprint; navigation says 足迹, not 证据库-as-museum.
+2. **Show the habit, not the archive**: second screen explains how one task leaves a footprint; navigation says 练习, not 证据库-as-museum.
 3. **Judgment stays with the learner**: AI explains and prompts after an independent draft; default ban on wholesale rewrite.
 4. **Plan is the front door**: hero asks for a life micro-goal and leads to 计划定制; diagnosis/baseline is supporting, not the headline CTA.
 5. **Restraint with tactility**: micro-interactions (buttons, press, focus) feel physical and editorial — never a physics toy park.
@@ -62,13 +62,13 @@ Aim for WCAG 2.2 AA on text contrast and focus visibility. Honor `prefers-reduce
 
 | Was | Trend |
 | --- | --- |
-| 证据库 | **足迹** |
+| 证据库 | **练习**（路由仍 `/app/footprints`） |
 | 水平诊断 / 开始诊断 | Soften to **基线** or de-emphasize; hero CTA → plan |
 | — | Add **计划** entry (定制 / 今日计划) |
 | 任务卡 | Keep |
 | 每周复盘 | Keep; light before/after |
 
-Main journey: **计划定制 → 今日任务 → 先独立尝试 → AI 陪练 → 独立输出存足迹 → 周复盘**.
+Main journey: **计划定制 → 今日任务 → 先独立尝试 → AI 陪练 → 独立输出存练习 → 周复盘**.
 
 ## Persistence (v1)
 

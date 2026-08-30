@@ -186,7 +186,7 @@ export function FootprintsPanel({
     setFocusedId(null)
     appliedFocusRef.current = null
     onClearFocus?.()
-    setStatus(`用「${tpl.title}」再写一条。写完会存成新足迹。`)
+    setStatus(`用「${tpl.title}」再写一条。写完会存成新练习。`)
     setStatusTone('ok')
     setFocusDraftAfter((n) => n + 1)
   }
@@ -195,7 +195,7 @@ export function FootprintsPanel({
     e.preventDefault()
     const draft = body.trim()
     if (!draft) {
-      setStatus('请先写独立稿，再存足迹或请求陪练。')
+      setStatus('请先写独立稿，再存练习或请求陪练。')
       setStatusTone('warn')
       return
     }
@@ -241,7 +241,7 @@ export function FootprintsPanel({
       setStatus(
         created.cloud === 'skipped'
           ? '已存一条本机匿名草稿。登录后可同步云端并开启陪练。'
-          : '足迹已保存到本机',
+          : '练习已保存到本机',
       )
       setStatusTone('ok')
       setBusy(false)
@@ -258,14 +258,14 @@ export function FootprintsPanel({
       if (updated.cloud === 'failed') {
         showLocalAfterCloudFail()
         setStatus(
-          `本地已更新这条足迹，但云端同步失败：${updated.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
+          `本地已更新这条练习，但云端同步失败：${updated.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
         )
         setStatusTone('warn')
         setBusy(false)
         return
       }
       await refresh()
-      setStatus(updated.cloud === 'ok' ? '已更新这条足迹（同一条）' : '已更新本机足迹')
+      setStatus(updated.cloud === 'ok' ? '已更新这条练习（同一条）' : '已更新本机练习')
       setStatusTone('ok')
       setBusy(false)
       return
@@ -303,7 +303,7 @@ export function FootprintsPanel({
 
     setBody('')
     setShowExampleInDraft(false)
-    setStatus(created.cloud === 'ok' ? '足迹已写入云端' : '足迹已保存到本机')
+    setStatus(created.cloud === 'ok' ? '练习已写入云端' : '练习已保存到本机')
     setStatusTone('ok')
     setBusy(false)
   }
@@ -331,7 +331,7 @@ export function FootprintsPanel({
     <section className="fp-panel" id="app-footprints">
       <div className="fp-head">
         <div>
-          <p className="kicker">足迹 · 持久化</p>
+          <p className="kicker">练习 · 持久化</p>
           <h2>留下独立输出</h2>
           <p className="fp-lead">
             先写自己的稿，再存证；AI 只点拨，不整段改写。打开笔记本对页：左页选模板，右页练习。
@@ -361,7 +361,7 @@ export function FootprintsPanel({
         </p>
       ) : null}
 
-      <div className="fp-spread" aria-label="足迹对页">
+      <div className="fp-spread" aria-label="练习对页">
         <div className="fp-page fp-page--left" aria-label="推荐模板">
           <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-recommend-head">
@@ -506,7 +506,7 @@ export function FootprintsPanel({
             {editingId ? (
               <div className="fp-cta-row">
                 <BridgeButton type="submit" variant="primary" disabled={busy}>
-                  {busy ? '更新中…' : '更新这条足迹'}
+                  {busy ? '更新中…' : '更新这条练习'}
                 </BridgeButton>
                 <BridgeButton
                   type="button"
@@ -520,7 +520,7 @@ export function FootprintsPanel({
               </div>
             ) : user ? (
               <BridgeButton type="submit" variant="primary" disabled={busy}>
-                {busy ? '保存中…' : '存足迹并请求陪练'}
+                {busy ? '保存中…' : '存练习并请求陪练'}
               </BridgeButton>
             ) : (
               <div className="fp-cta-row">
@@ -552,9 +552,9 @@ export function FootprintsPanel({
       ) : null}
 
       <div className="fp-list">
-        <h3>最近足迹</h3>
+        <h3>最近练习</h3>
         {!items.length ? (
-          <p className="fp-empty">还没有足迹。完成上面的独立稿即可留下第一条。</p>
+          <p className="fp-empty">还没有练习。完成上面的独立稿即可留下第一条。</p>
         ) : (
           <ul>
             {items.map((fp) => (

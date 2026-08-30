@@ -5,7 +5,7 @@ export const PLAN_SCENE_SEEDS = [
   { id: 'read-interest', label: '兴趣阅读' },
 ] as const
 
-export const STEPS = ['1 计划', '2 任务', '3 陪练', '4 足迹', '5 复盘'] as const
+export const STEPS = ['1 计划', '2 任务', '3 陪练', '4 练习', '5 复盘'] as const
 
 export const METHOD_TRAIL = [
   { n: '01', title: '今日任务', body: '一张旅行点餐卡，约 30 分钟。' },

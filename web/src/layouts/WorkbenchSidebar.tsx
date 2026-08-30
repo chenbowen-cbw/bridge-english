@@ -8,7 +8,7 @@ import type { LocalFootprint, PlanTier } from '../lib/supabase'
 const NAV = [
   { to: '/app', end: true, label: '今日' },
   { to: '/app/plan', end: false, label: '计划' },
-  { to: '/app/footprints', end: false, label: '足迹' },
+  { to: '/app/footprints', end: false, label: '练习' },
   { to: '/app/review', end: false, label: '复盘' },
 ] as const
 

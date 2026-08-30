@@ -12,7 +12,7 @@ export async function resolvePostLoginPath(
   return plan ? '/app' : '/app/plan'
 }
 
-/** 「稍后再说」：不要 history.back。足迹浅试回工作台路径，其余回首页。 */
+/** 「稍后再说」：不要 history.back。练习浅试回工作台路径，其余回首页。 */
 export function resolveLoginDismissPath(nextParam: string | null): string {
   if (nextParam && nextParam.startsWith('/app/footprints') && !nextParam.startsWith('//')) {
     return nextParam

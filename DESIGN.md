@@ -145,7 +145,7 @@ Large rounded prompt surface; editable goal copy; hero CTA label = plan entry (e
 
 ### Navigation
 
-Wordmark left; Chinese labels (首页 / 计划 / 任务 / 足迹 / 复盘); accent for current; ink pill CTA = same plan verb as hero.
+Wordmark left; Chinese labels (首页 / 计划 / 任务 / 练习 / 复盘); accent for current; ink pill CTA = same plan verb as hero.
 
 ## Do's and Don'ts
 

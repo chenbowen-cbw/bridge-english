@@ -73,7 +73,7 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       <p className="kicker">每周复盘</p>
       <h2>本周轻量对照</h2>
       <p className="rv-lead">
-        {weekRangeLabel()} · 不打分、不惩罚——从足迹里抽出几条，问问自己。
+        {weekRangeLabel()} · 不打分、不惩罚——从练习里抽出几条，问问自己。
       </p>
 
       {!user ? (
@@ -91,10 +91,10 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       ) : null}
 
       <div className="rv-section">
-        <h3>本周足迹</h3>
+        <h3>本周练习</h3>
         <p className="rv-hint">系统抽了最多 3 条（优先本周）。</p>
         {!picks.length ? (
-          <p className="rv-empty">还没有可复盘的足迹。先完成一张任务卡的独立输出。</p>
+          <p className="rv-empty">还没有可复盘的练习。先完成一张任务卡的独立输出。</p>
         ) : (
           <ul className="rv-picks">
             {picks.map((fp) => (
