@@ -6,16 +6,16 @@ import './onboard.css'
 
 const STEPS = [
   {
-    title: '今日看一张卡',
-    body: '有计划时，今日只摊开这一张任务。先看清要做成的那一件。',
+    title: '今日只做一件',
+    body: '有了计划之后，打开「今日」，你会看到一张任务卡：这一周先练哪一件、怎样算做完。先看清再动手。',
   },
   {
-    title: '练习写独立稿',
-    body: '打开练习，用模板自己写。写完再开 AI——它只点拨，不代写。',
+    title: '练习里先自己写',
+    body: '点进「练习」，选一张任务，用自己的话写一版。写完再请 AI 陪练——它只点出问题、给提示，不会替你改整段。',
   },
   {
-    title: '复盘看痕迹',
-    body: '周末对照留下的练习，轻轻看一眼带走了什么。不打分。',
+    title: '周末轻轻复盘',
+    body: '到了「复盘」，对照这周写下的练习，问问自己做成了什么、哪句还能用。不打分，也不跟别人比。',
   },
 ] as const
 
@@ -101,7 +101,7 @@ export function OnboardSheet() {
             跳过
           </button>
           <BridgeButton variant="primary" onClick={goNext}>
-            {step >= STEPS.length - 1 ? '开始' : '下一步'}
+            {step >= STEPS.length - 1 ? '好，我明白了' : '下一步'}
           </BridgeButton>
         </div>
       </div>

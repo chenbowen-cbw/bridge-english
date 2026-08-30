@@ -96,7 +96,7 @@ export function PlanPage() {
     return (
       <div className="wrap app-panel">
         <p className="app-loading" role="status">
-          读取当前计划…
+          正在打开你的计划…
         </p>
       </div>
     )
@@ -125,10 +125,10 @@ export function PlanPage() {
   if (historyId && !historyPlan) {
     return (
       <div className="wrap app-panel app-panel--tight">
-        <h2>找不到这份历史计划</h2>
-        <p className="app-lead">可能已经不在本子里了。</p>
+        <h2>找不到这份以前的计划</h2>
+        <p className="app-lead">可能已经不在了。回到正在用的那份就好。</p>
         <BridgeButton variant="ghost" arrow="none" onClick={clearHistory}>
-          回到当前计划
+          回到正在用的计划
         </BridgeButton>
       </div>
     )

@@ -17,7 +17,7 @@ export async function requestCoachTips(
 ): Promise<{ ok: true; data: CoachResponse } | { ok: false; error: string }> {
   const draft = input.draft.trim()
   if (!draft) {
-    return { ok: false, error: '需要先有独立稿，才能请求陪练（不会代写终稿）。' }
+    return { ok: false, error: '先用自己的话写一点，再请 AI 点拨。它不会替你改整段。' }
   }
   if (!supabase || !isSupabaseConfigured) {
     return { ok: false, error: 'Supabase 未配置' }

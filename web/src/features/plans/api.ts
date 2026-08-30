@@ -29,7 +29,7 @@ export type PlanFirstTask = {
   criteria: string | null
 }
 
-const UNREACHABLE = '暂时读不到计划，请稍后重试。'
+const UNREACHABLE = '计划暂时读不出来，过一会儿再试一次。'
 
 export function planFirstTask(plan: LearningPlanRow): PlanFirstTask {
   const progress = plan.tasks_progress ?? {}
@@ -85,7 +85,7 @@ export async function saveLearningPlan(
     .single()
 
   if (error || !data) {
-    return { ok: false, error: error?.message ?? '写入计划失败' }
+    return { ok: false, error: error?.message ?? '计划没能存下来' }
   }
 
   // Mirror focus onto profile.plan_focus (plan_tier untouched)

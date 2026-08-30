@@ -35,7 +35,7 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
     if (mode === 'signup' && !result.session) {
       // Confirm email ON: Auth creates the user but returns no session until the link/OTP is used.
       setMessage(
-        '账号已创建。请打开邮箱，点击确认链接（或输入验证码）后再登录。未确认前无法进入应用。',
+        '账号已经建好了。请打开邮箱，点确认链接（或输入验证码）后再登录。还没确认前，暂时进不去工作台。',
       )
       setMode('signin')
       setPassword('')
@@ -48,7 +48,7 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
   if (loading) {
     return (
       <section className="auth-panel" aria-busy="true">
-        <p className="auth-muted">正在读取会话…</p>
+        <p className="auth-muted">正在确认登录状态…</p>
       </section>
     )
   }
@@ -56,8 +56,8 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
   if (user) {
     return (
       <section className="auth-panel">
-        <p className="kicker">账户</p>
-        <h2>已登录</h2>
+      <p className="kicker">你的账号</p>
+      <h2>已经登录</h2>
         <p className="auth-lead">{user.email}</p>
         <div className="auth-actions">
           <BridgeButton variant="ghost" arrow="none" onClick={() => void signOut()}>
@@ -65,7 +65,7 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
           </BridgeButton>
           {onClose ? (
             <BridgeButton variant="primary" arrow="none" onClick={onClose}>
-              回到页面
+              回到刚才那一页
             </BridgeButton>
           ) : null}
         </div>
@@ -75,12 +75,12 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
 
   return (
     <section className="auth-panel" id="auth">
-      <p className="kicker">账户</p>
+      <p className="kicker">你的账号</p>
       <h2>{mode === 'signin' ? '登录 Bridge' : '注册 Bridge'}</h2>
       <p className="auth-lead">
         {mode === 'signup'
-          ? '用邮箱注册后即可保存计划、练习与复盘。若项目开启了邮箱确认，注册后需先点邮件里的链接。'
-          : '邮箱 + 密码登录。营销页可匿名浏览；工作台内计划与周复盘需登录，练习可先试一条本机草稿。'}
+          ? '注册之后，计划和练习、复盘都会记在你的账号里。如果收到确认邮件，先点里面的链接，再回来登录。'
+          : '用邮箱和密码登录。计划和周末复盘需要账号；「练习」可以先写一条草稿，就存在这台电脑上。'}
       </p>
       {!configured ? (
         <p className="auth-banner" role="status">
@@ -156,7 +156,7 @@ export function AuthPanel({ onClose, onSuccess }: Props) {
         ) : null}
         <div className="auth-actions">
           <BridgeButton type="submit" variant="primary" arrow="right" disabled={busy || !configured}>
-            {busy ? '请稍候…' : mode === 'signin' ? '登录' : '注册并开始'}
+            {busy ? '请稍候…' : mode === 'signin' ? '登录' : '注册'}
           </BridgeButton>
           {onClose ? (
             <BridgeButton type="button" variant="ghost" arrow="none" onClick={onClose}>

@@ -144,7 +144,7 @@ export function AppLayout() {
         <main className="app-main">
           {loading ? (
             <p className="app-loading" role="status">
-              正在读取会话…
+              正在确认登录状态…
             </p>
           ) : (
             <Outlet />

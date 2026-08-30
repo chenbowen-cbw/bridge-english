@@ -29,7 +29,7 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
   const navigate = useNavigate()
   const [picks, setPicks] = useState<LocalFootprint[]>([])
   const [dims, setDims] = useState<ReviewDims>(emptyDims)
-  const [focusNext, setFocusNext] = useState('本周只盯一个变量，别同时开太多线。')
+  const [focusNext, setFocusNext] = useState('下周先盯一件事，别同时开太多线。')
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState<string | null>(null)
   const [statusTone, setStatusTone] = useState<'ok' | 'warn'>('ok')
@@ -47,7 +47,7 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
 
   async function onSave() {
     if (!user) {
-      setStatus('请先登录再保存复盘。')
+      setStatus('要记下这次复盘，需要先登录。')
       setStatusTone('warn')
       onNeedAuth?.()
       return
@@ -66,18 +66,20 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       setStatusTone('warn')
       return
     }
-    setStatus('本周复盘已保存。')
+    setStatus('这次复盘已经记下了。下周还可以回来对照。')
     setStatusTone('ok')
   }
 
   return (
     <section className="rv-panel" id="app-review">
       <h2>复盘</h2>
-      <p className="rv-lead">{weekRangeLabel()} · 不打分，对照留下的痕迹。</p>
+      <p className="rv-lead">
+        {weekRangeLabel()}。对照这周写下的练习，看看带走了什么。不打分，也不跟别人比。
+      </p>
 
       {!user ? (
         <p className="rv-banner" role="status">
-          登录后才能保存本周复盘。
+          要记下这次复盘，需要先登录。没登录也可以先看看、先写，只是存不下来。
           {onNeedAuth ? (
             <>
               {' '}
@@ -90,13 +92,13 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       ) : null}
 
       <div className="rv-section">
-        <h3>本周练习</h3>
-        <p className="rv-hint">从本周练习里抽出几条对照。</p>
+        <h3>这周写下的练习</h3>
+        <p className="rv-hint">下面抽出几条，方便对照着回答。不是全部清单。</p>
         {!picks.length ? (
           <div className="rv-empty">
-            <p>还没有可复盘的练习。</p>
+            <p>这周还没有练习可对照。先去写一条，周末再回来看。</p>
             <BridgeButton variant="primary" onClick={() => navigate('/app/footprints')}>
-              去选模板写稿
+              先去写一条练习
             </BridgeButton>
           </div>
         ) : (
@@ -115,12 +117,12 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       </div>
 
       <div className="rv-section">
-        <h3>四维问答</h3>
-        <p className="rv-hint">各写一句就好。空白也可以，先点保存再说。</p>
+        <h3>四个小问题</h3>
+        <p className="rv-hint">各写一句就够。空着也没关系，先存下来，之后还能改。</p>
         <div className="rv-dims">
           <label>
-            完成
-            <span>这周我真正做完了什么？</span>
+            做成了什么
+            <span>这周我真正做完了哪一件？</span>
             <textarea
               rows={2}
               value={dims.done}
@@ -129,8 +131,8 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
             />
           </label>
           <label>
-            质量
-            <span>哪一句还站得住？哪里可以松一点？</span>
+            哪句还站得住
+            <span>哪一句还能用？哪里可以对自己松一点？</span>
             <textarea
               rows={2}
               value={dims.quality}
@@ -139,8 +141,8 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
             />
           </label>
           <label>
-            保持
-            <span>上周留下的表达，这周还会用吗？</span>
+            还会再用吗
+            <span>上周留下的说法，这周还说得出口吗？</span>
             <textarea
               rows={2}
               value={dims.keep}
@@ -149,35 +151,35 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
             />
           </label>
           <label className="rv-migrate">
-            迁移
-            <span>这周有没有在真实生活里用过？</span>
+            生活里用过了吗
+            <span>这周有没有在真实场合里说出去、写出去？</span>
             <label className="rv-check">
               <input
                 type="checkbox"
                 checked={dims.migrateLive}
                 onChange={(e) => setDims((d) => ({ ...d, migrateLive: e.target.checked }))}
               />
-              有——点餐 / 问路 / 回消息…用回生活了
+              有——点餐、问路、回消息……用回生活了
             </label>
             <textarea
               rows={2}
               value={dims.migrateNote}
               onChange={(e) => setDims((d) => ({ ...d, migrateNote: e.target.value }))}
-              placeholder="可选：用在哪一次？"
+              placeholder="愿意的话写一下：用在哪一次？"
             />
           </label>
         </div>
       </div>
 
       <div className="rv-section">
-        <h3>下周唯一重点</h3>
-        <p className="rv-hint">仍只动一个变量。保存后下周对照用。</p>
+        <h3>下周先盯这一件</h3>
+        <p className="rv-hint">只改一件事就好，别同时开太多线。存下来，下周复盘时对照。</p>
         <input
           className="rv-focus"
           maxLength={80}
           value={focusNext}
           onChange={(e) => setFocusNext(e.target.value)}
-          aria-label="下周唯一重点"
+          aria-label="下周先盯这一件"
         />
       </div>
 
@@ -188,18 +190,18 @@ export function WeeklyReviewPanel({ onNeedAuth }: Props) {
       <div className="rv-actions">
         {user ? (
           <BridgeButton variant="primary" disabled={busy} onClick={() => void onSave()}>
-            {busy ? '保存中…' : '保存本周复盘'}
+            {busy ? '正在记下…' : '记下这次复盘'}
           </BridgeButton>
         ) : (
           <BridgeButton
             variant="primary"
             onClick={() => {
-              setStatus('请先登录再保存复盘。')
+              setStatus('要记下这次复盘，需要先登录。')
               setStatusTone('warn')
               onNeedAuth?.()
             }}
           >
-            先登录再保存复盘
+            先登录，才能记下这次复盘
           </BridgeButton>
         )}
       </div>

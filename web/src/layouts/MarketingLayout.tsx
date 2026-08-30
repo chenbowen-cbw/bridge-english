@@ -132,7 +132,7 @@ export function MarketingLayout() {
 
       <Outlet />
 
-      <p className="proto-note">Bridge · 营销站与产品工作台同域分离 · 原型见 prototype/</p>
+      <p className="proto-note">Bridge · 官网和工作台在同一个站点</p>
     </div>
   )
 }

@@ -72,7 +72,7 @@ export function HomePage() {
           <p className="kicker">练习 · 不是档案墙</p>
           <h2>一张任务，如何留下痕迹</h2>
           <p className="band-lead">
-            练习嵌在任务结束态：独立输出先存证，再展开 AI 点拨；周复盘只做轻量前后对比。
+            写完先把你自己的稿留下来，再看 AI 点拨；周末轻轻对照前后，不做成档案墙。
           </p>
           <ol className="trail">
             {METHOD_TRAIL.map((item) => (
@@ -94,13 +94,13 @@ export function HomePage() {
               arrow="none"
               onClick={() => navigate('/app/footprints')}
             >
-              浅试一条练习
+              先写一条练习看看
             </BridgeButton>
           </div>
           <p className="band-soft">
-            完整计划与周复盘在{' '}
+            完整计划和周末复盘在{' '}
             <Link to={user ? '/app' : '/login?next=%2Fapp'}>工作台</Link>
-            ；未登录也可在练习页试一条本机草稿。
+            ；还没登录也可以在练习页先写一条，就存在这台电脑上。
           </p>
         </div>
       </section>

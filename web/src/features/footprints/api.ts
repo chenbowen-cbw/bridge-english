@@ -135,7 +135,7 @@ export async function createFootprint(
   return {
     item: pendingItem,
     cloud: 'failed',
-    cloudError: error?.message ?? '云端写入失败',
+    cloudError: error?.message ?? '没能存到网上',
   }
 }
 
@@ -242,7 +242,7 @@ export async function updateFootprint(
   return {
     item: pendingItem,
     cloud: 'failed',
-    cloudError: error?.message ?? '云端更新失败',
+    cloudError: error?.message ?? '没能把改动存到网上',
   }
 }
 

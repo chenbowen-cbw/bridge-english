@@ -75,15 +75,15 @@ export const PLAN_STEPS: QuizStep[] = [
   },
   {
     id: 'goal12',
-    q: '12 周后，希望「做成」哪一件具体事？',
-    sub: '一句话就行，比如：能在机场自己办完值机。',
+    q: '三个月后，希望真正做成哪一件具体的事？',
+    sub: '一句话就行，比如：能在机场自己办完值机，不用回头找人帮忙。',
     type: 'text',
     placeholder: '写一句你想做成的事…',
   },
   {
     id: 'block',
-    q: '哪一项最卡？',
-    sub: '最多选 2 项——我们先啃最堵的那块。',
+    q: '哪一块最卡你？',
+    sub: '最多选 2 项。我们先对付最堵的那块，别一次全开。',
     type: 'multi',
     max: 2,
     options: [
@@ -107,8 +107,8 @@ export const PLAN_STEPS: QuizStep[] = [
   },
   {
     id: 'session',
-    q: '单次最长能坐多久？',
-    sub: '决定任务卡的颗粒度。',
+    q: '一次最长能坐多久？',
+    sub: '时间短就给短任务，能坐久一点就给完整一点的。',
     type: 'single',
     options: [
       { v: 'short', l: '5–15 分钟' },
@@ -130,10 +130,10 @@ export const PLAN_STEPS: QuizStep[] = [
   },
   {
     id: 'aiBound',
-    q: '关于 AI，我们先约定边界',
+    q: '用 AI 之前，先说好规矩',
     type: 'confirm',
-    body: '先自己说 / 写一版，AI 只给提示和纠错，不代写整段。判断始终在你这边。',
-    confirmLabel: '我知道了',
+    body: '先自己说或写一版。AI 只给提示和纠错，不替你改整段。最后怎么说、怎么写，还是你自己定。',
+    confirmLabel: '好，我先自己写，再请它点拨',
   },
 ]
 

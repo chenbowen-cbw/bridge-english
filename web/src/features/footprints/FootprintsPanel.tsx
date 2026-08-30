@@ -95,7 +95,7 @@ export function FootprintsPanel({
     } else {
       setBody('')
     }
-    setStatus(`已填入「${tpl.title}」——先自己写，AI 只点拨。`)
+    setStatus(`已经选好「${tpl.title}」。先用自己的话写，写完再请 AI 点拨。`)
     setStatusTone('ok')
     if (opts?.focus) setFocusDraftAfter((n) => n + 1)
   }
@@ -164,7 +164,7 @@ export function FootprintsPanel({
       setCriteria(tpl.criteria)
       setPlaceholder(tpl.placeholder)
     }
-    setStatus(`正在改「${fp.title}」——保存会更新这条，不会另存一条。`)
+    setStatus(`正在改「${fp.title}」。点保存只会改这一条，不会另外存一份。`)
     setStatusTone('ok')
     const el = document.getElementById(`fp-item-${focusId}`)
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -180,7 +180,7 @@ export function FootprintsPanel({
     setFocusedId(null)
     appliedFocusRef.current = null
     onClearFocus?.()
-    setStatus(`用「${tpl.title}」再写一条。写完会存成新练习。`)
+    setStatus(`还是用「${tpl.title}」再写一条新的。写完会另外存一份，不会覆盖刚才那条。`)
     setStatusTone('ok')
     setFocusDraftAfter((n) => n + 1)
   }
@@ -189,14 +189,14 @@ export function FootprintsPanel({
     e.preventDefault()
     const draft = body.trim()
     if (!draft) {
-      setStatus('请先写独立稿，再存练习或请求陪练。')
+      setStatus('先用自己的话写一点，再保存或请 AI 点拨。')
       setStatusTone('warn')
       return
     }
 
     const payload = {
       scene,
-      title: title.trim() || '未命名任务',
+      title: title.trim() || '还没起名的练习',
       body: draft,
       criteria_met: criteriaMet,
       self_rating: selfRating,
@@ -207,7 +207,7 @@ export function FootprintsPanel({
     if (!user) {
       const existing = items.length ? items : (await listFootprints(null)).items
       if (!editingId && existing.length >= 1) {
-        setStatus('匿名草稿限一条。登录后可写入云端并请求陪练。')
+        setStatus('没登录时，这台电脑上只能留一条草稿。登录之后就可以多存几条，并请 AI 陪练。')
         setStatusTone('warn')
         onNeedAuth?.()
         return
@@ -221,8 +221,8 @@ export function FootprintsPanel({
         await refresh()
         setStatus(
           updated.cloud === 'failed'
-            ? `本机这条还在，未能写入：${updated.cloudError ?? '未知错误'}。`
-            : '已更新这条本机草稿（同一条，没有另存）。',
+            ? `这台电脑上的草稿还在，但没能存出去：${updated.cloudError ?? '出了点问题'}。`
+            : '已经改好了，还是这一条草稿，没有另外存一份。',
         )
         setStatusTone(updated.cloud === 'failed' ? 'warn' : 'ok')
         setBusy(false)
@@ -234,8 +234,8 @@ export function FootprintsPanel({
       setShowExampleInDraft(false)
         setStatus(
           created.cloud === 'skipped'
-            ? '已存一条本机草稿。登录后可同步并开启陪练。'
-            : '练习已保存',
+            ? '草稿已经记在这台电脑上。登录之后可以收到账号里，并请 AI 陪练。'
+            : '这条练习已经记下了。',
         )
       setStatusTone('ok')
       setBusy(false)
@@ -252,14 +252,14 @@ export function FootprintsPanel({
       if (updated.cloud === 'failed') {
         showLocalAfterCloudFail()
         setStatus(
-          `本地已更新这条练习，但云端同步失败：${updated.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
+          `这台电脑上已经改好了，但没能同步到网上：${updated.cloudError ?? '出了点问题'}。请检查网络后再试一次，先别当成已经存进账号。`,
         )
         setStatusTone('warn')
         setBusy(false)
         return
       }
       await refresh()
-      setStatus(updated.cloud === 'ok' ? '已更新这条练习' : '已更新这条练习（还在这台设备）')
+      setStatus(updated.cloud === 'ok' ? '已经改好这一条练习。' : '已经改好这一条，目前还只在这台电脑上。')
       setStatusTone('ok')
       setBusy(false)
       return
@@ -269,7 +269,7 @@ export function FootprintsPanel({
     if (created.cloud === 'failed') {
       showLocalAfterCloudFail()
       setStatus(
-        `本地已暂存，但云端写入失败：${created.cloudError ?? '未知错误'}。请检查网络后重试，勿当作已同步。`,
+        `这台电脑上已经先记下了，但没能存到网上：${created.cloudError ?? '出了点问题'}。请检查网络后再试一次，先别当成已经存进账号。`,
       )
       setStatusTone('warn')
       setBusy(false)
@@ -286,14 +286,14 @@ export function FootprintsPanel({
     })
     if (coach.ok) {
       setTips(coach.data.tips)
-      setCoachNote('AI 只点拨，没有改你的整段稿。')
+      setCoachNote('AI 只点了几处，没有改你的整段稿。')
     } else {
-      setCoachNote(`陪练暂不可用：${coach.error}`)
+      setCoachNote(`这次陪练暂时用不上：${coach.error}`)
     }
 
     setBody('')
     setShowExampleInDraft(false)
-    setStatus(created.cloud === 'ok' ? '练习已保存' : '练习已保存到这台设备')
+    setStatus(created.cloud === 'ok' ? '这条练习已经记下了。' : '这条练习已经记在这台电脑上。')
     setStatusTone('ok')
     setBusy(false)
   }
@@ -315,12 +315,14 @@ export function FootprintsPanel({
     <section className="fp-panel" id="app-footprints">
       <div className="fp-head">
         <h2>练习</h2>
-        <p className="fp-lead">先写自己的稿，再开 AI。左页选模板，右页写。</p>
+        <p className="fp-lead">
+          先用自己的话写一版，再请 AI 点拨。左边选一张任务，右边写；它不会替你改整段。
+        </p>
       </div>
 
       {!user ? (
         <p className="fp-banner" role="status">
-          未登录可先写草稿（存于本机匿名本）。要写入云端并请求陪练，请先登录。
+          还没登录也可以先写。草稿只存在这台电脑上，而且只能留一条。登录之后，才能存到账号里，并请 AI 陪练。
           {onNeedAuth ? (
             <>
               {' '}
@@ -332,11 +334,11 @@ export function FootprintsPanel({
         </p>
       ) : null}
 
-      <div className="fp-spread" aria-label="练习对页">
-        <div className="fp-page fp-page--left" aria-label="推荐模板">
+      <div className="fp-spread" aria-label="练习：左边选任务，右边写">
+        <div className="fp-page fp-page--left" aria-label="可选的任务">
           <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-recommend-head">
-            <p className="fp-section-label">模板</p>
+            <p className="fp-section-label">选一张任务</p>
           </div>
           <ul className="fp-template-list">
             {TASK_TEMPLATES.map((tpl) => (
@@ -362,6 +364,7 @@ export function FootprintsPanel({
           <div className="fp-page-margin" aria-hidden="true" />
           <div className="fp-detail-head">
             <h3 className="fp-practicing">{activeTemplate.title}</h3>
+            <p className="fp-stamp-label">怎样算做完</p>
             <p className="fp-stamp">{activeTemplate.criteria}</p>
           </div>
 
@@ -372,21 +375,21 @@ export function FootprintsPanel({
                 variant="primary"
                 onClick={() => practiceWithTemplate(activeTemplate)}
               >
-                用这个模板练习
+                用这张卡开始写
               </BridgeButton>
               <button
                 type="button"
                 className="fp-quiet-link"
                 onClick={() => practiceWithTemplate(activeTemplate, true)}
               >
-                填入示例稿
+                先看一眼示例（可改）
               </button>
             </div>
           ) : null}
 
           <form className="fp-form" ref={formRef} onSubmit={(e) => void onSave(e)}>
             <label className="fp-draft-label">
-              {editingId ? '改这条独立稿' : '独立稿'}
+              {editingId ? '改你已经写下的这一版' : '先自己写一版（还没请 AI）'}
               <textarea
                 ref={draftRef}
                 id="fp-draft"
@@ -409,7 +412,7 @@ export function FootprintsPanel({
                 </select>
               </label>
               <label>
-                任务标题
+                这条练习叫什么
                 <input value={title} onChange={(e) => setTitle(e.target.value)} />
               </label>
             </div>
@@ -420,7 +423,7 @@ export function FootprintsPanel({
                   checked={criteriaMet}
                   onChange={(e) => setCriteriaMet(e.target.checked)}
                 />
-                对照完成标准
+                对照过上面「怎样算做完」
               </label>
               <label>
                 自评
@@ -442,7 +445,7 @@ export function FootprintsPanel({
             {editingId ? (
               <div className="fp-cta-row">
                 <BridgeButton type="submit" variant="primary" disabled={busy}>
-                  {busy ? '更新中…' : '更新这条练习'}
+                  {busy ? '正在改这一条…' : '改好了，更新这一条'}
                 </BridgeButton>
                 <BridgeButton
                   type="button"
@@ -451,20 +454,20 @@ export function FootprintsPanel({
                   disabled={busy}
                   onClick={writeAnotherWithSameTemplate}
                 >
-                  用同一模板再写一条
+                  用同一张卡再写一条新的
                 </BridgeButton>
               </div>
             ) : user ? (
               <BridgeButton type="submit" variant="primary" disabled={busy}>
-                {busy ? '保存中…' : '存练习并请求陪练'}
+                {busy ? '正在记下…' : '存下这一条，并请 AI 点拨'}
               </BridgeButton>
             ) : (
               <div className="fp-cta-row">
                 <BridgeButton type="submit" variant="primary" disabled={busy}>
-                  {busy ? '保存中…' : '存一条本机草稿'}
+                  {busy ? '正在记下…' : '先存在这台电脑上'}
                 </BridgeButton>
                 <BridgeButton type="button" variant="ghost" arrow="none" onClick={() => onNeedAuth?.()}>
-                  登录以云端保存
+                  登录后存到账号里
                 </BridgeButton>
               </div>
             )}
@@ -474,7 +477,7 @@ export function FootprintsPanel({
 
       {tips ? (
         <div className="fp-tips">
-          <h3>AI 陪练反馈</h3>
+          <h3>AI 陪练刚才说了这些</h3>
           {coachNote ? <p className="fp-note">{coachNote}</p> : null}
           <ol>
             {tips.map((t) => (
@@ -491,8 +494,8 @@ export function FootprintsPanel({
         <h3>最近练习</h3>
         {!items.length ? (
           <div className="fp-empty">
-            <p>还没有练习。</p>
-            <p>选左边一个模板，在右页写完独立稿，第一条就会出现在这里。</p>
+            <p>这里还是空的。</p>
+            <p>左边选一张任务，右边用自己的话写完，第一条就会出现在这里。</p>
           </div>
         ) : (
           <ul>
@@ -510,7 +513,7 @@ export function FootprintsPanel({
                 <p className="fp-body">{fp.raw}</p>
                 <div className="fp-actions">
                   <button type="button" onClick={() => void onToggleMigrate(fp)} disabled={!user}>
-                    {fp.migrateChecked ? '已迁移 ✓' : '标记迁移'}
+                    {fp.migrateChecked ? '生活里用过了 ✓' : '还没在生活里用过'}
                   </button>
                   <button
                     type="button"

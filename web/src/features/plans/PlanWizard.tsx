@@ -62,7 +62,7 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
     setPhase('result')
 
     if (!user) {
-      setStatus('计划已生成。登录后才能保存到你的本子。')
+      setStatus('计划已经排好了。登录之后才会记到你的账号里，换电脑也能看到。')
       return
     }
 
@@ -70,10 +70,10 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
     const saved = await saveLearningPlan(user.id, answers, result)
     setBusy(false)
     if (!saved.ok) {
-      setStatus(`计划已生成，但云端写入失败：${saved.error}`)
+      setStatus(`计划已经排好了，但没能存到网上：${saved.error}`)
       return
     }
-    setStatus('计划已保存。点「本周第一张任务」开始练习。')
+    setStatus('计划已经记下了。点下面那张任务，就可以去写练习。')
   }
 
   function goNext() {
@@ -94,33 +94,33 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
   if (phase === 'result' && built) {
     return (
       <section className="plan-wizard" id="app-plan">
-        <h2>这一本，专为你这一周</h2>
+        <h2>这一周，就按这个来练</h2>
         <p className="plan-goal">{built.goalSentence}</p>
         <p className="plan-meta">{built.metaLine}</p>
 
         <div className="plan-focus">
-          <h3>本周唯一重点</h3>
+          <h3>这一周只盯这一件</h3>
           <p className="plan-focus-one">{built.focus.one}</p>
           <p className="plan-focus-why">{built.focus.why}</p>
         </div>
 
         <div className="plan-first-card">
-          <h3>本周第一张任务</h3>
+          <h3>这一周的第一张任务</h3>
           <p className="plan-first-title">{built.firstTaskTitle}</p>
-          <p className="plan-first-std">完成标准：{built.firstTaskCriteria}</p>
+          <p className="plan-first-std">怎样算做完：{built.firstTaskCriteria}</p>
           <div className="plan-first-actions">
             <BridgeButton variant="primary" onClick={startFirst}>
-              开始本周第一张任务
+              按这张任务去写练习
             </BridgeButton>
             {!user ? (
               <BridgeButton variant="ghost" arrow="none" onClick={() => onNeedAuth?.()}>
-                登录以云端保存
+                登录后，计划会记在你的账号里
               </BridgeButton>
             ) : null}
           </div>
         </div>
         {status ? <p className="plan-status">{status}</p> : null}
-        {busy ? <p className="plan-status">正在写入…</p> : null}
+        {busy ? <p className="plan-status">正在把计划存下来…</p> : null}
         <BridgeButton
           variant="ghost"
           arrow="none"
@@ -130,7 +130,7 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
             setStatus(null)
           }}
         >
-          再改一改答案
+          回去改几题
         </BridgeButton>
       </section>
     )
@@ -141,12 +141,12 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
       {onCancel ? (
         <p className="plan-desk-note">
           <button type="button" className="plan-text-btn" onClick={onCancel}>
-            回到当前计划
+            回到正在用的计划
           </button>
         </p>
       ) : null}
       <h2>先聊聊你想做成的事</h2>
-      <p className="plan-hint">答几题，定下周怎么练。不是测评。</p>
+      <p className="plan-hint">随便答几道就行，我们据此排这一周怎么练。不是考试，也没有对错。</p>
 
       <div
         className="plan-progress"
@@ -275,7 +275,7 @@ export function PlanWizard({ seedGoal = '', onNeedAuth, onStartFirstTask, onCanc
           上一题
         </BridgeButton>
         <BridgeButton variant="primary" disabled={!canNext || busy} onClick={goNext}>
-          {qi === PLAN_STEPS.length - 1 ? '生成我的计划' : '下一题'}
+          {qi === PLAN_STEPS.length - 1 ? '按这些答案排计划' : '下一题'}
         </BridgeButton>
       </div>
       {status ? <p className="plan-status">{status}</p> : null}

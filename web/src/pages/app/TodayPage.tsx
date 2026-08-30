@@ -44,7 +44,9 @@ export function TodayPage() {
     return (
       <div className="wrap app-panel app-panel--tight">
         <h2>今日</h2>
-        <p className="app-lead">未登录可先到练习浅试一条草稿。计划和复盘需要账号。</p>
+        <p className="app-lead">
+          还没登录也没关系。可以先去「练习」写一条草稿，就存在这台电脑上。要定制计划和周末复盘，需要先登录。
+        </p>
         <div className="app-actions">
           <BridgeButton
             variant="primary"
@@ -53,12 +55,12 @@ export function TodayPage() {
             登录
           </BridgeButton>
           <BridgeButton variant="ghost" arrow="none" onClick={() => navigate('/app/footprints')}>
-            浅试练习
+            先去写一条练习
           </BridgeButton>
         </div>
         <p className="band-soft">
           <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
-            再看一遍引导
+            再看一遍怎么用
           </button>
         </p>
       </div>
@@ -69,7 +71,7 @@ export function TodayPage() {
     return (
       <div className="wrap app-panel">
         <p className="app-loading" role="status">
-          读取今日计划…
+          正在打开今日的任务…
         </p>
       </div>
     )
@@ -90,14 +92,14 @@ export function TodayPage() {
   if (!plan) {
     return (
       <div className="wrap app-panel app-panel--tight">
-        <h2>今日还没有任务卡</h2>
-        <p className="app-lead">先定一件生活里的英语小事，再摊开这一周。</p>
+        <h2>今日还没有任务</h2>
+        <p className="app-lead">先说清楚你想用英语做成的一件小事，我们帮你排这一周先练什么。</p>
         <BridgeButton variant="primary" onClick={() => navigate('/app/plan')}>
-          去定制计划
+          去定这一周的计划
         </BridgeButton>
         <p className="band-soft">
           <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
-            再看一遍引导
+            再看一遍怎么用
           </button>
         </p>
       </div>
@@ -109,11 +111,11 @@ export function TodayPage() {
   return (
     <div className="wrap app-panel app-panel--tight">
       <h2>今日</h2>
-      <p className="app-goal">{plan.goal_sentence ?? '（未写目标句）'}</p>
+      <p className="app-goal">{plan.goal_sentence ?? '（还没写下想做成的事）'}</p>
       {plan.week_focus ? <p className="app-focus">{plan.week_focus}</p> : null}
       {task.title ? (
         <div className="app-today-card">
-          <p className="app-today-label">这一张</p>
+          <p className="app-today-label">今天先做这一件</p>
           <p className="app-today-title">{task.title}</p>
           {task.criteria ? <p className="app-today-stamp">{task.criteria}</p> : null}
           <BridgeButton
@@ -126,21 +128,21 @@ export function TodayPage() {
               )
             }
           >
-            去写练习
+            按这张卡去写练习
           </BridgeButton>
         </div>
       ) : (
         <BridgeButton variant="primary" onClick={() => navigate('/app/footprints')}>
-          打开练习
+          去练习里写
         </BridgeButton>
       )}
       <p className="band-soft">
-        <Link to="/app/plan">看当前计划</Link>
+        <Link to="/app/plan">看正在用的计划</Link>
         {' · '}
-        <Link to="/app/review">本周复盘</Link>
+        <Link to="/app/review">去做本周复盘</Link>
         {' · '}
         <button type="button" className="app-text-btn" onClick={requestOnboardReplay}>
-          再看一遍引导
+          再看一遍怎么用
         </button>
       </p>
     </div>

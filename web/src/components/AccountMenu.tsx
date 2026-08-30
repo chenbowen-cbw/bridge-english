@@ -63,7 +63,7 @@ export function AccountMenu({
         aria-controls={panelId}
         onClick={() => setOpen((o) => !o)}
       >
-        账户
+        你的账号
       </button>
       {open ? (
         <div
@@ -81,12 +81,12 @@ export function AccountMenu({
                 onReplayGuide()
               }}
             >
-              再看一遍引导
+              再看一遍怎么用
             </button>
           ) : null}
           {showHome ? (
             <Link role="menuitem" to="/" onClick={() => setOpen(false)}>
-              回到首页
+              回到官网首页
             </Link>
           ) : null}
           {onSignOut ? (
@@ -98,7 +98,7 @@ export function AccountMenu({
                 void onSignOut()
               }}
             >
-              退出
+              退出登录
             </button>
           ) : null}
         </div>

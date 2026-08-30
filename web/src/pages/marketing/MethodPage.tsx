@@ -12,7 +12,7 @@ export function MethodPage() {
       <section className="footprint-band method-page" id="method">
         <div className="wrap">
           <p className="kicker">方法</p>
-          <h2>真实任务 · 先独立稿 · AI 只点拨</h2>
+          <h2>真实任务 · 先自己写 · AI 只点拨</h2>
           <p className="band-lead">
             Bridge 不是词表 App，也不是整段代写。主旅程固定为：计划定制 → 今日任务 → 先独立尝试 →
             AI 陪练 → 独立输出存练习 → 周复盘。
@@ -60,7 +60,7 @@ export function MethodPage() {
             </BridgeButton>
           </div>
           <p className="band-soft">
-            产品面板在 <Link to="/app">/app</Link>；本页仅为静态方法叙事，不含真实问卷或 CRUD。
+            真正动手在 <Link to="/app">工作台</Link>。这一页只讲方法，没有问卷，也不会改你的练习。
           </p>
         </div>
       </section>

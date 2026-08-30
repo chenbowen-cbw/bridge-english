@@ -20,10 +20,10 @@ function pickFocus(blocks: BlockKey[]): PlanFocus {
   const order: BlockKey[] = ['speak', 'listen', 'write', 'read']
   const hit = order.find((k) => blocks.includes(k)) || 'speak'
   const map: Record<BlockKey, PlanFocus> = {
-    speak: { one: '本周只盯「开口完整度」', why: '先把一句说完整，再谈流利与词汇量。' },
-    listen: { one: '本周只盯「听懂主线」', why: '不追每个词，先抓场景主线与关键词。' },
-    write: { one: '本周只盯「写清三要素」', why: '先把信息写全，再打磨语气与语法。' },
-    read: { one: '本周只盯「抓主旨+两细节」', why: '读完必须能复述，而不是「感觉看懂了」。' },
+    speak: { one: '这一周先把一句话说完整', why: '先能自己把一句话说完，再去追求流利、堆单词。' },
+    listen: { one: '这一周先听懂在说什么', why: '不必抓住每个词，先听清场景主线和几个关键词。' },
+    write: { one: '这一周先把该写的写全', why: '先把对方需要知道的信息写齐，再打磨语气和语法。' },
+    read: { one: '这一周先抓住主旨和两个细节', why: '读完要能讲给别人听，而不是「感觉看懂了」。' },
   }
   return map[hit]
 }
@@ -65,6 +65,6 @@ export function buildPlanFromAnswers(answers: PlanAnswers): BuiltPlan {
     firstTemplateId: SCENE_TO_TEMPLATE[scene],
     firstTaskTitle: first.title,
     firstTaskCriteria: first.std,
-    metaLine: `${blocks.map((b) => ({ listen: '听', speak: '说', read: '读', write: '写' })[b]).join('·')} · AI 只提示纠错、不代写`,
+    metaLine: `${blocks.map((b) => ({ listen: '听', speak: '说', read: '读', write: '写' })[b]).join('·')} · 先自己写；AI 只点拨，不代写整段`,
   }
 }

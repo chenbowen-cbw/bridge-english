@@ -1129,6 +1129,10 @@ textarea {
   margin: 0 6px 18px;
 }
 
+.app-sidebar-brand span {
+  letter-spacing: 0.08em;
+}
+
 .app-sidebar-nav {
   display: flex;
   flex-direction: column;

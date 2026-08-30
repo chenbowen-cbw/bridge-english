@@ -56,7 +56,7 @@ export function WorkbenchSidebar({
     >
       <Link className="wordmark app-sidebar-brand" to="/app" onClick={onNavigate}>
         bridge.
-        <span>WORKBENCH</span>
+        <span>工作台</span>
       </Link>
 
       <nav className="app-sidebar-nav" aria-label="功能">
@@ -84,7 +84,7 @@ export function WorkbenchSidebar({
                   className={focusId === fp.id ? 'on' : undefined}
                   onClick={onNavigate}
                 >
-                  <span className="app-session-title">{fp.title || '未命名任务'}</span>
+                  <span className="app-session-title">{fp.title || '还没起名的练习'}</span>
                   <span className="app-session-date">{formatSessionDate(fp.date)}</span>
                 </Link>
               </li>
@@ -94,7 +94,7 @@ export function WorkbenchSidebar({
           <p className="app-sidebar-empty">
             还没有练习。{' '}
             <Link to="/app/footprints" onClick={onNavigate}>
-              选模板写稿
+              去写第一条
             </Link>
           </p>
         )}
@@ -123,7 +123,7 @@ export function WorkbenchSidebar({
               登录
             </Link>
             <Link className="nav-text" to="/" onClick={onNavigate}>
-              回到首页
+              回到官网首页
             </Link>
           </div>
         )}

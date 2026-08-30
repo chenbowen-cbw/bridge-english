@@ -37,7 +37,7 @@ export function weekRangeLabel(d = new Date()): string {
   const sun = new Date(mon)
   sun.setDate(mon.getDate() + 6)
   const fmt = (x: Date) => `${x.getMonth() + 1}/${x.getDate()}`
-  return `${fmt(mon)} – ${fmt(sun)}`
+  return `本周 ${fmt(mon)} – ${fmt(sun)}`
 }
 
 export function startOfWeek(d = new Date()): Date {
